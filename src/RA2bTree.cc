@@ -1,4 +1,3 @@
-#ifndef RA2bTree_cxx
 #define RA2bTree_cxx
 #include "RA2bTree.h"
 #include <TH2.h>
@@ -42,4 +41,3 @@ void RA2bTree::Loop()
       // if (Cut(ientry) < 0) continue;
    }
 }
-#endif
