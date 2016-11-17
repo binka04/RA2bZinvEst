@@ -1,8 +1,8 @@
 from ROOT import *
 from math import sqrt
 
-nBins = 61
-region="LDP"
+nBins = 59
+region="HDP"
 
 yieldInputFile = TFile("plotObs_baseline.root","READ")
 regionTag = ""
@@ -14,7 +14,6 @@ else :
     print "region not known"
     assert(0)
 
-yieldInputFile.ls()
 GJetsEBHisto = yieldInputFile.Get("AnalysisBins_BTag0plusQCDCR_"+regionTag+"_baseline_EB_GJets")
 GJetsEEHisto = yieldInputFile.Get("AnalysisBins_BTag0plusQCDCR_"+regionTag+"_baseline_EE_GJets")
 GJetsHisto = yieldInputFile.Get("AnalysisBins_BTag0plusQCDCR_"+regionTag+"_baseline_GJets")
@@ -250,9 +249,9 @@ columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","p
 ## Final table
 outputFileName=""
 if region == "LDP":
-   outputFileName="gJets_LDP.dat"
+   outputFileName="gJets_ldp.dat"
 elif region == "HDP":
-   outputFileName="gJets_HDP.dat"
+   outputFileName="gJets_hdp.dat"
 outputFile = open(outputFileName,"w")
 formattingString=" {0} : {1}( {2})|{3} |{4} |{5} |{6}| {7}({8}) |{9}| {10}({11}) |{12}({13},+{14}-{15}) |{16}({17}) |{18}({19})| {20}(+{21}-{22})| {23}(+{24}-{25},+{26}-{27})"
 outputFile.write(formattingString.format(*columnNames))
