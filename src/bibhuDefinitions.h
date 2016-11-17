@@ -96,7 +96,7 @@ template<typename ntupleType> double fillLepActivity(ntupleType* ntuple){
 ////////////////////////////////////////////////////////////
 template<typename ntupleType> double fillMinPhotonDeltaR(ntupleType* ntuple){
   if( ntuple->Photons->size() == 0 ) return 9.;
-  //cout << "num reco photons: " << ntuple->Photons->size() << endl;                                                                                                                          
+  //cout << "num reco photons: " << ntuple->Photons->size() << endl;
 
   double minDR_genRecoPhotons = 9.;
   int genPhotonIndex = -1;
