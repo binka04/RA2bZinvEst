@@ -3,3 +3,8 @@
 **/*stdout
 **/*stderr
 **/*condor
+**/*png
+**/*pdf
+**/*eps
+**/*log
+**/*tar
