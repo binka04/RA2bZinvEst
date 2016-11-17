@@ -114,6 +114,23 @@ int main(int argc, char** argv){
   plotsReference.push_back(refHTplot);
   plotsReference.push_back(refNJetsplot);
 
+  /*
+  // samples
+  //skim inputs
+  vector<RA2bTree*> samples;
+  vector<TString> sampleNames;
+  TString skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJet_CleanVars/";
+  TChain* JetHTdata = new TChain("tree");
+  JetHTdata->Add(skimType+"tree_HTMHT_2016B.root");
+  JetHTdata->Add(skimType+"tree_HTMHT_2016C.root");
+  JetHTdata->Add(skimType+"tree_HTMHT_2016D.root");
+  JetHTdata->Add(skimType+"tree_HTMHT_2016E.root");
+  JetHTdata->Add(skimType+"tree_HTMHT_2016F.root");
+  JetHTdata->Add(skimType+"tree_HTMHT_2016G.root");
+  samples.push_back(new RA2bTree(JetHTdata));
+  sampleNames.push_back("JetHTdata");
+  */
+
   // background MC samples
   vector<RA2bTree*> samples;
   vector<TString> sampleNames;
@@ -125,18 +142,19 @@ int main(int argc, char** argv){
   in_stream.open("JetHT_inputs.txt");
   vector<TString> fileNames;
   while(!in_stream.eof()){
-    in_stream >> line;
-    if( line.find("Run2016B") == -1 ) continue;
-    fileNames.push_back(TString(line));
+      in_stream >> line;
+      if( line.find("Run2016B") == -1 ) continue;
+      fileNames.push_back(TString(line));
   }
   in_stream.close();
 
   for( int i = atoi(argv[1]) ; i < atoi(argv[2]) ; i++ ){
-    JetHTdata->Add(fileNames[i]);
+      JetHTdata->Add(fileNames[i]);
   }
 
   samples.push_back(new RA2bTree(JetHTdata));
   sampleNames.push_back("JetHTdata");
+  
 
   for( int iSample = 0 ; iSample < samples.size() ; iSample++){
 
@@ -151,10 +169,15 @@ int main(int argc, char** argv){
     for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
       ntuple->GetEntry(iEvt);
       if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
-      if( ntuple->TriggerPass->size() > 40 && ntuple->TriggerPass->at(40) == 1 && ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()>100. ) continue;
+
+      if( ntuple->TriggerPass->size() <= 50 ) continue;      
+      if( ntuple->TriggerPass->at(40) != 1 && ntuple->TriggerPass->at(39) != 1 && ntuple->TriggerPass->at(38) != 1 && ntuple->TriggerPass->at(37) != 1 && ntuple->TriggerPass->at(36) != 1 && ntuple->TriggerPass->at(35) != 1 && ntuple->TriggerPass->at(34) != 1 && ntuple->TriggerPass->at(33) != 1 ) continue;
+      if( ntuple->Photons->size() == 0 ) continue;
+      if( ntuple->Photons->at(0).Pt() < 100. ) continue;
+
       for( int iPlot = 0 ; iPlot < plotsTarget.size() ; iPlot++ ){
 	plotsReference[iPlot].fillData(ntuple);
-	if( ntuple->TriggerPass->size() > 50 && ntuple->TriggerPass->at(50) == 1 ){
+	if( ntuple->TriggerPass->at(50) == 1 ){
 	  plotsTarget[iPlot].fillData(ntuple);
 	}
       }
@@ -162,6 +185,7 @@ int main(int argc, char** argv){
   }
 
   TFile* outputFile = new TFile("triggerEff_"+TString(argv[1])+"_"+TString(argv[2])+"_histo.root","RECREATE");
+  //TFile* outputFile = new TFile("triggerEff_histo.root","RECREATE");
 
   TCanvas* can = new TCanvas("can","can",500,500);
 
