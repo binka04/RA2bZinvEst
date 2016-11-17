@@ -109,14 +109,6 @@ int main(int argc, char** argv){
   // need this plotted for QCD, GJets, Data above sieie, and Data below sieie
   // then, we ultimately need these histograms in different regions (i.e. MHT regions)
 
-  /*
-  plots.push_back(MHTplot);
-  plots.push_back(HTplot);
-  plots.push_back(NJetsplot);
-  plots.push_back(BTagsplot);
-  plots.push_back(Binsplot);
-  */
-
   vector<plot> plotsEB;
   plotsEB.push_back(SieieEBplot);
   plotsEB.push_back(IsoChrgEBplot);
@@ -168,29 +160,42 @@ int main(int argc, char** argv){
       ntuple->GetEntry(iEvt);
       if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
 
-      if( skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
+      if( skims.regionNames[regInt] == "photonLDPLoose" || skims.regionNames[regInt] == "photonLoose" || 
+	  skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
 	if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
 	if( skims.sampleName[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
       }
       
-      if( ntuple->Photons->at(0).Pt()<200. ) continue;
-      if( !RA2bBaselineCut(ntuple) ) continue;
+      if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.)) continue;
+      if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 
+	  ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineCut(ntuple)) ) continue;
 
       for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
 
 	int iBin = projections[iProj].fill(ntuple);
 	if( iBin <= 0 ) continue;
+
+	//cout << "iBin:" << iBin << endl;
+	//cout << "isEB: " << ntuple->Photons_isEB->at(0) << endl;
+	//cout << "sieie: " << ntuple->Photons_sigmaIetaIeta->at(0) << endl;
+	//cout << "chrgIso: " << ntuple->Photons_pfChargedIsoRhoCorr->at(0) << endl;
 	if( ntuple->Photons_isEB->at(0) ){
-	  if(ntuple->Photons_sigmaIetaIeta->at(0)>.0107)
+	  if(ntuple->Photons_sigmaIetaIeta->at(0)>.0107){
+	    //cout << "high sieie" << endl;
 	    chargeIsoEBHighSieieVersus[iProj][iBin-1].fill(ntuple);
-	  else
+	  }else{
+	    //cout << "low sieie" << endl;
 	    chargeIsoEBLowSieieVersus[iProj][iBin-1].fill(ntuple);
+	  }
 	}
 	else{
-	  if(ntuple->Photons_sigmaIetaIeta->at(0)>.0272)
+	  if(ntuple->Photons_sigmaIetaIeta->at(0)>.0272){
+	    //cout << "high sieie" << endl;
 	    chargeIsoEEHighSieieVersus[iProj][iBin-1].fill(ntuple);
-	  else
+	  }else{
+	    //cout << "low sieie" << endl;
 	    chargeIsoEELowSieieVersus[iProj][iBin-1].fill(ntuple);
+	  }
 	}
       }
       
@@ -237,9 +242,11 @@ int main(int argc, char** argv){
     ntuple->GetEntry(iEvt);
     if( iEvt % 1000000 == 0 ) cout << "data: " << iEvt << "/" << numEvents << endl;
     
-    if( ntuple->TriggerPass->size() < 44 || !ntuple->TriggerPass->at(50) ) continue;
-    if( ntuple->Photons->at(0).Pt()<200. ) continue;
-    if( !RA2bBaselineCut(ntuple) ) continue;
+    if( ntuple->TriggerPass->size() < 50 || !ntuple->TriggerPass->at(50) ) continue;
+
+    if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.) ) continue;
+    if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 
+	((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineCut(ntuple)) ) continue;
 
     for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
       int iBin = projections[iProj].fillData(ntuple);

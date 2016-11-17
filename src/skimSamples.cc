@@ -18,8 +18,8 @@ public :
   std::vector<TString> dataSampleName; 
   std::vector<int> fillColor, lineColor;
 
-  enum region {kSignal,kPhoton,kPhotonLDP,kDYe,kDYm,kDYeLDP,kDYmLDP,kNumRegions};
-  TString regionNames[kNumRegions]={"signal","photon","photonLDP","DYe","DYm","DYeLDP","DYmLDP"};
+  enum region {kSignal,kLDP,kPhoton,kPhotonLoose,kPhotonLDP,kPhotonLDPLoose,kDYe,kDYm,kDYeLDP,kDYmLDP,kNumRegions};
+  TString regionNames[kNumRegions]={"signal","LDP","photon","photonLoose","photonLDP","photonLDPLoose","DYe","DYm","DYeLDP","DYmLDP"};
 
   TString skimType;
 
@@ -33,6 +33,10 @@ public :
       skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJet_CleanVars/";
     if( r == kPhotonLDP )
       skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJetLDP_CleanVars/";
+    if( r == kPhotonLoose )
+      skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJetLoose_CleanVars/";
+    if( r == kPhotonLDPLoose )
+      skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJetLooseLDP_CleanVars/";
     if( r == kDYm )
       skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_DYm_CleanVars";
     if( r == kDYmLDP )
@@ -76,7 +80,7 @@ public :
     for( int i = 0 ; i < QCDFileNames.size() ; i++ ){
       QCD->Add(skimType+"/"+QCDFileNames[i]);
     }
-    if( r == kSignal || r == kPhoton || r == kPhotonLDP ){ 
+    if( r == kSignal || r == kPhoton || r == kPhotonLDP || r == kPhotonLoose || r == kPhotonLDPLoose ){ 
       ntuples.push_back(new RA2bTree(QCD));
       sampleName.push_back("QCD");
       fillColor.push_back(kGray);
@@ -182,7 +186,7 @@ public :
     for( int i = 0 ; i < GJetsFileNames.size() ; i++ ){
       GJets->Add(skimType+"/"+GJetsFileNames[i]);
     }
-    if( r == kPhoton || r == kPhotonLDP ){
+    if( r == kPhoton || r == kPhotonLDP || r == kPhotonLoose || r == kPhotonLDPLoose ){
       ntuples.push_back(new RA2bTree(GJets));
       sampleName.push_back("GJets");
       fillColor.push_back(kGreen);
@@ -247,7 +251,7 @@ public :
     SinglePhotonFileNames.push_back("tree_SinglePhoton_2016F.root");
     SinglePhotonFileNames.push_back("tree_SinglePhoton_2016G.root");
 
-    if( r == kPhoton || r == kPhotonLDP ){
+    if( r == kPhoton || r == kPhotonLDP || r == kPhotonLoose || r == kPhotonLDPLoose ){
       data = new TChain("tree");
       for( int i = 0 ; i < SinglePhotonFileNames.size() ; i++ ){
 	data->Add(skimType+"/"+SinglePhotonFileNames[i]);
