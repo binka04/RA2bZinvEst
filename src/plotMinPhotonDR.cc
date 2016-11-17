@@ -83,7 +83,7 @@ int main(int argc, char** argv){
 
       if( ntuple->Photons->size() == 0 ) continue; 
       if( !isPromptPhoton(ntuple) ) continue;
-      if( ntuple->NJetsclean<=4 ) continue;
+      if( ntuple->NJetsclean<2 || ntuple->MHTclean<200 || ntuple->HTclean<500 ) continue;
       //if( !RA2bBaselineCut(ntuple) ) continue;
       //cout << "minPhotonDeltaR: " << fillMinPhotonDeltaR(ntuple) << endl;
       for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++ ){
