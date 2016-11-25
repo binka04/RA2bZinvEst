@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Oct 11 10:47:04 2016 by ROOT version 6.02/05
+// Thu Nov 17 12:28:33 2016 by ROOT version 6.02/05
 // from TTree tree/all observables, GJet_CleanVars
-// found on file: /uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJet_CleanVars/tree_GJets_HT-400to600.root
+// found on file: /uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJet_CleanVars/tree_GJets_HT-100to200.root
 //////////////////////////////////////////////////////////
 
 #ifndef RA2bTree_h
@@ -11,11 +11,9 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TLorentzVector.h>
-
+#include "TLorentzVector.h"
 // Header file for the classes stored in the TTree if any.
 #include "vector"
-
 
 class RA2bTree {
 public :
@@ -42,52 +40,53 @@ public :
    Double_t        DeltaPhi4;
    Int_t           EcalDeadCellTriggerPrimitiveFilter;
    Int_t           eeBadScFilter;
-   vector<TLorentzVector> *Electrons;
-   vector<int>     *Electrons_charge;
-   vector<bool>    *Electrons_mediumID;
-   vector<double>  *Electrons_MT2Activity;
-   vector<double>  *Electrons_MTW;
-   vector<double>  *Electrons_PTW;
-   vector<bool>    *Electrons_tightID;
-   vector<TLorentzVector> *ElectronsNoIso;
-   vector<bool>    *ElectronsNoIso_mediumID;
-   vector<double>  *ElectronsNoIso_MiniIso;
-   vector<double>  *ElectronsNoIso_MT2Activity;
-   vector<double>  *ElectronsNoIso_MTW;
-   vector<bool>    *ElectronsNoIso_tightID;
-   vector<TLorentzVector> *GenElectrons;
-   vector<bool>    *GenElectrons_fromTau;
-   vector<double>  *GenElectrons_MT2Activity;
-   vector<double>  *GenElectrons_RecoTrkAct;
-   vector<double>  *GenElectrons_RecoTrkd3;
-   vector<double>  *GenElectrons_RecoTrkIso;
+   std::vector<TLorentzVector> *Electrons;
+   std::vector<int>     *Electrons_charge;
+   std::vector<bool>    *Electrons_mediumID;
+   std::vector<double>  *Electrons_MT2Activity;
+   std::vector<double>  *Electrons_MTW;
+   std::vector<double>  *Electrons_PTW;
+   std::vector<bool>    *Electrons_tightID;
+   std::vector<TLorentzVector> *ElectronsNoIso;
+   std::vector<bool>    *ElectronsNoIso_mediumID;
+   std::vector<double>  *ElectronsNoIso_MiniIso;
+   std::vector<double>  *ElectronsNoIso_MT2Activity;
+   std::vector<double>  *ElectronsNoIso_MTW;
+   std::vector<bool>    *ElectronsNoIso_tightID;
+   std::vector<TLorentzVector> *GenElectrons;
+   std::vector<bool>    *GenElectrons_fromTau;
+   std::vector<double>  *GenElectrons_MT2Activity;
+   std::vector<double>  *GenElectrons_RecoTrkAct;
+   std::vector<double>  *GenElectrons_RecoTrkd3;
+   std::vector<double>  *GenElectrons_RecoTrkIso;
    Double_t        GenHT;
-   vector<TLorentzVector> *GenJets;
-   vector<bool>    *GenJets_HTMask;
-   vector<bool>    *GenJets_MHTMask;
+   std::vector<TLorentzVector> *GenJets;
+   std::vector<bool>    *GenJets_HTMask;
+   std::vector<bool>    *GenJets_MHTMask;
    Double_t        GenMET;
    Double_t        GenMETPhi;
    Double_t        GenMHT;
    Double_t        GenMHTPhi;
-   vector<TLorentzVector> *GenMuons;
-   vector<bool>    *GenMuons_fromTau;
-   vector<double>  *GenMuons_MT2Activity;
-   vector<double>  *GenMuons_RecoTrkAct;
-   vector<double>  *GenMuons_RecoTrkd3;
-   vector<double>  *GenMuons_RecoTrkIso;
-   vector<TLorentzVector> *GenParticles;
-   vector<int>     *GenParticles_ParentId;
-   vector<int>     *GenParticles_ParentIdx;
-   vector<int>     *GenParticles_PdgId;
-   vector<int>     *GenParticles_Status;
-   vector<TLorentzVector> *GenTaus;
-   vector<bool>    *GenTaus_had;
-   vector<double>  *GenTaus_LeadRecoTrkAct;
-   vector<double>  *GenTaus_LeadRecoTrkd3;
-   vector<double>  *GenTaus_LeadRecoTrkIso;
-   vector<TLorentzVector> *GenTaus_LeadTrk;
-   vector<double>  *GenTaus_MT2Activity;
-   vector<TLorentzVector> *GenTaus_Nu;
+   std::vector<TLorentzVector> *GenMuons;
+   std::vector<bool>    *GenMuons_fromTau;
+   std::vector<double>  *GenMuons_MT2Activity;
+   std::vector<double>  *GenMuons_RecoTrkAct;
+   std::vector<double>  *GenMuons_RecoTrkd3;
+   std::vector<double>  *GenMuons_RecoTrkIso;
+   std::vector<TLorentzVector> *GenParticles;
+   std::vector<int>     *GenParticles_ParentId;
+   std::vector<int>     *GenParticles_ParentIdx;
+   std::vector<int>     *GenParticles_PdgId;
+   std::vector<int>     *GenParticles_Status;
+   std::vector<TLorentzVector> *GenTaus;
+   std::vector<bool>    *GenTaus_had;
+   std::vector<double>  *GenTaus_LeadRecoTrkAct;
+   std::vector<double>  *GenTaus_LeadRecoTrkd3;
+   std::vector<double>  *GenTaus_LeadRecoTrkIso;
+   std::vector<TLorentzVector> *GenTaus_LeadTrk;
+   std::vector<double>  *GenTaus_MT2Activity;
+   std::vector<int>     *GenTaus_NProngs;
+   std::vector<TLorentzVector> *GenTaus_Nu;
    Int_t           globalTightHalo2016Filter;
    Int_t           HBHEIsoNoiseFilter;
    Int_t           HBHENoiseFilter;
@@ -97,123 +96,132 @@ public :
    Int_t           isoPionTracks;
    Bool_t          JetID;
    Bool_t          JetIDAK8;
-   vector<TLorentzVector> *Jets;
-   vector<double>  *Jets_bDiscriminatorCSV;
-   vector<double>  *Jets_bDiscriminatorMVA;
-   vector<double>  *Jets_chargedEmEnergyFraction;
-   vector<double>  *Jets_chargedHadronEnergyFraction;
-   vector<int>     *Jets_chargedHadronMultiplicity;
-   vector<int>     *Jets_chargedMultiplicity;
-   vector<int>     *Jets_electronMultiplicity;
-   vector<int>     *Jets_hadronFlavor;
-   vector<bool>    *Jets_HTMask;
-   vector<bool>    *Jets_ID;
-   vector<bool>    *Jets_ISRMask;
-   vector<double>  *Jets_jecFactor;
-   vector<double>  *Jets_jecUnc;
-   vector<bool>    *Jets_LeptonMask;
-   vector<bool>    *Jets_MHTMask;
-   vector<double>  *Jets_muonEnergyFraction;
-   vector<int>     *Jets_muonMultiplicity;
-   vector<double>  *Jets_neutralEmEnergyFraction;
-   vector<double>  *Jets_neutralHadronEnergyFraction;
-   vector<int>     *Jets_neutralHadronMultiplicity;
-   vector<int>     *Jets_neutralMultiplicity;
-   vector<int>     *Jets_partonFlavor;
-   vector<double>  *Jets_photonEnergyFraction;
-   vector<int>     *Jets_photonMultiplicity;
-   vector<double>  *Jets_qgAxis2;
-   vector<double>  *Jets_qgLikelihood;
-   vector<int>     *Jets_qgMult;
-   vector<double>  *Jets_qgPtD;
-   vector<TLorentzVector> *JetsAK8;
-   vector<double>  *JetsAK8_bDiscriminatorSubjet1CSV;
-   vector<double>  *JetsAK8_bDiscriminatorSubjet2CSV;
-   vector<double>  *JetsAK8_doubleBDiscriminator;
-   vector<bool>    *JetsAK8_ID;
-   vector<double>  *JetsAK8_NsubjettinessTau1;
-   vector<double>  *JetsAK8_NsubjettinessTau2;
-   vector<double>  *JetsAK8_NsubjettinessTau3;
-   vector<int>     *JetsAK8_NumBhadrons;
-   vector<int>     *JetsAK8_NumChadrons;
-   vector<double>  *JetsAK8_prunedMass;
+   std::vector<TLorentzVector> *Jets;
+   std::vector<double>  *Jets_bDiscriminatorCSV;
+   std::vector<double>  *Jets_bDiscriminatorMVA;
+   std::vector<double>  *Jets_chargedEmEnergyFraction;
+   std::vector<double>  *Jets_chargedHadronEnergyFraction;
+   std::vector<int>     *Jets_chargedHadronMultiplicity;
+   std::vector<int>     *Jets_chargedMultiplicity;
+   std::vector<int>     *Jets_electronMultiplicity;
+   std::vector<int>     *Jets_hadronFlavor;
+   std::vector<bool>    *Jets_HTMask;
+   std::vector<bool>    *Jets_ID;
+   std::vector<bool>    *Jets_ISRMask;
+   std::vector<double>  *Jets_jecFactor;
+   std::vector<double>  *Jets_jecUnc;
+   std::vector<double>  *Jets_jerFactor;
+   std::vector<double>  *Jets_jerFactorDown;
+   std::vector<double>  *Jets_jerFactorUp;
+   std::vector<bool>    *Jets_LeptonMask;
+   std::vector<bool>    *Jets_MHTMask;
+   std::vector<double>  *Jets_muonEnergyFraction;
+   std::vector<int>     *Jets_muonMultiplicity;
+   std::vector<double>  *Jets_neutralEmEnergyFraction;
+   std::vector<double>  *Jets_neutralHadronEnergyFraction;
+   std::vector<int>     *Jets_neutralHadronMultiplicity;
+   std::vector<int>     *Jets_neutralMultiplicity;
+   std::vector<int>     *Jets_partonFlavor;
+   std::vector<double>  *Jets_photonEnergyFraction;
+   std::vector<int>     *Jets_photonMultiplicity;
+   std::vector<double>  *Jets_qgAxis2;
+   std::vector<double>  *Jets_qgLikelihood;
+   std::vector<int>     *Jets_qgMult;
+   std::vector<double>  *Jets_qgPtD;
+   std::vector<TLorentzVector> *JetsAK8;
+   std::vector<double>  *JetsAK8_bDiscriminatorSubjet1CSV;
+   std::vector<double>  *JetsAK8_bDiscriminatorSubjet2CSV;
+   std::vector<double>  *JetsAK8_doubleBDiscriminator;
+   std::vector<bool>    *JetsAK8_ID;
+   std::vector<double>  *JetsAK8_NsubjettinessTau1;
+   std::vector<double>  *JetsAK8_NsubjettinessTau2;
+   std::vector<double>  *JetsAK8_NsubjettinessTau3;
+   std::vector<int>     *JetsAK8_NumBhadrons;
+   std::vector<int>     *JetsAK8_NumChadrons;
+   std::vector<double>  *JetsAK8_prunedMass;
    Double_t        madHT;
+   Int_t           madMinDeltaRStatus;
    Double_t        madMinPhotonDeltaR;
    Double_t        MET;
-   vector<double>  *METDown;
+   std::vector<double>  *METDown;
    Double_t        METPhi;
-   vector<double>  *METPhiDown;
-   vector<double>  *METPhiUp;
-   vector<double>  *METUp;
+   std::vector<double>  *METPhiDown;
+   std::vector<double>  *METPhiUp;
+   std::vector<double>  *METUp;
    Double_t        MHT;
    Double_t        MHTPhi;
    Double_t        MT2;
-   vector<TLorentzVector> *Muons;
-   vector<int>     *Muons_charge;
-   vector<double>  *Muons_MT2Activity;
-   vector<double>  *Muons_MTW;
-   vector<double>  *Muons_PTW;
-   vector<bool>    *Muons_tightID;
-   vector<TLorentzVector> *MuonsNoIso;
-   vector<double>  *MuonsNoIso_MiniIso;
-   vector<double>  *MuonsNoIso_MT2Activity;
-   vector<double>  *MuonsNoIso_MTW;
-   vector<bool>    *MuonsNoIso_tightID;
+   std::vector<TLorentzVector> *Muons;
+   std::vector<int>     *Muons_charge;
+   std::vector<double>  *Muons_MT2Activity;
+   std::vector<double>  *Muons_MTW;
+   std::vector<double>  *Muons_PTW;
+   std::vector<bool>    *Muons_tightID;
+   std::vector<TLorentzVector> *MuonsNoIso;
+   std::vector<double>  *MuonsNoIso_MiniIso;
+   std::vector<double>  *MuonsNoIso_MT2Activity;
+   std::vector<double>  *MuonsNoIso_MTW;
+   std::vector<bool>    *MuonsNoIso_tightID;
    Int_t           nAllVertices;
    Int_t           NJets;
    Int_t           NJetsISR;
    Double_t        NumEvents;
    Int_t           NumInteractions;
    Int_t           NVtx;
-   vector<int>     *PDFids;
-   vector<double>  *PDFweights;
+   std::vector<int>     *PDFids;
+   std::vector<double>  *PDFweights;
    Double_t        PFCaloMETRatio;
-   vector<TLorentzVector> *Photons;
-   vector<bool>    *Photons_fullID;
-   vector<double>  *Photons_genMatched;
-   vector<double>  *Photons_hadTowOverEM;
-   vector<double>  *Photons_hasPixelSeed;
-   vector<double>  *Photons_isEB;
-   vector<bool>    *Photons_nonPrompt;
-   vector<double>  *Photons_passElectronVeto;
-   vector<double>  *Photons_pfChargedIso;
-   vector<double>  *Photons_pfChargedIsoRhoCorr;
-   vector<double>  *Photons_pfGammaIso;
-   vector<double>  *Photons_pfGammaIsoRhoCorr;
-   vector<double>  *Photons_pfNeutralIso;
-   vector<double>  *Photons_pfNeutralIsoRhoCorr;
-   vector<double>  *Photons_sigmaIetaIeta;
+   std::vector<TLorentzVector> *Photons;
+   std::vector<bool>    *Photons_fullID;
+   std::vector<double>  *Photons_genMatched;
+   std::vector<double>  *Photons_hadTowOverEM;
+   std::vector<double>  *Photons_hasPixelSeed;
+   std::vector<double>  *Photons_isEB;
+   std::vector<bool>    *Photons_nonPrompt;
+   std::vector<double>  *Photons_passElectronVeto;
+   std::vector<double>  *Photons_pfChargedIso;
+   std::vector<double>  *Photons_pfChargedIsoRhoCorr;
+   std::vector<double>  *Photons_pfGammaIso;
+   std::vector<double>  *Photons_pfGammaIsoRhoCorr;
+   std::vector<double>  *Photons_pfNeutralIso;
+   std::vector<double>  *Photons_pfNeutralIsoRhoCorr;
+   std::vector<double>  *Photons_sigmaIetaIeta;
+   std::vector<string>  *PmssmId;
    Double_t        puSysDown;
    Double_t        puSysUp;
    Double_t        puWeight;
-   vector<double>  *ScaleWeights;
-   vector<TLorentzVector> *SoftJets;
-   vector<bool>    *SoftJets_ID;
-   vector<double>  *SoftJets_jecFactor;
-   vector<double>  *SoftJets_jecUnc;
+   std::vector<double>  *ScaleWeights;
+   std::vector<TLorentzVector> *SoftJets;
+   std::vector<double>  *SoftJets_bDiscriminatorCSV;
+   std::vector<bool>    *SoftJets_ID;
+   std::vector<double>  *SoftJets_jecFactor;
+   std::vector<double>  *SoftJets_jecUnc;
+   std::vector<double>  *SoftJets_jerFactor;
+   std::vector<double>  *SoftJets_jerFactorDown;
+   std::vector<double>  *SoftJets_jerFactorUp;
    Double_t        SusyLSPMass;
    Double_t        SusyMotherMass;
-   vector<TLorentzVector> *TAPElectronTracks;
-   vector<double>  *TAPElectronTracks_activity;
-   vector<int>     *TAPElectronTracks_charge;
-   vector<double>  *TAPElectronTracks_mT;
-   vector<double>  *TAPElectronTracks_trkiso;
-   vector<TLorentzVector> *TAPMuonTracks;
-   vector<double>  *TAPMuonTracks_activity;
-   vector<int>     *TAPMuonTracks_charge;
-   vector<double>  *TAPMuonTracks_mT;
-   vector<double>  *TAPMuonTracks_trkiso;
-   vector<TLorentzVector> *TAPPionTracks;
-   vector<double>  *TAPPionTracks_activity;
-   vector<int>     *TAPPionTracks_charge;
-   vector<double>  *TAPPionTracks_mT;
-   vector<double>  *TAPPionTracks_trkiso;
-   vector<string>  *TriggerNames;
-   vector<int>     *TriggerPass;
-   vector<int>     *TriggerPrescales;
+   std::vector<TLorentzVector> *TAPElectronTracks;
+   std::vector<double>  *TAPElectronTracks_activity;
+   std::vector<int>     *TAPElectronTracks_charge;
+   std::vector<double>  *TAPElectronTracks_mT;
+   std::vector<double>  *TAPElectronTracks_trkiso;
+   std::vector<TLorentzVector> *TAPMuonTracks;
+   std::vector<double>  *TAPMuonTracks_activity;
+   std::vector<int>     *TAPMuonTracks_charge;
+   std::vector<double>  *TAPMuonTracks_mT;
+   std::vector<double>  *TAPMuonTracks_trkiso;
+   std::vector<TLorentzVector> *TAPPionTracks;
+   std::vector<double>  *TAPPionTracks_activity;
+   std::vector<int>     *TAPPionTracks_charge;
+   std::vector<double>  *TAPPionTracks_mT;
+   std::vector<double>  *TAPPionTracks_trkiso;
+   std::vector<string>  *TriggerNames;
+   std::vector<int>     *TriggerPass;
+   std::vector<int>     *TriggerPrescales;
    Double_t        TrueNumInteractions;
    Double_t        Weight;
-   vector<TLorentzVector> *ZCandidates;
+   std::vector<TLorentzVector> *ZCandidates;
 
    // List of branches
    TBranch        *b_RunNum;   //!
@@ -278,6 +286,7 @@ public :
    TBranch        *b_GenTaus_LeadRecoTrkIso;   //!
    TBranch        *b_GenTaus_LeadTrk;   //!
    TBranch        *b_GenTaus_MT2Activity;   //!
+   TBranch        *b_GenTaus_NProngs;   //!
    TBranch        *b_GenTaus_Nu;   //!
    TBranch        *b_globalTightHalo2016Filter;   //!
    TBranch        *b_HBHEIsoNoiseFilter;   //!
@@ -302,6 +311,9 @@ public :
    TBranch        *b_Jets_ISRMask;   //!
    TBranch        *b_Jets_jecFactor;   //!
    TBranch        *b_Jets_jecUnc;   //!
+   TBranch        *b_Jets_jerFactor;   //!
+   TBranch        *b_Jets_jerFactorDown;   //!
+   TBranch        *b_Jets_jerFactorUp;   //!
    TBranch        *b_Jets_LeptonMask;   //!
    TBranch        *b_Jets_MHTMask;   //!
    TBranch        *b_Jets_muonEnergyFraction;   //!
@@ -329,6 +341,7 @@ public :
    TBranch        *b_JetsAK8_NumChadrons;   //!
    TBranch        *b_JetsAK8_prunedMass;   //!
    TBranch        *b_madHT;   //!
+   TBranch        *b_madMinDeltaRStatus;   //!
    TBranch        *b_madMinPhotonDeltaR;   //!
    TBranch        *b_MET;   //!
    TBranch        *b_METDown;   //!
@@ -374,14 +387,19 @@ public :
    TBranch        *b_Photons_pfNeutralIso;   //!
    TBranch        *b_Photons_pfNeutralIsoRhoCorr;   //!
    TBranch        *b_Photons_sigmaIetaIeta;   //!
+   TBranch        *b_PmssmId;   //!
    TBranch        *b_puSysDown;   //!
    TBranch        *b_puSysUp;   //!
    TBranch        *b_puWeight;   //!
    TBranch        *b_ScaleWeights;   //!
    TBranch        *b_SoftJets;   //!
+   TBranch        *b_SoftJets_bDiscriminatorCSV;   //!
    TBranch        *b_SoftJets_ID;   //!
    TBranch        *b_SoftJets_jecFactor;   //!
    TBranch        *b_SoftJets_jecUnc;   //!
+   TBranch        *b_SoftJets_jerFactor;   //!
+   TBranch        *b_SoftJets_jerFactorDown;   //!
+   TBranch        *b_SoftJets_jerFactorUp;   //!
    TBranch        *b_SusyLSPMass;   //!
    TBranch        *b_SusyMotherMass;   //!
    TBranch        *b_TAPElectronTracks;   //!
@@ -420,15 +438,14 @@ public :
 #endif
 
 #ifdef RA2bTree_cxx
-
 RA2bTree::RA2bTree(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJet_CleanVars/tree_GJets_HT-400to600.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJet_CleanVars/tree_GJets_HT-100to200.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJet_CleanVars/tree_GJets_HT-400to600.root");
+         f = new TFile("/uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJet_CleanVars/tree_GJets_HT-100to200.root");
       }
       f->GetObject("tree",tree);
 
@@ -512,6 +529,7 @@ void RA2bTree::Init(TTree *tree)
    GenTaus_LeadRecoTrkIso = 0;
    GenTaus_LeadTrk = 0;
    GenTaus_MT2Activity = 0;
+   GenTaus_NProngs = 0;
    GenTaus_Nu = 0;
    Jets = 0;
    Jets_bDiscriminatorCSV = 0;
@@ -527,6 +545,9 @@ void RA2bTree::Init(TTree *tree)
    Jets_ISRMask = 0;
    Jets_jecFactor = 0;
    Jets_jecUnc = 0;
+   Jets_jerFactor = 0;
+   Jets_jerFactorDown = 0;
+   Jets_jerFactorUp = 0;
    Jets_LeptonMask = 0;
    Jets_MHTMask = 0;
    Jets_muonEnergyFraction = 0;
@@ -585,11 +606,16 @@ void RA2bTree::Init(TTree *tree)
    Photons_pfNeutralIso = 0;
    Photons_pfNeutralIsoRhoCorr = 0;
    Photons_sigmaIetaIeta = 0;
+   PmssmId = 0;
    ScaleWeights = 0;
    SoftJets = 0;
+   SoftJets_bDiscriminatorCSV = 0;
    SoftJets_ID = 0;
    SoftJets_jecFactor = 0;
    SoftJets_jecUnc = 0;
+   SoftJets_jerFactor = 0;
+   SoftJets_jerFactorDown = 0;
+   SoftJets_jerFactorUp = 0;
    TAPElectronTracks = 0;
    TAPElectronTracks_activity = 0;
    TAPElectronTracks_charge = 0;
@@ -677,6 +703,7 @@ void RA2bTree::Init(TTree *tree)
    fChain->SetBranchAddress("GenTaus_LeadRecoTrkIso", &GenTaus_LeadRecoTrkIso, &b_GenTaus_LeadRecoTrkIso);
    fChain->SetBranchAddress("GenTaus_LeadTrk", &GenTaus_LeadTrk, &b_GenTaus_LeadTrk);
    fChain->SetBranchAddress("GenTaus_MT2Activity", &GenTaus_MT2Activity, &b_GenTaus_MT2Activity);
+   fChain->SetBranchAddress("GenTaus_NProngs", &GenTaus_NProngs, &b_GenTaus_NProngs);
    fChain->SetBranchAddress("GenTaus_Nu", &GenTaus_Nu, &b_GenTaus_Nu);
    fChain->SetBranchAddress("globalTightHalo2016Filter", &globalTightHalo2016Filter, &b_globalTightHalo2016Filter);
    fChain->SetBranchAddress("HBHEIsoNoiseFilter", &HBHEIsoNoiseFilter, &b_HBHEIsoNoiseFilter);
@@ -701,6 +728,9 @@ void RA2bTree::Init(TTree *tree)
    fChain->SetBranchAddress("Jets_ISRMask", &Jets_ISRMask, &b_Jets_ISRMask);
    fChain->SetBranchAddress("Jets_jecFactor", &Jets_jecFactor, &b_Jets_jecFactor);
    fChain->SetBranchAddress("Jets_jecUnc", &Jets_jecUnc, &b_Jets_jecUnc);
+   fChain->SetBranchAddress("Jets_jerFactor", &Jets_jerFactor, &b_Jets_jerFactor);
+   fChain->SetBranchAddress("Jets_jerFactorDown", &Jets_jerFactorDown, &b_Jets_jerFactorDown);
+   fChain->SetBranchAddress("Jets_jerFactorUp", &Jets_jerFactorUp, &b_Jets_jerFactorUp);
    fChain->SetBranchAddress("Jets_LeptonMask", &Jets_LeptonMask, &b_Jets_LeptonMask);
    fChain->SetBranchAddress("Jets_MHTMask", &Jets_MHTMask, &b_Jets_MHTMask);
    fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
@@ -728,6 +758,7 @@ void RA2bTree::Init(TTree *tree)
    fChain->SetBranchAddress("JetsAK8_NumChadrons", &JetsAK8_NumChadrons, &b_JetsAK8_NumChadrons);
    fChain->SetBranchAddress("JetsAK8_prunedMass", &JetsAK8_prunedMass, &b_JetsAK8_prunedMass);
    fChain->SetBranchAddress("madHT", &madHT, &b_madHT);
+   fChain->SetBranchAddress("madMinDeltaRStatus", &madMinDeltaRStatus, &b_madMinDeltaRStatus);
    fChain->SetBranchAddress("madMinPhotonDeltaR", &madMinPhotonDeltaR, &b_madMinPhotonDeltaR);
    fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("METDown", &METDown, &b_METDown);
@@ -773,14 +804,19 @@ void RA2bTree::Init(TTree *tree)
    fChain->SetBranchAddress("Photons_pfNeutralIso", &Photons_pfNeutralIso, &b_Photons_pfNeutralIso);
    fChain->SetBranchAddress("Photons_pfNeutralIsoRhoCorr", &Photons_pfNeutralIsoRhoCorr, &b_Photons_pfNeutralIsoRhoCorr);
    fChain->SetBranchAddress("Photons_sigmaIetaIeta", &Photons_sigmaIetaIeta, &b_Photons_sigmaIetaIeta);
+   fChain->SetBranchAddress("PmssmId", &PmssmId, &b_PmssmId);
    fChain->SetBranchAddress("puSysDown", &puSysDown, &b_puSysDown);
    fChain->SetBranchAddress("puSysUp", &puSysUp, &b_puSysUp);
    fChain->SetBranchAddress("puWeight", &puWeight, &b_puWeight);
    fChain->SetBranchAddress("ScaleWeights", &ScaleWeights, &b_ScaleWeights);
    fChain->SetBranchAddress("SoftJets", &SoftJets, &b_SoftJets);
+   fChain->SetBranchAddress("SoftJets_bDiscriminatorCSV", &SoftJets_bDiscriminatorCSV, &b_SoftJets_bDiscriminatorCSV);
    fChain->SetBranchAddress("SoftJets_ID", &SoftJets_ID, &b_SoftJets_ID);
    fChain->SetBranchAddress("SoftJets_jecFactor", &SoftJets_jecFactor, &b_SoftJets_jecFactor);
    fChain->SetBranchAddress("SoftJets_jecUnc", &SoftJets_jecUnc, &b_SoftJets_jecUnc);
+   fChain->SetBranchAddress("SoftJets_jerFactor", &SoftJets_jerFactor, &b_SoftJets_jerFactor);
+   fChain->SetBranchAddress("SoftJets_jerFactorDown", &SoftJets_jerFactorDown, &b_SoftJets_jerFactorDown);
+   fChain->SetBranchAddress("SoftJets_jerFactorUp", &SoftJets_jerFactorUp, &b_SoftJets_jerFactorUp);
    fChain->SetBranchAddress("SusyLSPMass", &SusyLSPMass, &b_SusyLSPMass);
    fChain->SetBranchAddress("SusyMotherMass", &SusyMotherMass, &b_SusyMotherMass);
    fChain->SetBranchAddress("TAPElectronTracks", &TAPElectronTracks, &b_TAPElectronTracks);
