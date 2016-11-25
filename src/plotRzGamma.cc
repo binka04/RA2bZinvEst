@@ -216,6 +216,7 @@ int main(int argc, char** argv){
       if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
       
       if( sampleNames[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
+      if( sampleNames[iSample] == "GJets" && !( madMinPhotonDeltaR(ntuple)>0.4 && madMinDeltaRStatus(ntuple)==23 ) ) continue;
       if( sampleNames[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;
       if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;      
       if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;
