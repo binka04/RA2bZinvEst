@@ -21,7 +21,7 @@ using namespace std;
 
 int main(int argc, char** argv){
 
-  bool DR0p4 = true;
+  bool DR0p4 = false;
 
   if( argc != 2 ){ 
     cout << "1 argument needed:" << endl;
@@ -294,9 +294,9 @@ int main(int argc, char** argv){
     can->GetFrame()->Draw();
  
     if( DR0p4 )    
-      can->SaveAs("RzGamma_plots/"+TString(plotsEB[iPlot].histoMap[samples[0]]->GetName())+".png");
+      can->SaveAs("../plots/RzGamma_plots/"+TString(plotsEB[iPlot].histoMap[samples[0]]->GetName())+".png");
     else 
-      can->SaveAs("RzGamma_DR0p05_plots/"+TString(plotsEB[iPlot].histoMap[samples[0]]->GetName())+".png");
+      can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plotsEB[iPlot].histoMap[samples[0]]->GetName())+".png");
   }
 
   for( int iPlot = 0 ; iPlot < plotsEE.size() ; iPlot++){
