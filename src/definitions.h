@@ -567,15 +567,16 @@ template<typename ntupleType> bool RA2bBaselineCut(ntupleType* ntuple){
   int NJets = ntuple->NJets;
 
   return ( (NJets==2 && DeltaPhi1>0.5 && DeltaPhi2>0.5) 
-	   || (NJets == 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3) 
-	   || (NJets > 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3 && DeltaPhi4 > 0.3 ) )
-    && MHT>250. && HT>300. 
-    && ntuple->HBHENoiseFilter==1 
-    && ntuple->HBHEIsoNoiseFilter==1 
-    && ntuple->eeBadScFilter==1 
-    && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
-    && ntuple->NVtx>0 
-    && ntuple->JetID == 1 ;
+           || (NJets == 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3) 
+           || (NJets > 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3 && DeltaPhi4 > 0.3 ) )
+      && MHT>250. && HT>300. 
+      && ntuple->HBHENoiseFilter==1 
+      && ntuple->HBHEIsoNoiseFilter==1 
+      && ntuple->eeBadScFilter==1 
+      && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
+      && ntuple->NVtx>0 
+      && ntuple->JetID == 1 
+      ;
 
 }
 
@@ -590,8 +591,15 @@ template<typename ntupleType> bool RA2bLDPBaselineCut(ntupleType* ntuple){
   double MHT = ntuple->MHT;
   int NJets = ntuple->NJets;
 
-  return NJets >= 2 && MHT > 250. && HT > 300. && ntuple->HBHENoiseFilter==1 && ntuple->HBHEIsoNoiseFilter==1 && ntuple->eeBadScFilter==1 && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 && ntuple->NVtx>0 && ntuple->JetID == 1 
-    && (DeltaPhi1 < 0.5 || DeltaPhi2 < 0.5 || DeltaPhi3 < 0.3 || DeltaPhi4 < 0.3);
+  return NJets >= 2 && MHT > 250. && HT > 300. 
+      && (DeltaPhi1 < 0.5 || DeltaPhi2 < 0.5 || DeltaPhi3 < 0.3 || DeltaPhi4 < 0.3)
+      && ntuple->HBHENoiseFilter==1 
+      && ntuple->HBHEIsoNoiseFilter==1 
+      && ntuple->eeBadScFilter==1 
+      && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
+      && ntuple->NVtx>0 
+      && ntuple->JetID == 1 
+      ;
 
 }
 
