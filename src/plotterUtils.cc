@@ -4,6 +4,8 @@
 #include "TString.h"
 #include "TCanvas.h"
 #include "TLegend.h"
+#include "TLine.h"
+#include "CMS_lumi.cc"
 
 #include <iostream>
 #include <vector>
@@ -13,7 +15,8 @@ using namespace std;
 
 //double lumi=9200.;
 //double lumi=15000.;
-double lumi=40000.;
+//double lumi=40000.;
+double lumi=36100.;
 
 template <typename ntupleType> class plot{
 
@@ -79,9 +82,9 @@ template <typename ntupleType> class plot{
   void addDataNtuple(ntupleType* ntuple_,TString tag="test"){
     //cout << "nbins: " << nbins << " lower: " << lower << " upper: " << upper << endl;
     tagMap[ntuple_] = tag ;
-    if( binEdges )
-      dataHist = new TH1F(label+"_"+tag,label+"_"+tag,nbins,binEdges);
-    else
+    if( binEdges ){
+        dataHist = new TH1F(label+"_"+tag,label+"_"+tag,nbins,binEdges);
+    }else
       dataHist = new TH1F(label+"_"+tag,label+"_"+tag,nbins,lower,upper);
     dataHist->SetMarkerStyle(8);
   };
@@ -208,6 +211,8 @@ template <typename ntupleType> class plot{
     
     TPad* topPad = new TPad("topPad","topPad",0.,0.4,.99,.99);
     TPad* botPad = new TPad("botPad","botPad",0.,0.01,.99,.39);
+    botPad->SetBottomMargin(0.2);
+    topPad->SetTopMargin(0.06);
     topPad->Draw();
     botPad->Draw();
     topPad->cd();
@@ -242,26 +247,72 @@ template <typename ntupleType> class plot{
     stack->SetMaximum(max);
     stack->SetMinimum(0.1);
 
+    stack->GetYaxis()->SetLabelFont(63);
+    stack->GetYaxis()->SetLabelSize(14);
+    stack->GetYaxis()->SetTitleFont(63);
+    stack->GetYaxis()->SetTitleSize(20);
+    stack->GetYaxis()->SetTitleOffset(1.6);
+
+    stack->GetXaxis()->SetLabelFont(63);
+    stack->GetXaxis()->SetLabelSize(14);
+    stack->GetXaxis()->SetTitleFont(63);
+    stack->GetXaxis()->SetTitleSize(20);
+    stack->GetXaxis()->SetTitleOffset(1.6);
+
+    writeExtraText = true;
+    extraText="Preliminary";
+    char lumiString[4];
+    sprintf(lumiString,"%.1f",lumi/1000.);
+    lumi_13TeV = lumiString;
+    CMS_lumi( can , 4 , 0 );
+    can->Update();
+    can->RedrawAxis();
+    can->GetFrame()->Draw();
+
     botPad->cd();
-    TH1F* ratio = new TH1F(*sum);
+    TH1F* ratio = new TH1F(*dataHist);
     ratio->SetNameTitle(sum->GetName()+TString("ratio"),sum->GetTitle());
-    ratio->Divide(dataHist);
+    ratio->Divide(sum);
     //TGraphAsymmErrors* ratio = new TGraphAsymmErrors(sum,dataHist,"pois");
     ratio->SetMarkerStyle(8);
-    ratio->GetYaxis()->SetTitle("MC/Data");
-    ratio->GetYaxis()->SetRangeUser(0,2);
+    ratio->GetYaxis()->SetTitle("Data/MC");
+    ratio->GetYaxis()->SetRangeUser(0.2,1.5);
     ratio->GetXaxis()->SetRangeUser(lower,upper);
     ratio->GetXaxis()->SetTitle(xlabel);
+
+    ratio->GetYaxis()->SetLabelFont(63);
+    ratio->GetYaxis()->SetLabelSize(14);
+    ratio->GetYaxis()->SetTitleFont(63);
+    ratio->GetYaxis()->SetTitleSize(20);
+    ratio->GetYaxis()->SetTitleOffset(1.6);
+
+    ratio->GetXaxis()->SetLabelFont(63);
+    ratio->GetXaxis()->SetLabelSize(14);
+    ratio->GetXaxis()->SetTitleFont(63);
+    ratio->GetXaxis()->SetTitleSize(20);
+    ratio->GetXaxis()->SetTitleOffset(2.);
+
     ratio->Draw("e1");
+    TLine one(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,1.,ratio->GetBinCenter(ratio->GetNbinsX())+ratio->GetBinWidth(ratio->GetNbinsX())/2.,1.);
+    TLine avg(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,dataHist->Integral()/sum->Integral(),ratio->GetBinCenter(ratio->GetNbinsX())+ratio->GetBinWidth(ratio->GetNbinsX())/2.,dataHist->Integral()/sum->Integral());
+    avg.SetLineColor(2);
+    avg.SetLineStyle(2);
+    one.SetLineStyle(2);
+    one.Draw();
+    avg.Draw();
 
+    char SF[16];
+    sprintf(SF,"data/MC=%1.1f",dataHist->Integral()/sum->Integral());
+    TText* scaleFactor = new TText(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,2.1,SF);
+    scaleFactor->SetTextFont(43);
+    scaleFactor->SetTextSize(16);
+    scaleFactor->Draw();
+
+    can->cd();
     topPad->cd();
-    gPad->SetLogy(false);
-    can->SaveAs(dir+"/"+label+".png");
-    gPad->SetLogy(true);
-    can->SaveAs(dir+"/"+label+"_LogY.png");
 
-    TCanvas* legCan = new TCanvas("legCan","legCan",500,500);
-    TLegend* leg = new TLegend(0.1,.1,.9,.9);
+    //TCanvas* legCan = new TCanvas("legCan","legCan",500,500);
+    TLegend* leg = new TLegend(0.8,.6,.9,.9);
     leg->SetBorderSize(0);
     leg->SetFillColor(0);
     for(int iSample = 0 ; iSample < ntuples.size() ; iSample++){
@@ -273,7 +324,15 @@ template <typename ntupleType> class plot{
     if( dataHist ) 
       leg->AddEntry(dataHist,"data","p");
     leg->Draw();
-    legCan->SaveAs(dir+"/legend.png");
+    //legCan->SaveAs(dir+"/legend.png");
+
+    can->cd();
+    topPad->cd();
+    gPad->SetLogy(false);
+    can->SaveAs(dir+"/"+label+".png");
+    gPad->SetLogy(true);
+    can->SaveAs(dir+"/"+label+"_LogY.png");
+
 
   }
 
