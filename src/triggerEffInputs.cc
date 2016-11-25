@@ -1,3 +1,4 @@
+#include "TLegend.h"
 #include "TGraphAsymmErrors.h"
 #include "TString.h"
 #include "TChain.h"
@@ -80,14 +81,16 @@ using namespace std;
 
 int main(int argc, char** argv){
 
+    /*
   if( argc < 3 ){
     cout << "need two arguments" << endl;
     cout << "Arg. 1 - first file index" << endl;
     cout << "Arg. 2 - last file index" << endl;
   }
+    */
 
-  //gROOT->ProcessLine(".L ~/tdrstyle.C");
-  //gROOT->ProcessLine("setTDRStyle()");
+  gROOT->ProcessLine(".L ~/tdrstyle.C");
+  gROOT->ProcessLine("setTDRStyle()");
 
   typedef plot<RA2bTree> plot;
   
@@ -97,41 +100,75 @@ int main(int argc, char** argv){
   xlabels.push_back("MHT [GeV]");
   xlabels.push_back("H_{T} [GeV]");
   xlabels.push_back("n_{j}");
+  double MHTbinning[7]={ 200. , 250. , 300. , 350. , 500. , 750. , 1500. };
+  plot tarMHTplot(*fillMHT<RA2bTree>,"MHT_tarTrigger","H_{T}^{miss} [GeV]",6,MHTbinning);
+  plot tarMHTplotEB(*fillMHT<RA2bTree>,"MHT_tarTrigger_EB","H_{T}^{miss} [GeV]",6,MHTbinning);
+  plot tarMHTplotEE(*fillMHT<RA2bTree>,"MHT_tarTrigger_EE","H_{T}^{miss} [GeV]",6,MHTbinning);
 
-  plot tarMHTplot(*fillMHT<RA2bTree>,"MHT_tarTrigger","H_{T}^{miss} [GeV]",20,100.,2100.);
-  plot tarHTplot(*fillHT<RA2bTree>,"HT_tarTrigger","H_{T} [GeV]",30,100,3100.);
-  plot tarNJetsplot(*fillNJets<RA2bTree>,"NJets_tarTrigger","n_{j}",14,1.5,15.5);
+  plot tarHTplot(*fillHT<RA2bTree>,"HT_tarTrigger","H_{T} [GeV]",15,100,1600.);
+  plot tarHTplotEB(*fillHT<RA2bTree>,"HT_tarTrigger_EB","H_{T} [GeV]",15,100,1600.);
+  plot tarHTplotEE(*fillHT<RA2bTree>,"HT_tarTrigger_EE","H_{T} [GeV]",15,100,1600.);
 
-  plot refMHTplot(*fillMHT<RA2bTree>,"MHT_refTrigger","H_{T}^{miss} [GeV]",20,100.,2100.);
-  plot refHTplot(*fillHT<RA2bTree>,"HT_refTrigger","H_{T} [GeV]",30,100,3100.);
-  plot refNJetsplot(*fillNJets<RA2bTree>,"NJets_refTrigger","n_{j}",14,1.5,15.5);
+  plot tarNJetsplot(*fillNJets<RA2bTree>,"NJets_tarTrigger","n_{j}",7,1.5,8.5);
+  plot tarNJetsplotEB(*fillNJets<RA2bTree>,"NJets_tarTrigger_EB","n_{j}",7,1.5,8.5);
+  plot tarNJetsplotEE(*fillNJets<RA2bTree>,"NJets_tarTrigger_EE","n_{j}",7,1.5,8.5);
+
+  plot refMHTplot(*fillMHT<RA2bTree>,"MHT_refTrigger","H_{T}^{miss} [GeV]",6,MHTbinning);
+  plot refMHTplotEB(*fillMHT<RA2bTree>,"MHT_refTrigger_EB","H_{T}^{miss} [GeV]",6,MHTbinning);
+  plot refMHTplotEE(*fillMHT<RA2bTree>,"MHT_refTrigger_EE","H_{T}^{miss} [GeV]",6,MHTbinning);
+
+  plot refHTplot(*fillHT<RA2bTree>,"HT_refTrigger","H_{T} [GeV]",15,100,1600.);
+  plot refHTplotEB(*fillHT<RA2bTree>,"HT_refTrigger_EB","H_{T} [GeV]",15,100,1600.);
+  plot refHTplotEE(*fillHT<RA2bTree>,"HT_refTrigger_EE","H_{T} [GeV]",15,100,1600.);
+
+  plot refNJetsplot(*fillNJets<RA2bTree>,"NJets_refTrigger","n_{j}",7,1.5,8.5);
+  plot refNJetsplotEB(*fillNJets<RA2bTree>,"NJets_refTrigger_EB","n_{j}",7,1.5,8.5);
+  plot refNJetsplotEE(*fillNJets<RA2bTree>,"NJets_refTrigger_EE","n_{j}",7,1.5,8.5);
 
   vector<plot> plotsTarget;
   plotsTarget.push_back(tarMHTplot);
   plotsTarget.push_back(tarHTplot);
   plotsTarget.push_back(tarNJetsplot);
+  vector<plot> plotsTargetEB;
+  plotsTargetEB.push_back(tarMHTplotEB);
+  plotsTargetEB.push_back(tarHTplotEB);
+  plotsTargetEB.push_back(tarNJetsplotEB);
+  vector<plot> plotsTargetEE;
+  plotsTargetEE.push_back(tarMHTplotEE);
+  plotsTargetEE.push_back(tarHTplotEE);
+  plotsTargetEE.push_back(tarNJetsplotEE);
   vector<plot> plotsReference;
   plotsReference.push_back(refMHTplot);
   plotsReference.push_back(refHTplot);
   plotsReference.push_back(refNJetsplot);
+  vector<plot> plotsReferenceEB;
+  plotsReferenceEB.push_back(refMHTplotEB);
+  plotsReferenceEB.push_back(refHTplotEB);
+  plotsReferenceEB.push_back(refNJetsplotEB);
+  vector<plot> plotsReferenceEE;
+  plotsReferenceEE.push_back(refMHTplotEE);
+  plotsReferenceEE.push_back(refHTplotEE);
+  plotsReferenceEE.push_back(refNJetsplotEE);
 
-  /*
   // samples
   //skim inputs
   vector<RA2bTree*> samples;
   vector<TString> sampleNames;
-  TString skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJet_CleanVars/";
+  TString skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJet_CleanVars/";
   TChain* JetHTdata = new TChain("tree");
-  JetHTdata->Add(skimType+"tree_HTMHT_2016B.root");
-  JetHTdata->Add(skimType+"tree_HTMHT_2016C.root");
-  JetHTdata->Add(skimType+"tree_HTMHT_2016D.root");
-  JetHTdata->Add(skimType+"tree_HTMHT_2016E.root");
-  JetHTdata->Add(skimType+"tree_HTMHT_2016F.root");
-  JetHTdata->Add(skimType+"tree_HTMHT_2016G.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016B.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016C.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016D.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016E.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016F.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016G.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016H2.root");
+  JetHTdata->Add(skimType+"tree_JetHT_2016H3.root");
   samples.push_back(new RA2bTree(JetHTdata));
   sampleNames.push_back("JetHTdata");
-  */
 
+
+  /*
   // background MC samples
   vector<RA2bTree*> samples;
   vector<TString> sampleNames;
@@ -155,14 +192,29 @@ int main(int argc, char** argv){
 
   samples.push_back(new RA2bTree(JetHTdata));
   sampleNames.push_back("JetHTdata");
-  
+  */
 
   for( int iSample = 0 ; iSample < samples.size() ; iSample++){
 
     RA2bTree* ntuple = samples[iSample];
+
     for( int iPlot = 0 ; iPlot < plotsTarget.size() ; iPlot++){
       plotsTarget[iPlot].addDataNtuple(ntuple,sampleNames[iSample]);
+    }
+    for( int iPlot = 0 ; iPlot < plotsReference.size() ; iPlot++){
       plotsReference[iPlot].addDataNtuple(ntuple,sampleNames[iSample]);
+    }
+    for( int iPlot = 0 ; iPlot < plotsTargetEB.size() ; iPlot++){
+      plotsTargetEB[iPlot].addDataNtuple(ntuple,sampleNames[iSample]);
+    }
+    for( int iPlot = 0 ; iPlot < plotsReferenceEB.size() ; iPlot++){
+      plotsReferenceEB[iPlot].addDataNtuple(ntuple,sampleNames[iSample]);
+    }
+    for( int iPlot = 0 ; iPlot < plotsTargetEE.size() ; iPlot++){
+      plotsTargetEE[iPlot].addDataNtuple(ntuple,sampleNames[iSample]);
+    }
+    for( int iPlot = 0 ; iPlot < plotsReferenceEE.size() ; iPlot++){
+      plotsReferenceEE[iPlot].addDataNtuple(ntuple,sampleNames[iSample]);
     }
 
     int numEvents = ntuple->fChain->GetEntries();
@@ -172,44 +224,130 @@ int main(int argc, char** argv){
         if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
         
         if( ntuple->TriggerPass->size() <= 51 ) continue;      
-        if( ntuple->TriggerPass->at(41) != 1 && ntuple->TriggerPass->at(40) != 1 && ntuple->TriggerPass->at(39) != 1 && ntuple->TriggerPass->at(38) != 1 && ntuple->TriggerPass->at(37) != 1 && ntuple->TriggerPass->at(36) != 1 && ntuple->TriggerPass->at(35) != 1 && ntuple->TriggerPass->at(34) != 1 ) continue;
+        if( ntuple->TriggerPass->at(41) != 1 //&& 
+            /*
+            ntuple->TriggerPass->at(40) != 1 && 
+            ntuple->TriggerPass->at(39) != 1 && 
+            ntuple->TriggerPass->at(38) != 1 && 
+            ntuple->TriggerPass->at(37) != 1 && 
+            ntuple->TriggerPass->at(36) != 1 && 
+            ntuple->TriggerPass->at(35) != 1 && 
+            ntuple->TriggerPass->at(34) != 1 
+            */
+            ) continue;
         if( ntuple->Photons->size() == 0 ) continue;
         if( ntuple->Photons->at(0).Pt() < 100. ) continue;
-        
+                
         for( int iPlot = 0 ; iPlot < plotsTarget.size() ; iPlot++ ){
-            plotsReference[iPlot].fillData(ntuple);
-            if( ntuple->TriggerPass->at(51) == 1 ){
-                plotsTarget[iPlot].fillData(ntuple);
+            if( ntuple->Photons_isEB->at(0) ){
+                plotsReferenceEB[iPlot].fillData(ntuple);
+                plotsReference[iPlot].fillData(ntuple);
+                if( ntuple->TriggerPass->at(51) == 1 ){
+                    plotsTarget[iPlot].fillData(ntuple);
+                    plotsTargetEB[iPlot].fillData(ntuple);
+                }
+            }
+            
+            if( !ntuple->Photons_isEB->at(0) ){
+                plotsReferenceEE[iPlot].fillData(ntuple);
+                plotsReference[iPlot].fillData(ntuple);
+                if( ntuple->TriggerPass->at(51) == 1 ){
+                    plotsTarget[iPlot].fillData(ntuple);
+                    plotsTargetEE[iPlot].fillData(ntuple);
+                }
             }
         }
     }
   }
   
-  TFile* outputFile = new TFile("triggerEff_"+TString(argv[1])+"_"+TString(argv[2])+"_histo.root","RECREATE");
-  //TFile* outputFile = new TFile("triggerEff_histo.root","RECREATE");
+  //TFile* outputFile = new TFile("triggerEff_"+TString(argv[1])+"_"+TString(argv[2])+"_histo.root","RECREATE");
+  TFile* outputFile = new TFile("triggerEff_histo.root","RECREATE");
 
   TCanvas* can = new TCanvas("can","can",500,500);
 
   for( int iPlot = 0 ; iPlot < plotsTarget.size() ; iPlot++){
     plotsTarget[iPlot].Write();
     plotsReference[iPlot].Write();
-    /*
     TGraphAsymmErrors* ratio = new TGraphAsymmErrors(plotsTarget[iPlot].dataHist,plotsReference[iPlot].dataHist);
     ratio->SetMarkerStyle(8);
     ratio->GetXaxis()->SetTitle(xlabels[iPlot]);
+    ratio->GetXaxis()->SetNdivisions(505);
     ratio->GetYaxis()->SetTitle("#epsilon");
-    ratio->GetYaxis()->SetRangeUser(0.,ratio->GetMaximum());
+    ratio->GetYaxis()->SetRangeUser(.8,ratio->GetMaximum());
+
+    plotsTargetEB[iPlot].Write();
+    plotsReferenceEB[iPlot].Write();
+    TGraphAsymmErrors* ratioEB = new TGraphAsymmErrors(plotsTargetEB[iPlot].dataHist,plotsReferenceEB[iPlot].dataHist);
+    ratioEB->SetMarkerStyle(8);
+    ratioEB->SetMarkerColor(2);
+
+    plotsTargetEE[iPlot].Write();
+    plotsReferenceEE[iPlot].Write();
+    TGraphAsymmErrors* ratioEE = new TGraphAsymmErrors(plotsTargetEE[iPlot].dataHist,plotsReferenceEE[iPlot].dataHist);
+    ratioEE->SetMarkerStyle(8);
+    ratioEE->SetMarkerColor(4);
+
+    TLegend* leg = new TLegend(.25,.25,.5,.5);
+    leg->SetBorderSize(0);
+    leg->SetFillColor(0);
+    leg->AddEntry(ratioEB,"barrel","p");
+    leg->AddEntry(ratioEE,"endcap","p");
+    leg->AddEntry(ratio,"inclusive","p");
+
+    can->cd();
+
     ratio->Draw("Ap");
+    ratioEE->Draw("p");
+    ratioEB->Draw("p");
+    leg->Draw();
     writeExtraText = true;
-    extraText = "Simulation";
-    lumi_13TeV = "";
+    extraText = "Preliminary";
+    lumi_13TeV = "36.1";
     CMS_lumi( can , 4 , 0 );
     can->Update();
     can->RedrawAxis();
     can->GetFrame()->Draw();
+    can->SaveAs("../plots/triggerEff_plots/"+TString(plotsTarget[iPlot].dataHist->GetName())+".png");
+
+    cout << " - - - - - - - - - - - - - - - - - - - - - - " << endl;
+    cout << plotsTarget[iPlot].dataHist->GetName() << endl;
+    cout << " - - - - - - - - - - - - - - - - - - - - - - " << endl;        
+    TString heading="Trigger $\\epsilon$[\\%] & ";
+    TString inclEffic="Incl. & ";
+    TString EBeffic="Barrel & ";
+    TString EEeffic="Endcap & ";
+    double x,y;
+    double yEB;
+    double yEE;
+    char temp[128];
+    cout << "Trigger $\\epsilon$[\\%] & Incl. & Barrel & Endcap \\\\ \\hline " << endl;
+    for( int i = 0 ; i < plotsTarget[iPlot].dataHist->GetNbinsX() ; i++ ){
+        ratio->GetPoint(i,x,y);
+        ratioEB->GetPoint(i,x,yEB);
+        ratioEE->GetPoint(i,x,yEE);
+        /*
+        sprintf(temp," %i $<$ %s $<$ %i & ",int(x-ratio->GetErrorXlow(i)),plotsTarget[iPlot].dataHist->GetTitle(),int(x+ratio->GetErrorXhigh(i)));
+        heading+=TString(temp);
+        sprintf(temp," %.3f$_{%.3f}^{%.3f}$ & ",y,ratio->GetErrorYlow(i),ratio->GetErrorYhigh(i));
+        inclEffic+=TString(temp);
+
+        ratioEB->GetPoint(i,x,y);
+        sprintf(temp," %.3f$_{%.3f}^{%.3f}$ & ",y,ratioEB->GetErrorYlow(i),ratioEB->GetErrorYhigh(i));
+        EBeffic+=TString(temp);
+
+        ratioEE->GetPoint(i,x,y);
+        sprintf(temp," %.3f$_{%.3f}^{%.3f}$ & ",y,ratioEE->GetErrorYlow(i),ratioEE->GetErrorYhigh(i));
+        EEeffic+=TString(temp);
+        */
+        sprintf(temp," %i $<%s<$ %i & %.3f$_{%.3f}^{%.3f}$ & %.3f$_{%.3f}^{%.3f}$ &%.3f$_{%.3f}^{%.3f}$ \\\\",int(x-ratio->GetErrorXlow(i)),plotsTarget[iPlot].dataHist->GetTitle(),int(x+ratio->GetErrorXhigh(i)),y,ratio->GetErrorYlow(i),ratio->GetErrorYhigh(i),yEB,ratioEB->GetErrorYlow(i),ratioEB->GetErrorYhigh(i),yEE,ratioEE->GetErrorYlow(i),ratioEE->GetErrorYhigh(i)  );
+        cout << temp << endl;
+    }       
     
-    can->SaveAs("triggerEff_plots/"+TString(plotsTarget[iPlot].dataHist->GetName())+".png");
-    */
+    //cout << heading << endl;
+    //cout << inclEffic << endl;
+    //cout << EBeffic << endl;
+    //cout << EEeffic << endl;
+
   }
   outputFile->Close();
 }
