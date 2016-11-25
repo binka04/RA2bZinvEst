@@ -1,3 +1,6 @@
+#ifndef CMS_LUMI_CXX
+#define CMS_LUMI_CXX
+
 #include "CMS_lumi.h"
 #include <iostream>
 
@@ -121,24 +124,26 @@ CMS_lumi( TPad* pad, int iPeriod, int iPosX )
       latex.SetTextAlign(align_);
       latex.DrawLatex(posX_, posY_, cmsText);
       if( writeExtraText ) 
-	{
-	  latex.SetTextFont(extraTextFont);
-	  latex.SetTextAlign(align_);
-	  latex.SetTextSize(extraTextSize*t);
-	  latex.DrawLatex(posX_, posY_- relExtraDY*cmsTextSize*t, extraText);
-	}
+          {
+              latex.SetTextFont(extraTextFont);
+              latex.SetTextAlign(align_);
+              latex.SetTextSize(extraTextSize*t);
+              latex.DrawLatex(posX_, posY_- relExtraDY*cmsTextSize*t, extraText);
+          }
     }
   else if( writeExtraText )
-    {
-      if( iPosX==0) 
-	{
-	  posX_ =   l +  relPosX*(1-l-r);
-	  posY_ =   1-t+lumiTextOffset*t;
-	}
-      latex.SetTextFont(extraTextFont);
-      latex.SetTextSize(extraTextSize*t);
-      latex.SetTextAlign(align_);
-      latex.DrawLatex(posX_+relExtraDX*cmsTextSize*t, posY_, extraText);      
-    }
+      {
+          if( iPosX==0) 
+              {
+                  posX_ =   l +  relPosX*(1-l-r);
+                  posY_ =   1-t+lumiTextOffset*t;
+              }
+          latex.SetTextFont(extraTextFont);
+          latex.SetTextSize(extraTextSize*t);
+          latex.SetTextAlign(align_);
+          latex.DrawLatex(posX_+relExtraDX*cmsTextSize*t, posY_, extraText);      
+      }
   return;
 }
+
+#endif
