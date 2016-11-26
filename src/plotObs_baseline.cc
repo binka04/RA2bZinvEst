@@ -170,17 +170,17 @@ int main(int argc, char** argv){
 	if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
 	  plotsAllEvents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
 	else 
-	  plotsAllEvents[iPlot].fill(ntuple);
+        plotsAllEvents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
 	if( ntuple->Photons_isEB->at(0) ){
 	  if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
 	    plotsEBevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
 	  else 
-	    plotsEBevents[iPlot].fill(ntuple);
+          plotsEBevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
 	}else{
 	  if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP )
 	    plotsEEevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
 	  else 
-	    plotsEEevents[iPlot].fill(ntuple);
+          plotsEEevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
 	}
       }
 
