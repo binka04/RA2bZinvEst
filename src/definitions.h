@@ -44,30 +44,34 @@ template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
 
   if( ntuple->Photons->size() == 0 ) return -9999.;
 
-  double EBtrigger[4]={0.98692,0.97952,0.96992,0.96992};     
-  double ECtrigger[4]={0.94825,0.93808,0.96579,1.00};
+  double EBtrigger[4]={0.969,0.983,0.985,0.984,0.979};
+  double ECtrigger[4]={0.953,0.974,0.984,0.989,0.980};
 
   double MHT = ntuple->MHT;
   if( ntuple->Photons_isEB->at(0) ){
     if( MHT > 250. && MHT < 300. ){
       return EBtrigger[0];
-    }else if( MHT > 300. && MHT < 500. ){
+    }else if( MHT > 300. && MHT < 350. ){
       return EBtrigger[1];
-    }else if( MHT > 500.  && MHT < 750. ){
+    }else if( MHT > 350.  && MHT < 500. ){
       return EBtrigger[2];
-    }else if( MHT > 750. ){
+    }else if( MHT > 500.  && MHT < 750. ){
       return EBtrigger[3];
+    }else if( MHT > 750. ){
+      return EBtrigger[4];
     }else
       return -9999.;
   }else{
     if( MHT > 250. && MHT < 300. ){
       return ECtrigger[0];
-    }else if( MHT > 300. && MHT < 500. ){
+    }else if( MHT > 300. && MHT < 350. ){
       return ECtrigger[1];
-    }else if( MHT > 500.  && MHT < 750. ){
+    }else if( MHT > 350. && MHT < 500. ){
       return ECtrigger[2];
-    }else if( MHT > 750. ){
+    }else if( MHT > 500.  && MHT < 750. ){
       return ECtrigger[3];
+    }else if( MHT > 750. ){
+      return ECtrigger[4];
     }else
       return -9999.;
   }
