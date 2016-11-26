@@ -216,7 +216,7 @@ int main(int argc, char** argv){
       if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
       
       if( sampleNames[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
-      if( sampleNames[iSample] == "GJets" && !( madMinPhotonDeltaR(ntuple)>0.4 && madMinDeltaRStatus(ntuple)==23 ) ) continue;
+      if( sampleNames[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
       if( sampleNames[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;
       if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;      
       if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;
@@ -225,7 +225,7 @@ int main(int argc, char** argv){
 	if( sampleNames[iSample] == "GJets" ){ 
 	  plots[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
 	}else 
-	  plots[iPlot].fill(ntuple);
+        plots[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
       }
 
       if( ntuple->Photons->size() > 0 && ntuple->Photons_isEB->at(0) ){
@@ -233,7 +233,7 @@ int main(int argc, char** argv){
 	  if( sampleNames[iSample] == "GJets" )
 	    plotsEB[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
 	  else 
-	    plotsEB[iPlot].fill(ntuple);
+          plotsEB[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
 	}
 	// done with barrel
       }else{
@@ -241,7 +241,7 @@ int main(int argc, char** argv){
 	  if( sampleNames[iSample] == "GJets" )
 	    plotsEE[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
 	  else 
-	    plotsEE[iPlot].fill(ntuple);
+          plotsEE[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
 	}
       }// done with endcap
 
@@ -273,9 +273,9 @@ int main(int argc, char** argv){
     can->GetFrame()->Draw();
     
     if( DR0p4 )
-      can->SaveAs("RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
+      can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
     else
-      can->SaveAs("RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
+      can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
   }
 
   for( int iPlot = 0 ; iPlot < plotsEB.size() ; iPlot++){
@@ -316,9 +316,9 @@ int main(int argc, char** argv){
     can->RedrawAxis();
     can->GetFrame()->Draw();
     if( DR0p4 ) 
-      can->SaveAs("RzGamma_plots/"+TString(plotsEE[iPlot].histoMap[samples[0]]->GetName())+".png");
+      can->SaveAs("../plots/RzGamma_plots/"+TString(plotsEE[iPlot].histoMap[samples[0]]->GetName())+".png");
     else
-      can->SaveAs("RzGamma_DR0p05_plots/"+TString(plotsEE[iPlot].histoMap[samples[0]]->GetName())+".png");
+      can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plotsEE[iPlot].histoMap[samples[0]]->GetName())+".png");
   }
 
   outputFile->Close();
