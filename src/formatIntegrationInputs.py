@@ -40,34 +40,29 @@ if RzGamma.GetNbinsX() != GJetsEEHisto.GetNbinsX() :
     print "number bins in RzGamma does not match others"
     assert(0)
 
-fragFrac=[0.92]*nBins
-fragFracErr=[0.00]*nBins
+print "================ FRAGMENTATION FRACTION =============="
+fragFrac = [0.]*nBins
+fragFracErr = [0.]*nBins
+fragFracFile = open("fragmentation.25112016.txt","read")
+for line in fragFracFile: 
+    line = line[:-1]
+    line_tokens = line.split(" ")
+    while '' in line_tokens : 
+        line_tokens.remove('')
+    fragFrac[int(line_tokens[0])-1] = float(line_tokens[1])
+    fragFracErr[int(line_tokens[0])-1] = float(line_tokens[2])
 
-# REGION: EB MHT_300
-# purity in SR:  0.947065153182 +/- 0.00258867318803
-# ALT purity in SR:  0.954562818866 +/- 0.00239232698278
-# MCALT purity in SR:  0.969584333786 +/- 0.00165659995076
-# REGION: EB MHT_350
-# purity in SR:  0.956121166585 +/- 0.00262600409226
-# ALT purity in SR:  0.920957814936 +/- 0.00392427976856
-# MCALT purity in SR:  0.970276710469 +/- 0.001487786791
-# REGION: EB MHT_500
-# purity in SR:  0.984790438389 +/- 0.00354601885298
-# ALT purity in SR:  0.885676319007 +/- 0.0172658490083
-# MCALT purity in SR:  0.986678278129 +/- 0.00216370358693
+print fragFrac
+print fragFracErr
+print "------------------------------------------------------"
 
-# REGION: EE MHT_300
-# purity in SR:  0.877284301603 +/- 0.0050137564078
-# ALT purity in SR:  0.863595295813 +/- 0.00519330924813
-# MCALT purity in SR:  0.889480018081 +/- 0.00428417595026
-# REGION: EE MHT_350
-# purity in SR:  0.910163505329 +/- 0.00523068508861
-# ALT purity in SR:  0.888194155599 +/- 0.0056589211042
-# MCALT purity in SR:  0.91319327327 +/- 0.00436336626333
-# REGION: EE MHT_500
-# purity in SR:  0.956462420031 +/- 0.0102555425361
-# ALT purity in SR:  0.882485967811 +/- 0.015853949627
-# MCALT purity in SR:  0.939235081042 +/- 0.0082216591307
+print "================= ID SCALE FACTORS ==================="
+scaleFactorFile = TFile("SFcorrections.Photons.root","READ")
+scaleFactor = [scaleFactorFile.Get("h_inc").GetBinContent(1)]*nBins
+scaleFactorErr = [scaleFactorFile.Get("h_inc").GetBinError(1)]*nBins
+print scaleFactor
+print scaleFactorErr
+print "------------------------------------------------------"
 
 NomPurityHTMHT_EB=[0.947065153182]*3
 NomPurityHTMHT_EB.extend([0.956121166585]*3)
@@ -180,7 +175,7 @@ outputDict["RErUp"] = []
 outputDict["RErLow"] = []
 outputDict["f"] = []
 outputDict["ferr"] = []
-outputDict["purityTimesFrag"]=[]
+outputDict["purity"]=[]
 outputDict["pErr"]=[]
 outputDict["DR"]=[]
 outputDict["DRup"]=[]
@@ -196,11 +191,11 @@ for i in range(nBins) :
     outputDict["binIndex"].append(i+1)
     outputDict["nMCEBt"].append(GJetsEBHisto.GetBinContent(i+1))
     outputDict["nMCECt"].append(GJetsEEHisto.GetBinContent(i+1))
-    outputDict["nMCGJ"].append(GJetsHisto.GetBinContent(i+1))
+    outputDict["nMCGJ"].append(GJetsHisto.GetBinContent(i+1)*scaleFactor[i])
     if( outputDict["nMCGJ"][i] == 0 ) :
-        outputDict["nMCerr"].append(poisZeroErr)
+        outputDict["nMCerr"].append(sqrt(poisZeroErr*poisZeroErr+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
     else:
-        outputDict["nMCerr"].append(GJetsHisto.GetBinError(i+1)/outputDict["nMCGJ"][i])
+        outputDict["nMCerr"].append(sqrt(GJetsHisto.GetBinError(i+1)*GJetsHisto.GetBinError(i+1)/outputDict["nMCGJ"][i]/outputDict["nMCGJ"][i]+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
     outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
     outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
     outputDict["pEB"].append(purityEBAll[i])
@@ -233,10 +228,10 @@ for i in range(nBins) :
     #print "denom:",outputDict["pEB"][i]*outputDict["nEB"][i]+outputDict["pEC"][i]*outputDict["nEC"][i]
     
     if( outputDict["nEB"][i] == 0 and outputDict["nEC"][i] == 0 ):
-        outputDict["purityTimesFrag"].append(1.)
+        outputDict["purity"].append(1.)
         outputDict["pErr"].append(0.)
     else:
-        outputDict["purityTimesFrag"].append(outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i])/(outputDict["nEB"][i]+outputDict["nEC"][i]))
+        outputDict["purity"].append((outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i])/(outputDict["nEB"][i]+outputDict["nEC"][i]))
         outputDict["pErr"].append((outputDict["pEBerr"][i]*outputDict["pEB"][i]*outputDict["nEB"][i]+outputDict["pECerr"][i]*outputDict["pEC"][i]*outputDict["nEC"][i])/(outputDict["pEB"][i]*outputDict["nEB"][i]+outputDict["pEC"][i]*outputDict["nEC"][i]))
     outputDict["DR"].append(1.0)
     outputDict["DRup"].append(0.000)
@@ -259,7 +254,7 @@ for i in range(nBins) :
     outputDict["YsysUp"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["RErUp"][i]*outputDict["RErUp"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]))
     outputDict["YsysLow"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["RErLow"][i]*outputDict["RErLow"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]))
 
-columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","pEBerr","nEC","pEC","pECerr","ZgR","REr1","RErUp","RErLow","f","ferr","purityTimesFrag","pErr","DR","DRup","DRlow","Yield","YstatUp","YstatLow","YsysUp","YsysLow"]
+columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","pEBerr","nEC","pEC","pECerr","ZgR","REr1","RErUp","RErLow","f","ferr","purity","pErr","DR","DRup","DRlow","Yield","YstatUp","YstatLow","YsysUp","YsysLow"]
 ## Final table
 outputFile = open("gJets_signal.dat","w")
 formattingString=" {0} : {1}( {2})|{3} |{4} |{5} |{6}| {7}({8}) |{9}| {10}({11}) |{12}({13},+{14}-{15}) |{16}({17}) |{18}({19})| {20}(+{21}-{22})| {23}(+{24}-{25},+{26}-{27})"
