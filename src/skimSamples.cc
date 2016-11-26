@@ -203,6 +203,8 @@ public :
     HTMHTFileNames.push_back("tree_HTMHT_2016E.root");
     HTMHTFileNames.push_back("tree_HTMHT_2016F.root");
     HTMHTFileNames.push_back("tree_HTMHT_2016G.root");
+    HTMHTFileNames.push_back("tree_HTMHT_2016H2.root");
+    HTMHTFileNames.push_back("tree_HTMHT_2016H3.root");
 
     if( r == kSignal ){
       data = new TChain("tree");
@@ -218,6 +220,8 @@ public :
     SingleElectronNames.push_back("tree_SingleElectron_2016E.root");
     SingleElectronNames.push_back("tree_SingleElectron_2016F.root");
     SingleElectronNames.push_back("tree_SingleElectron_2016G.root");
+    SingleElectronNames.push_back("tree_SingleElectron_2016H2.root");
+    SingleElectronNames.push_back("tree_SingleElectron_2016H3.root");
 
     if( r == kDYe || r == kDYeLDP ){
       data = new TChain("tree");
@@ -234,6 +238,8 @@ public :
     SingleMuonNames.push_back("tree_SingleMuon_2016E.root");
     SingleMuonNames.push_back("tree_SingleMuon_2016F.root");
     SingleMuonNames.push_back("tree_SingleMuon_2016G.root");
+    SingleMuonNames.push_back("tree_SingleMuon_2016H2.root");
+    SingleMuonNames.push_back("tree_SingleMuon_2016H3.root");
 
     if( r == kDYm || r == kDYmLDP ){
       data = new TChain("tree");
@@ -250,7 +256,8 @@ public :
     SinglePhotonFileNames.push_back("tree_SinglePhoton_2016E.root");
     SinglePhotonFileNames.push_back("tree_SinglePhoton_2016F.root");
     SinglePhotonFileNames.push_back("tree_SinglePhoton_2016G.root");
-
+    SinglePhotonFileNames.push_back("tree_SinglePhoton_2016H2.root");
+    SinglePhotonFileNames.push_back("tree_SinglePhoton_2016H3.root");
     if( r == kPhoton || r == kPhotonLDP || r == kPhotonLoose || r == kPhotonLDPLoose ){
       data = new TChain("tree");
       for( int i = 0 ; i < SinglePhotonFileNames.size() ; i++ ){
