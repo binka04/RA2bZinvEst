@@ -44,8 +44,8 @@ template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
 
   if( ntuple->Photons->size() == 0 ) return -9999.;
 
-  double EBtrigger[4]={0.969,0.983,0.985,0.984,0.979};
-  double ECtrigger[4]={0.953,0.974,0.984,0.989,0.980};
+  double EBtrigger[5]={0.969,0.983,0.985,0.984,0.979};
+  double ECtrigger[5]={0.953,0.974,0.984,0.989,0.980};
 
   double MHT = ntuple->MHT;
   if( ntuple->Photons_isEB->at(0) ){
