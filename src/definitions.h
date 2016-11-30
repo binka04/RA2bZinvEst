@@ -40,6 +40,60 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
 /* custom weights			   */
 /******************************************/
 
+TRandom rand();
+
+double truncGauss(double mean, double errUp, double errDown){
+    double result=rand.Gaus()*(errUp/2.+errDown/2.)+mean;
+    if( result > 1. ) 
+        return 1. ;
+    else if( result < 0. ) 
+        return 0. ;
+    else 
+        return result;
+}
+
+template<typename ntupleType> double photonTriggerWeightRand( ntupleType* ntuple ){
+
+  if( ntuple->Photons->size() == 0 ) return -9999.;
+
+  double EBtrigger[5]={0.969,0.983,0.985,0.984,0.979};
+  double ECtrigger[5]={0.953,0.974,0.984,0.989,0.980};
+  double EBtriggerErrUp[5]={0.002,0.001,0.001,0.001,0.003};
+  double ECtriggerErrUp[5]={0.003,0.003,0.001,0.001,0.011};
+  double EBtriggerErrDown[5]={0.002,0.001,0.001,0.001,0.004};
+  double ECtriggerErrDown[5]={0.004,0.003,0.001,0.003,0.019};
+
+  double MHT = ntuple->MHT;
+  if( ntuple->Photons_isEB->at(0) ){
+    if( MHT > 250. && MHT < 300. ){
+      return truncGauss(EBtrigger[0],EBtriggerErrUp[0],EBtriggerErrDown[0]);
+    }else if( MHT > 300. && MHT < 350. ){
+        return truncGauss(EBtrigger[1],EBtriggerErrUp[1],EBtriggerErrDown[1]);
+    }else if( MHT > 350.  && MHT < 500. ){
+        return truncGauss(EBtrigger[2],EBtriggerErrUp[2],EBtriggerErrDown[2]);
+    }else if( MHT > 500.  && MHT < 750. )
+        return truncGauss(EBtrigger[3],EBtriggerErrUp[3],EBtriggerErrDown[3]);
+    }else if( MHT > 750. ){
+        return truncGauss(EBtrigger[4],EBtriggerErrUp[4],EBtriggerErrDown[4]);
+    }else
+      return -9999.;
+  }else{
+    if( MHT > 250. && MHT < 300. ){
+        return truncGauss(ECtrigger[0],ECtriggerErrUp[0],ECtriggerErrDown[0]);
+    }else if( MHT > 300. && MHT < 350. ){
+        return truncGauss(ECtrigger[1],ECtriggerErrUp[1],ECtriggerErrDown[1]);
+    }else if( MHT > 350. && MHT < 500. ){
+        return truncGauss(ECtrigger[2],ECtriggerErrUp[2],ECtriggerErrDown[2]);
+    }else if( MHT > 500.  && MHT < 750. ){
+        return truncGauss(ECtrigger[3],ECtriggerErrUp[3],ECtriggerErrDown[3]);
+    }else if( MHT > 750. ){
+        return truncGauss(ECtrigger[4],ECtriggerErrUp[4],ECtriggerErrDown[4]);
+    }else
+      return -9999.;
+  }
+  
+}
+
 template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
 
   if( ntuple->Photons->size() == 0 ) return -9999.;
