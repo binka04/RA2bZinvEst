@@ -1,16 +1,67 @@
 from ROOT import *
 from math import sqrt
+gROOT.ProcessLine(".L ~/tdrstyle.C")
+gROOT.ProcessLine("setTDRStyle()")
 
-nBins = 46
+nBins = 0
+MChistoFileName=""
+MChistoTag=""
+RzgHistoFileName=""
+RzgHistoTag=""
+trigWeightFileName=""
+trigWeightTag=""
+outputFileName=""
 
-yieldInputFile = TFile("plotObs_baseline.root","READ")
+#region = "signal"
+#region="ldp"
+region="hdp"
 
-GJetsEBHisto = yieldInputFile.Get("AnalysisBins_BTag0_photon_baseline_EB_GJets")
-GJetsEEHisto = yieldInputFile.Get("AnalysisBins_BTag0_photon_baseline_EE_GJets")
-GJetsHisto = yieldInputFile.Get("AnalysisBins_BTag0_photon_baseline_GJets")
-dataHisto = yieldInputFile.Get("AnalysisBins_BTag0_photon_baseline_data")
-dataEBHisto = yieldInputFile.Get("AnalysisBins_BTag0_photon_baseline_EB_data")
-dataEEHisto = yieldInputFile.Get("AnalysisBins_BTag0_photon_baseline_EE_data")
+if region == "signal" :
+    nBins = 46
+    MChistoFileName = "plotObs_baseline.root"
+    MChistoTag = "AnalysisBins_BTag0_photon_baseline"
+    RzgHistoFileName = "RzGamma_DR0p05_PUweightOnly_signal_histo.root"
+    RzgHistoTag = "AnalysisBins_BTag0_RzGamma_signal"
+    trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
+    trigWeightTag = "AnalysisBins_BTag0_signal"
+    fragmentationFileName = "fragmentation.25112016.txt"
+    purityFileName = "photonPurity_signal.txt"
+    outputFileName = "gJets_signal.dat"
+
+elif region == "ldp" : 
+    nBins = 59
+    MChistoFileName = "plotObs_baseline.root"
+    MChistoTag = "AnalysisBins_BTag0plusQCDCR_photonLDP_baseline"
+    RzgHistoFileName = "RzGamma_DR0p05_PUweightOnly_LDP_histo.root"
+    RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
+    trigWeightFileName = "triggerUnc_DR0p05_LDP_histo.root"
+    trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
+    fragmentationFileName = "fragmentation.59binsldp.27112016.txt"
+    purityFileName = "photonPurity_QCD_CR.txt"
+    outputFileName = "gJets_ldp.dat"
+elif region == "hdp" :
+    nBins = 59
+    MChistoFileName = "plotObs_baseline.root"
+    MChistoTag = "AnalysisBins_BTag0plusQCDCR_photon_baseline"
+    RzgHistoFileName = "RzGamma_DR0p05_PUweightOnly_signal_histo.root"
+    RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
+    trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
+    trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
+    fragmentationFileName = "fragmentation.59bins.27112016.txt"
+    purityFileName = "photonPurity_QCD_CR.txt"
+    outputFileName = "gJets_hdp.dat"
+else : 
+    assert(0)
+
+yieldInputFile = TFile(MChistoFileName,"READ")
+
+GJetsEBHisto = yieldInputFile.Get(MChistoTag+"_EB_GJets")
+GJetsEEHisto = yieldInputFile.Get(MChistoTag+"_EE_GJets")
+GJetsHisto = yieldInputFile.Get(MChistoTag+"_GJets")
+dataHisto = yieldInputFile.Get(MChistoTag+"_data")
+dataEBHisto = yieldInputFile.Get(MChistoTag+"_EB_data")
+dataEEHisto = yieldInputFile.Get(MChistoTag+"_EE_data")
+
 
 if GJetsEBHisto.GetNbinsX() != GJetsEEHisto.GetNbinsX() : 
     print "number of bins in barrel and endcap don't match"
@@ -28,22 +79,53 @@ if dataEEHisto.GetNbinsX() != GJetsEEHisto.GetNbinsX() :
     print "number of bins in dataEEHisto and GJetsEEHisto don't match"
     assert(0)
 
-ratioInputFile = TFile("RzGamma_DR0p05_signal_histo.root")
-ZJetsHisto = ratioInputFile.Get("AnalysisBins_BTag0_RzGamma_signal_ZJets")
-GJetsHisto = ratioInputFile.Get("AnalysisBins_BTag0_RzGamma_signal_GJets")
-RzGamma = TH1F(ZJetsHisto)
+print "================ RzGamma =============="
+ratioInputFile = TFile(RzgHistoFileName)
+ZJetsHisto_Rzg = TH1F(ratioInputFile.Get(RzgHistoTag+"_ZJets"))
+ZJetsHisto_Rzg.SetNameTitle("ZJetsHisto_Rzg","ZJetsHisto_Rzg")
+GJetsHisto_Rzg = TH1F(ratioInputFile.Get(RzgHistoTag+"_GJets"))
+GJetsHisto_Rzg.SetNameTitle("GJetsHisto_Rzg","GJetsHisto_Rzg")
+RzGamma = TH1F(ZJetsHisto_Rzg)
+print "ZJets:",RzGamma.GetBinContent(1)*36300./24500.
 RzGamma.SetNameTitle("RzGamma","RzGamma")
-RzGamma.Divide(GJetsHisto)
+RzGamma.Divide(GJetsHisto_Rzg)
+print "GJets:",GJetsHisto_Rzg.GetBinContent(1)*36300./24500.
+print "GJets/ZJets:",RzGamma.GetBinContent(1)
 RzGamma.Scale(1./1.23)
+print "RzG:",RzGamma.GetBinContent(1)
 
 if RzGamma.GetNbinsX() != GJetsEEHisto.GetNbinsX() :
     print "number bins in RzGamma does not match others"
     assert(0)
 
+for i in range(RzGamma.GetNbinsX()):
+    print RzGamma.GetBinContent(i+1)
+print "---------------------------------------"
+print "================ TriggerWeights =============="
+triggerWeight = [0.]*nBins
+triggerWeightErr = [0.]*nBins
+
+triggerInputFile = TFile(trigWeightFileName,"READ")
+triggerWeightHisto = triggerInputFile.Get(trigWeightTag)
+triggerWeightProf = triggerWeightHisto.ProfileX("triggerWeightProf",1,-1,"S")
+ 
+assert(triggerWeightProf.GetNbinsX()==nBins)
+for iBin in range(nBins):
+    triggerWeight[iBin] = triggerWeightProf.GetBinContent(iBin+1)
+    if triggerWeight[iBin] == 0. : 
+        triggerWeight[iBin] = 1.
+    triggerWeightErr[iBin] = triggerWeightProf.GetBinError(iBin+1)
+
+print "triggerWeight: " 
+print triggerWeight
+print "triggerWeightErr"
+print triggerWeightErr
+print "------------------------------------------------------"
+
 print "================ FRAGMENTATION FRACTION =============="
 fragFrac = [0.]*nBins
 fragFracErr = [0.]*nBins
-fragFracFile = open("fragmentation.25112016.txt","read")
+fragFracFile = open(fragmentationFileName,"read")
 for line in fragFracFile: 
     line = line[:-1]
     line_tokens = line.split(" ")
@@ -64,81 +146,23 @@ print scaleFactor
 print scaleFactorErr
 print "------------------------------------------------------"
 
-NomPurityHTMHT_EB=[0.947065153182]*3
-NomPurityHTMHT_EB.extend([0.956121166585]*3)
-NomPurityHTMHT_EB.extend([0.984790438389]*4)
-
-NomPurityHTMHT_EE=[0.877284301603]*3
-NomPurityHTMHT_EE.extend([0.910163505329]*3)
-NomPurityHTMHT_EE.extend([0.956462420031]*4)
-
-DataPurityHTMHT_EB=[0.954562818866]*3
-DataPurityHTMHT_EB.extend([0.920957814936]*3)
-DataPurityHTMHT_EB.extend([0.885676319007]*4)
-
-DataPurityHTMHT_EE=[0.863595295813]*3
-DataPurityHTMHT_EE.extend([0.888194155599]*3)
-DataPurityHTMHT_EE.extend([0.882485967811]*4)
-
-MCaltPurityHTMHT_EB=[0.969584333786]*3
-MCaltPurityHTMHT_EB.extend([0.970276710469]*3)
-MCaltPurityHTMHT_EB.extend([0.986678278129]*4)
-
-MCaltPurityHTMHT_EE=[0.889480018081]*3
-MCaltPurityHTMHT_EE.extend([0.91319327327]*3)
-MCaltPurityHTMHT_EE.extend([0.939235081042]*4)
-
-purityEB=[]
-purityEE=[]
-purityEBerr=[]
-purityEEerr=[]
-print "Averaging 3 measurements for nominal"
-print "Take half of the maximum variation as uncertainty"
-for i in range(len(NomPurityHTMHT_EB)):
-    purityEB.append(NomPurityHTMHT_EB[i]/3.+DataPurityHTMHT_EB[i]/3.+MCaltPurityHTMHT_EB[i]/3.)
-    purityEE.append(NomPurityHTMHT_EE[i]/3.+DataPurityHTMHT_EE[i]/3.+MCaltPurityHTMHT_EE[i]/3.)
-    purityEBerr.append(max([abs(NomPurityHTMHT_EB[i]-DataPurityHTMHT_EB[i]),abs(NomPurityHTMHT_EB[i]-MCaltPurityHTMHT_EB[i]),abs(DataPurityHTMHT_EB[i]-MCaltPurityHTMHT_EB[i])]))
-    purityEEerr.append(max([abs(NomPurityHTMHT_EE[i]-DataPurityHTMHT_EE[i]),abs(NomPurityHTMHT_EE[i]-MCaltPurityHTMHT_EE[i]),abs(DataPurityHTMHT_EE[i]-MCaltPurityHTMHT_EE[i])]))
-
-purityEBNJet7=list(purityEB)
-purityEBNJet7.pop(4)
-purityEBNJet7.pop(1)
-purityEBAll = []
-purityEBAll.extend(purityEB)
-purityEBAll.extend(purityEB)
-purityEBAll.extend(purityEB)
-purityEBAll.extend(purityEBNJet7)
-purityEBAll.extend(purityEBNJet7)
-
-purityEBerrNJet7=list(purityEBerr)
-purityEBerrNJet7.pop(4)
-purityEBerrNJet7.pop(1)
-purityEBerrAll=[]
-purityEBerrAll.extend(purityEBerr)
-purityEBerrAll.extend(purityEBerr)
-purityEBerrAll.extend(purityEBerr)
-purityEBerrAll.extend(purityEBerrNJet7)
-purityEBerrAll.extend(purityEBerrNJet7)
-
-purityEENJet7=list(purityEE)
-purityEENJet7.pop(4)
-purityEENJet7.pop(1)
+print "================= PHOTON PURITY ==================="
+purityEBAll=[]
 purityEEAll=[]
-purityEEAll.extend(purityEE)
-purityEEAll.extend(purityEE)
-purityEEAll.extend(purityEE)
-purityEEAll.extend(purityEENJet7)
-purityEEAll.extend(purityEENJet7)
-
-purityEEerrNJet7=list(purityEEerr)
-purityEEerrNJet7.pop(4)
-purityEEerrNJet7.pop(1)
+purityEBerrAll=[]
 purityEEerrAll=[]
-purityEEerrAll.extend(purityEEerr)
-purityEEerrAll.extend(purityEEerr)
-purityEEerrAll.extend(purityEEerr)
-purityEEerrAll.extend(purityEEerrNJet7)
-purityEEerrAll.extend(purityEEerrNJet7)
+
+purityInputFile = open(purityFileName,"r")
+for line in purityInputFile : 
+    if line[0] == "#" : continue
+    line = line[:-1]
+    dat = line.split()
+    while '' in dat : 
+        dat.remove('')
+    purityEBAll.append(float(dat[0]))
+    purityEBerrAll.append(float(dat[1]))
+    purityEEAll.append(float(dat[2]))
+    purityEEerrAll.append(float(dat[3]))
 
 print "len(purityEB):",len(purityEBAll)
 print "purity EB:",purityEBAll
@@ -149,6 +173,7 @@ print "len(purityEEerr):",len(purityEEerrAll)
 print "purity EE:",purityEEAll
 print "len(purityEEerr):",len(purityEEerrAll)
 print "purity EE error:",purityEEerrAll
+print "------------------------------------------------------"
 
 DR=[0.0]*nBins
 DRup=[0.0]*nBins
@@ -156,7 +181,6 @@ DRdown=[0.0]*nBins
 
 outputDict = {}
 
-print "Note there are no trigger weights applied here!!"
 outputDict["binIndex"]=[]
 outputDict["nMCEBt"]=[]
 outputDict["nMCECt"]=[]
@@ -169,12 +193,14 @@ outputDict["pEB"]=[]
 outputDict["pEC"]=[]
 outputDict["pEBerr"]=[]
 outputDict["pECerr"]=[]
+outputDict["SF"]=scaleFactor
+outputDict["SFerr"]=[err/cv for cv,err in zip(scaleFactor,scaleFactorErr)]
+outputDict["trigW"]=triggerWeight
+outputDict["trigWerr"]=[err/cv for cv,err in zip(triggerWeight,triggerWeightErr)]
 outputDict["ZgR"] = []
 outputDict["REr1"] = []
-outputDict["RErUp"] = []
-outputDict["RErLow"] = []
-outputDict["f"] = []
-outputDict["ferr"] = []
+outputDict["f"]=fragFrac
+outputDict["ferr"]=[err/cv for cv,err in zip(fragFrac,fragFracErr)]
 outputDict["purity"]=[]
 outputDict["pErr"]=[]
 outputDict["DR"]=[]
@@ -189,8 +215,8 @@ outputDict["YsysLow"]=[]
 poisZeroErr=1.67
 for i in range(nBins) :
     outputDict["binIndex"].append(i+1)
-    outputDict["nMCEBt"].append(GJetsEBHisto.GetBinContent(i+1))
-    outputDict["nMCECt"].append(GJetsEEHisto.GetBinContent(i+1))
+    outputDict["nMCEBt"].append(GJetsEBHisto.GetBinContent(i+1)*scaleFactor[i])
+    outputDict["nMCECt"].append(GJetsEEHisto.GetBinContent(i+1)*scaleFactor[i])
     outputDict["nMCGJ"].append(GJetsHisto.GetBinContent(i+1)*scaleFactor[i])
     if( outputDict["nMCGJ"][i] == 0 ) :
         outputDict["nMCerr"].append(sqrt(poisZeroErr*poisZeroErr+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
@@ -210,22 +236,8 @@ for i in range(nBins) :
             outputDict["ZgR"].append(RzGamma.GetBinContent(i+1-8))                                   
         outputDict["REr1"].append(1.)
     else:
-        outputDict["ZgR"].append(RzGamma.GetBinContent(i+1))
+        outputDict["ZgR"].append(RzGamma.GetBinContent(i+1))#*scaleFactor[i])
         outputDict["REr1"].append(RzGamma.GetBinError(i+1)/outputDict["ZgR"][i])
-    outputDict["RErUp"].append(0.053)
-    outputDict["RErLow"].append(0.048)
-    outputDict["f"].append(fragFrac[i])
-    outputDict["ferr"].append(fragFracErr[i])
-   
-    #print "pEBerr[",i,"]:",outputDict["pEBerr"][i]
-    #print "pEB[",i,"]:",outputDict["pEB"][i]
-    #print "nEB[",i,"]:",outputDict["nEB"][i]
-    #print "pECerr[",i,"]:",outputDict["pECerr"][i]
-    #print "pEC[",i,"]:",outputDict["pEC"][i]
-    #print "nEC[",i,"]:",outputDict["nEC"][i]
-
-    #print "num:",sqrt(outputDict["pEBerr"][i]*outputDict["pEBerr"][i]*outputDict["pEB"][i]*outputDict["pEB"][i]*outputDict["nEB"][i]*outputDict["nEB"][i]+outputDict["pECerr"][i]*outputDict["pECerr"][i]*outputDict["pEC"][i]*outputDict["pEC"][i]*outputDict["nEC"][i]*outputDict["nEC"][i])
-    #print "denom:",outputDict["pEB"][i]*outputDict["nEB"][i]+outputDict["pEC"][i]*outputDict["nEC"][i]
     
     if( outputDict["nEB"][i] == 0 and outputDict["nEC"][i] == 0 ):
         outputDict["purity"].append(1.)
@@ -237,7 +249,7 @@ for i in range(nBins) :
     outputDict["DRup"].append(0.000)
     outputDict["DRlow"].append(0.000)
     
-    outputDict["Yield"].append(outputDict["ZgR"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i])*outputDict["f"][i])
+    outputDict["Yield"].append(outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i]*outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i]))
     if( outputDict["nEB"][i] == 0 and outputDict["nEC"][i] != 0 ):
         outputDict["YstatUp"].append(sqrt(poisZeroErr*poisZeroErr+outputDict["nEC"][i])/outputDict["Yield"][i])
         outputDict["YstatLow"].append(sqrt(poisZeroErr*poisZeroErr+outputDict["nEC"][i])/outputDict["Yield"][i])
@@ -251,13 +263,13 @@ for i in range(nBins) :
         outputDict["YstatUp"].append(sqrt(outputDict["nEB"][i]+outputDict["nEC"][i])/outputDict["Yield"][i])
         outputDict["YstatLow"].append(sqrt(outputDict["nEB"][i]+outputDict["nEC"][i])/outputDict["Yield"][i])
         
-    outputDict["YsysUp"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["RErUp"][i]*outputDict["RErUp"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]))
-    outputDict["YsysLow"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["RErLow"][i]*outputDict["RErLow"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]))
+    outputDict["YsysUp"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferr"][i]*outputDict["ferr"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
+    outputDict["YsysLow"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferr"][i]*outputDict["ferr"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
 
-columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","pEBerr","nEC","pEC","pECerr","ZgR","REr1","RErUp","RErLow","f","ferr","purity","pErr","DR","DRup","DRlow","Yield","YstatUp","YstatLow","YsysUp","YsysLow"]
+columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","pEBerr","nEC","pEC","pECerr","trigW","trigWerr","SF","SFerr","ZgR","REr1","f","ferr","purity","pErr","DR","DRup","DRlow","Yield","YstatUp","YstatLow","YsysUp","YsysLow"]
 ## Final table
-outputFile = open("gJets_signal.dat","w")
-formattingString=" {0} : {1}( {2})|{3} |{4} |{5} |{6}| {7}({8}) |{9}| {10}({11}) |{12}({13},+{14}-{15}) |{16}({17}) |{18}({19})| {20}(+{21}-{22})| {23}(+{24}-{25},+{26}-{27})"
+outputFile = open(outputFileName,"w")
+formattingString=" {0} : {1}( {2})|{3} |{4} |{5} |{6}| {7}({8}) |{9}| {10}({11}) | {12}({13}) | {14}({15}) |{16}({17}) |{18}({19}) |{20}({21})| {22}(+{23}-{24})| {25}(+{26}-{27},+{28}-{29})"
 outputFile.write(formattingString.format(*columnNames))
 outputFile.write("\n")
 for b in range(nBins):
@@ -275,3 +287,32 @@ for b in range(nBins):
     outputFile.write(formattingString.format(*dataInBin))
     outputFile.write("\n")
 outputFile.close
+
+can = TCanvas("can","can",500,500)
+can.SetTopMargin(.08)
+RzgCorr = TH1F("RzgCorr","RzgCorr",nBins,0.5,nBins+0.5)
+for i in range(nBins):
+    RzgCorr.SetBinContent(i+1,outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i])
+    RzgCorr.SetBinError(i+1,sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i])*outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i])
+
+RzgCorr.SetMarkerStyle(8)
+RzgCorr.GetYaxis().SetRangeUser(0.,1.)
+RzgCorr.GetYaxis().SetTitle("R_{Z/#gamma}")
+RzgCorr.GetXaxis().SetTitle("i^{th} Bin")
+
+RzgCorr.Draw("e1")
+
+CMStext = TText(0.5,1.01,"CMS")
+CMStext.SetTextFont(61)
+CMStext.SetTextSize(0.045)
+CMStext.Draw()
+
+SIMtext = TText(7.,1.01,"simulation")
+SIMtext.SetTextFont(52)
+SIMtext.SetTextSize(0.045)
+SIMtext.Draw()
+
+LUMItext = TText(38,1.01,"13 TeV")
+LUMItext.SetTextFont(51)
+LUMItext.SetTextSize(0.045)
+LUMItext.Draw()
