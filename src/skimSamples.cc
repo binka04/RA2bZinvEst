@@ -268,6 +268,13 @@ public :
 
     };
 
+    void dumpRegion(){
+        cout << "index  name" << endl;
+        for( int iReg = 0 ; iReg < kNumRegions ; iReg++ ){
+            cout << iReg << "      " << regionNames[iReg] << endl;
+        }
+    };
+
     RA2bTree* findNtuple(TString name){
         for( int iSam = 0 ; iSam < sampleName.size() ; iSam++ ){
             if( sampleName[iSam] == name )
