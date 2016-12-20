@@ -268,7 +268,7 @@ public :
 
     };
 
-    void dumpRegion(){
+    void dumpRegions(){
         cout << "index  name" << endl;
         for( int iReg = 0 ; iReg < kNumRegions ; iReg++ ){
             cout << iReg << "      " << regionNames[iReg] << endl;
