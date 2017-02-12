@@ -2,7 +2,15 @@ from ROOT import *
 from math import sqrt
 gROOT.ProcessLine(".L ~/tdrstyle.C")
 gROOT.ProcessLine("setTDRStyle()")
+from optparse import OptionParser
 
+parser = OptionParser()
+parser.add_option("-r", "--region", dest="region", default="signal",
+                  help="region -- signal, ldp, hdp -- only")
+(options, args) = parser.parse_args()
+assert( options.region == "signal" or options.region == "ldp" or options.region == "hdp" )
+
+region = options.region
 nBins = 0
 MChistoFileName=""
 MChistoTag=""
@@ -12,10 +20,6 @@ trigWeightFileName=""
 trigWeightTag=""
 outputFileName=""
 
-#region = "signal"
-#region="ldp"
-region="hdp"
-
 if region == "signal" :
     nBins = 46
     MChistoFileName = "plotObs_baseline.root"
@@ -24,7 +28,7 @@ if region == "signal" :
     RzgHistoTag = "AnalysisBins_BTag0_RzGamma_signal"
     trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
     trigWeightTag = "AnalysisBins_BTag0_signal"
-    fragmentationFileName = "fragmentation.25112016.txt"
+    fragmentationFileName = "fragmentation.bin46.normal.txt"
     purityFileName = "photonPurity_signal.txt"
     outputFileName = "gJets_signal.dat"
 
@@ -36,7 +40,7 @@ elif region == "ldp" :
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
     trigWeightFileName = "triggerUnc_DR0p05_LDP_histo.root"
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
-    fragmentationFileName = "fragmentation.59binsldp.27112016.txt"
+    fragmentationFileName = "fragmentation.bin59.ldp.normal.txt"
     purityFileName = "photonPurity_QCD_CR.txt"
     outputFileName = "gJets_ldp.dat"
 elif region == "hdp" :
@@ -47,7 +51,7 @@ elif region == "hdp" :
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
     trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
-    fragmentationFileName = "fragmentation.59bins.27112016.txt"
+    fragmentationFileName = "fragmentation.bin59.normal.txt"
     purityFileName = "photonPurity_QCD_CR.txt"
     outputFileName = "gJets_hdp.dat"
 else : 
@@ -124,7 +128,8 @@ print "------------------------------------------------------"
 
 print "================ FRAGMENTATION FRACTION =============="
 fragFrac = [0.]*nBins
-fragFracErr = [0.]*nBins
+fragFracErrUp = [0.]*nBins
+fragFracErrDn = [0.]*nBins
 fragFracFile = open(fragmentationFileName,"read")
 for line in fragFracFile: 
     line = line[:-1]
@@ -132,10 +137,16 @@ for line in fragFracFile:
     while '' in line_tokens : 
         line_tokens.remove('')
     fragFrac[int(line_tokens[0])-1] = float(line_tokens[1])
-    fragFracErr[int(line_tokens[0])-1] = float(line_tokens[2])
+    if( float(line_tokens[1]) == 1.0 ) :
+        fragFracErrUp[int(line_tokens[0])-1] = 0.0
+        fragFracErrDn[int(line_tokens[0])-1] = 0.03
+    else : 
+        fragFracErrUp[int(line_tokens[0])-1] = float(line_tokens[2])
+        fragFracErrDn[int(line_tokens[0])-1] = float(line_tokens[3])
 
 print fragFrac
-print fragFracErr
+print fragFracErrUp
+print fragFracErrDn
 print "------------------------------------------------------"
 
 print "================= ID SCALE FACTORS ==================="
@@ -196,11 +207,14 @@ outputDict["pECerr"]=[]
 outputDict["SF"]=scaleFactor
 outputDict["SFerr"]=[err/cv for cv,err in zip(scaleFactor,scaleFactorErr)]
 outputDict["trigW"]=triggerWeight
+outputDict["trigWsysErr"]=[0.01]*nBins
 outputDict["trigWerr"]=[err/cv for cv,err in zip(triggerWeight,triggerWeightErr)]
 outputDict["ZgR"] = []
 outputDict["REr1"] = []
 outputDict["f"]=fragFrac
-outputDict["ferr"]=[err/cv for cv,err in zip(fragFrac,fragFracErr)]
+outputDict["fsysErr"]=[0.005]*nBins
+outputDict["ferrUp"]=[err/cv for cv,err in zip(fragFrac,fragFracErrUp)]
+outputDict["ferrDn"]=[err/cv for cv,err in zip(fragFrac,fragFracErrDn)]
 outputDict["purity"]=[]
 outputDict["pErr"]=[]
 outputDict["DR"]=[]
@@ -263,13 +277,13 @@ for i in range(nBins) :
         outputDict["YstatUp"].append(sqrt(outputDict["nEB"][i]+outputDict["nEC"][i])/outputDict["Yield"][i])
         outputDict["YstatLow"].append(sqrt(outputDict["nEB"][i]+outputDict["nEC"][i])/outputDict["Yield"][i])
         
-    outputDict["YsysUp"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferr"][i]*outputDict["ferr"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
-    outputDict["YsysLow"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferr"][i]*outputDict["ferr"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
+    outputDict["YsysUp"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferrUp"][i]*outputDict["ferrUp"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["trigWsysErr"][i]*outputDict["trigWsysErr"][i]+outputDict["fsysErr"][i]*outputDict["fsysErr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
+    outputDict["YsysLow"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferrDn"][i]*outputDict["ferrDn"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["trigWsysErr"][i]*outputDict["trigWsysErr"][i]+outputDict["fsysErr"][i]*outputDict["fsysErr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
 
-columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","pEBerr","nEC","pEC","pECerr","trigW","trigWerr","SF","SFerr","ZgR","REr1","f","ferr","purity","pErr","DR","DRup","DRlow","Yield","YstatUp","YstatLow","YsysUp","YsysLow"]
+columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","pEBerr","nEC","pEC","pECerr","trigW","trigWsysErr","trigWerr","SF","SFerr","ZgR","REr1","f","fsysErr","ferrUp","ferrDn","purity","pErr","DR","DRup","DRlow","Yield","YstatUp","YstatLow","YsysUp","YsysLow"]
 ## Final table
 outputFile = open(outputFileName,"w")
-formattingString=" {0} : {1}( {2})|{3} |{4} |{5} |{6}| {7}({8}) |{9}| {10}({11}) | {12}({13}) | {14}({15}) |{16}({17}) |{18}({19}) |{20}({21})| {22}(+{23}-{24})| {25}(+{26}-{27},+{28}-{29})"
+formattingString=" {0} : {1}( {2})|{3} |{4} |{5} |{6}| {7}({8}) |{9}| {10}({11}) | {12}({13},{14}) | {15}({16}) |{17}({18}) |{19}({20},+{21}-{22}) |{23}({24})| {25}(+{26}-{27})| {28}(+{29}-{30},+{31}-{32})"
 outputFile.write(formattingString.format(*columnNames))
 outputFile.write("\n")
 for b in range(nBins):

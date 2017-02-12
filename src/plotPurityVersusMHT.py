@@ -43,19 +43,19 @@ MCALT purity in SR:  0.942058620977 +/- 0.00787214238654
 """
 
 x=[275,325,425,650]
-xErr=[25,25,75,75]
-EB={"nom":[],"alt":[],"mcalt":[],"nomErr":[],"altErr":[],"mcaltErr":[]}
-EE={"nom":[],"alt":[],"mcalt":[],"nomErr":[],"altErr":[],"mcaltErr":[]}
-for measurement in inputs.split("--"):
-    lines = measurement[1:].split("\n")
-    #print lines
-    if lines[0].find("EB") != -1 : 
-        EB["nom"].append(float(lines[1].split(":  ")[1].split(" +/- ")[0]))
-        EB["nomErr"].append(float(lines[1].split(":  ")[1].split(" +/- ")[1]))
+xErr=[25,25,75,150]
+EB={"nom":[0.957,0.957,0.949,0.952],"alt":[],"mcalt":[],"nomErr":[0.029,0.024,0.052,0.106],"altErr":[],"mcaltErr":[]}
+EE={"nom":[0.854,0.877,0.904,0.926],"alt":[],"mcalt":[],"nomErr":[0.027,0.03,0.028,0.08],"altErr":[],"mcaltErr":[]}
+# for measurement in inputs.split("--"):
+#     lines = measurement[1:].split("\n")
+#     #print lines
+#     if lines[0].find("EB") != -1 : 
+#         EB["nom"].append(float(lines[1].split(":  ")[1].split(" +/- ")[0]))
+#         EB["nomErr"].append(float(lines[1].split(":  ")[1].split(" +/- ")[1]))
         
-    else :
-        EE["nom"].append(float(lines[1].split(":  ")[1].split(" +/- ")[0]))
-        EE["nomErr"].append(float(lines[1].split(":  ")[1].split(" +/- ")[1]))
+#     else :
+#         EE["nom"].append(float(lines[1].split(":  ")[1].split(" +/- ")[0]))
+#         EE["nomErr"].append(float(lines[1].split(":  ")[1].split(" +/- ")[1]))
 
 #print "x:",x
 #print "EB['nom']:",EB["nom"]
@@ -67,6 +67,7 @@ gROOT.ProcessLine(".L ~/tdrstyle.C")
 gROOT.ProcessLine("setTDRStyle()")
 
 can = TCanvas("can","can",500,500)
+can.SetTopMargin(0.08)
 
 nomEB = TGraphErrors(len(x),array("f",x),array("f",EB["nom"]),array("f",xErr),array("f",EB["nomErr"]))
 nomEB.SetMarkerStyle(8)
@@ -86,3 +87,22 @@ leg.AddEntry(nomEE,"EE","p")
 nomEB.Draw("Ap")
 nomEE.Draw("p")
 leg.Draw()
+
+CMStext = TText(200,1.01,"CMS")
+CMStext.SetTextFont(61)
+CMStext.SetTextSize(0.045)
+CMStext.Draw()
+
+SIMtext = TText(285,1.01,"simulation")
+SIMtext.SetTextFont(52)
+SIMtext.SetTextSize(0.045)
+SIMtext.Draw()
+
+LUMItext = TText(600,1.01,"13 TeV (24.5/fb)")
+LUMItext.SetTextFont(51)
+LUMItext.SetTextSize(0.045)
+LUMItext.Draw()
+
+can.SaveAs("photonPurity_MHT.pdf")
+can.SaveAs("photonPurity_MHT.png")
+can.SaveAs("photonPurity_MHT.eps")

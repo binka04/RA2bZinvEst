@@ -2,16 +2,28 @@ CC=g++
 CFLAGS=
 LIBS=`root-config --cflags --glibs` -L $(ROOTSYS)/lib
 INCLUDES=-I$(CMSSW_BASE)/src/
-EXECS=plotObs_baseline plotRzGamma triggerEffInputs plotPurityProperties
-$(EXECS):RA2bTree.cc definitions.h skimSamples.cc plotterUtils.cc 
+EXECS=plotObs_baseline plotRzGamma triggerEffInputs plotPurityProperties triggerUncertainties
+$(EXECS):RA2bTree.cc definitions.h skimSamples.cc plotterUtils.cc cutFlow.cc
 plotObs_GJetsCR_baseline:plotObs_GJetsCR_baseline.cc
 plotObs_baseline:plotObs_baseline.cc
 plotRzGamma:plotRzGamma.cc CMS_lumi.h CMS_lumi.cc
 triggerEffInputs:triggerEffInputs.cc
 plotPurityProperties:plotPurityProperties.cc
+triggerUncertainties:triggerUncertainties.cc
+photonNbExtrapolation:photonNbExtrapolation.cc
+cutFlow:cutFlow.cc
+fragmentationFits:fragmentationFits.cc
 
 all:$(EXECS)
 
+cutFlow:
+	$(CC) -g $(CFLAGS) $(LIBS) $(INCLUDES) cutFlow.cc -o ../bin/$@
+fragmentationFits:
+	$(CC) -g $(CFLAGS) $(LIBS) $(INCLUDES) fragmentationFits.cc -o ../bin/$@
+photonNbExtrapolation:
+	$(CC) -g $(CFLAGS) $(LIBS) $(INCLUDES) photonNbExtrapolation.cc -o ../bin/$@
+triggerUncertainties:
+	$(CC) $(CFLAGS) $(LIBS) $(INCLUDES) triggerUncertainties.cc -o ../bin/$@
 plotPurityProperties:
 	$(CC) $(CFLAGS) $(LIBS) $(INCLUDES) plotPurityProperties.cc -o ../bin/$@
 triggerEffInputs:

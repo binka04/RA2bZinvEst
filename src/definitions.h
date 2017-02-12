@@ -1,3 +1,4 @@
+#include "TRandom.h"
 #include "TLorentzVector.h"
 
 // constants
@@ -19,6 +20,7 @@ double CalcdPhi( double phi1 , double phi2 ){
 
 template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
   ntuple->fChain->SetBranchStatus("*",0);
+  ntuple->fChain->SetBranchStatus("Jets",1);
   ntuple->fChain->SetBranchStatus("DeltaPhi*",1);
   ntuple->fChain->SetBranchStatus("HT",1);
   ntuple->fChain->SetBranchStatus("NJets",1);
@@ -40,10 +42,10 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
 /* custom weights			   */
 /******************************************/
 
-TRandom rand();
+TRandom randGen;
 
 double truncGauss(double mean, double errUp, double errDown){
-    double result=rand.Gaus()*(errUp/2.+errDown/2.)+mean;
+    double result=randGen.Gaus()*(errUp/2.+errDown/2.)+mean;
     if( result > 1. ) 
         return 1. ;
     else if( result < 0. ) 
@@ -56,12 +58,12 @@ template<typename ntupleType> double photonTriggerWeightRand( ntupleType* ntuple
 
   if( ntuple->Photons->size() == 0 ) return -9999.;
 
-  double EBtrigger[5]={0.969,0.983,0.985,0.984,0.979};
-  double ECtrigger[5]={0.953,0.974,0.984,0.989,0.980};
-  double EBtriggerErrUp[5]={0.002,0.001,0.001,0.001,0.003};
-  double ECtriggerErrUp[5]={0.003,0.003,0.001,0.001,0.011};
-  double EBtriggerErrDown[5]={0.002,0.001,0.001,0.001,0.004};
-  double ECtriggerErrDown[5]={0.004,0.003,0.001,0.003,0.019};
+  double EBtrigger[5]={0.991,0.988,0.988,0.986,0.978};
+  double ECtrigger[5]={0.989,0.985,0.986,0.991,1.000};
+  double EBtriggerErrDown[5]={0.001,0.001,0.001,0.001,0.005};
+  double ECtriggerErrDown[5]={0.001,0.002,0.001,0.002,0.014};
+  double EBtriggerErrUp[5]={0.001,0.001,0.001,0.001,0.004};
+  double ECtriggerErrUp[5]={0.001,0.001,0.001,0.002,0.000};
 
   double MHT = ntuple->MHT;
   if( ntuple->Photons_isEB->at(0) ){
@@ -71,12 +73,12 @@ template<typename ntupleType> double photonTriggerWeightRand( ntupleType* ntuple
         return truncGauss(EBtrigger[1],EBtriggerErrUp[1],EBtriggerErrDown[1]);
     }else if( MHT > 350.  && MHT < 500. ){
         return truncGauss(EBtrigger[2],EBtriggerErrUp[2],EBtriggerErrDown[2]);
-    }else if( MHT > 500.  && MHT < 750. )
+    }else if( MHT > 500.  && MHT < 750. ){
         return truncGauss(EBtrigger[3],EBtriggerErrUp[3],EBtriggerErrDown[3]);
     }else if( MHT > 750. ){
         return truncGauss(EBtrigger[4],EBtriggerErrUp[4],EBtriggerErrDown[4]);
     }else
-      return -9999.;
+        return -9999.;
   }else{
     if( MHT > 250. && MHT < 300. ){
         return truncGauss(ECtrigger[0],ECtriggerErrUp[0],ECtriggerErrDown[0]);
@@ -98,8 +100,8 @@ template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
 
   if( ntuple->Photons->size() == 0 ) return -9999.;
 
-  double EBtrigger[5]={0.969,0.983,0.985,0.984,0.979};
-  double ECtrigger[5]={0.953,0.974,0.984,0.989,0.980};
+  double EBtrigger[5]={0.991,0.988,0.988,0.986,0.978};
+  double ECtrigger[5]={0.989,0.985,0.986,0.991,1.000};
 
   double MHT = ntuple->MHT;
   if( ntuple->Photons_isEB->at(0) ){
@@ -140,7 +142,7 @@ template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
 //////////////////////
 //////////////////////
 template<typename ntupleType> int isPromptPhoton(ntupleType* ntuple){
-  return !ntuple->Photons_nonPrompt->at(0);
+  return ntuple->Photons_nonPrompt->at(0)==0;
 }
 
 template<typename ntupleType> double photonPt(ntupleType* ntuple){
@@ -271,6 +273,21 @@ template<typename ntupleType> double fillPythiaMinPhotonDeltaR(ntupleType* ntupl
 
 template<typename ntupleType> double fillDeltaPhi1(ntupleType* ntuple){
   return ntuple->DeltaPhi1;
+}
+
+template<typename ntupleType> double fillRecoPhotonDeltaR(ntupleType* ntuple){
+    //int minIndex=-1;
+    double minDR=999999.;
+    if( ntuple->Photons->size()<1 ) return -9999.;
+    for( int iJet = 0 ; iJet < ntuple->Jets->size() ; iJet++ ){
+        //cout << "temp DR: " << ntuple->Jets->at(iJet).DeltaR(ntuple->Photons->at(0)) << endl; 
+        if( ntuple->Jets->at(iJet).DeltaR(ntuple->Photons->at(0)) < minDR ){
+            minDR = ntuple->Jets->at(iJet).DeltaR(ntuple->Photons->at(0));
+            //minIndex = iJet;
+        }
+    }
+    //cout << "minDR: " << minDR << endl;
+    return minDR;
 }
 
 template<typename ntupleType> double fillDeltaPhi2(ntupleType* ntuple){
@@ -661,3 +678,43 @@ template<typename ntupleType> bool RA2bLDPBaselineCut(ntupleType* ntuple){
 
 }
 
+ /******************************************************************/
+ /* - - - - - - - - - - - - cut flow function - - - - - - - - - -  */
+ /******************************************************************/
+
+template<typename ntupleType> bool cutFlow_none(ntupleType* ntuple){
+    return true;
+}
+template<typename ntupleType> bool cutFlow_onePhoton(ntupleType* ntuple){
+    return ntuple->Photons->size()==1 
+        && isPromptPhoton(ntuple)
+        && ntuple->Photons_fullID->at(0)==1;    
+}
+
+template<typename ntupleType> bool cutFlow_photonPt200(ntupleType* ntuple){
+    return ntuple->Photons->at(0).Pt()>=200.;
+}
+template<typename ntupleType> bool cutFlow_minDR(ntupleType* ntuple){
+    return ntuple->madMinPhotonDeltaR>0.4;
+}
+template<typename ntupleType> bool cutFlow_HTbin1(ntupleType* ntuple){
+    return ntuple->HT>=300. && ntuple->HT<500.;
+}
+template<typename ntupleType> bool cutFlow_MHTbin1(ntupleType* ntuple){
+    return ntuple->MHT>=300. && ntuple->MHT<350;
+}
+template<typename ntupleType> bool cutFlow_nJetsTwo(ntupleType* ntuple){
+    return ntuple->NJets==2;
+}
+template<typename ntupleType> bool cutFlow_btagsZero(ntupleType* ntuple){
+    return ntuple->BTags==0;
+}
+template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
+    return ntuple->HBHENoiseFilter==1 
+        && ntuple->HBHEIsoNoiseFilter==1 
+        && ntuple->eeBadScFilter==1 
+        && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
+        && ntuple->NVtx>0 
+        && ntuple->JetID == 1 
+        ;
+}

@@ -9,7 +9,7 @@ eval `scramv1 runtime -sh`
 
 cd RA2bZinvEst/src
 
-./triggerEffInputs $FISTFILE $LASTFILE
+./../bin/triggerEffInputs $FISTFILE $LASTFILE
 
 ls 
 

@@ -151,9 +151,9 @@ int main(int argc, char** argv){
 
   TString skimType;
   if( region == 0 )
-    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_signal/";
+    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_signal/";
   if( region == 1 )
-    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_LDP/";
+    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_LDP/";
 
   vector<TString> ZJetsFileNames;
   ZJetsFileNames.push_back("tree_ZJetsToNuNu_HT-100to200.root");
@@ -171,9 +171,9 @@ int main(int argc, char** argv){
   sampleNames.push_back("ZJets");
 
   if( region == 0 )
-    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJet_CleanVars/";
+    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJet_CleanVars/";
   if( region == 1 )
-    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV10/tree_GJetLDP_CleanVars/";
+    skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJetLDP_CleanVars/";
 
   vector<TString> GJetsFileNames;
   if( DR0p4 ){ 
@@ -214,16 +214,16 @@ int main(int argc, char** argv){
     for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
       ntuple->GetEntry(iEvt);
       if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
-      
+      if( sampleNames[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;      
       if( sampleNames[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
+      if( sampleNames[iSample] == "GJets" && ntuple->Photons_fullID->at(0)!=1 ) continue;
       if( sampleNames[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
-      if( sampleNames[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;
       if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;      
       if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;
 
       for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++ ){
 	if( sampleNames[iSample] == "GJets" ){ 
-	  plots[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
+        plots[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);//*photonTriggerWeight(ntuple));
 	}else 
         plots[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
       }
@@ -231,7 +231,7 @@ int main(int argc, char** argv){
       if( ntuple->Photons->size() > 0 && ntuple->Photons_isEB->at(0) ){
 	for( int iPlot = 0 ; iPlot < plotsEB.size() ; iPlot++ ){
 	  if( sampleNames[iSample] == "GJets" )
-	    plotsEB[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
+          plotsEB[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);//*photonTriggerWeight(ntuple));
 	  else 
           plotsEB[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
 	}
@@ -239,7 +239,7 @@ int main(int argc, char** argv){
       }else{
 	for( int iPlot = 0 ; iPlot < plotsEE.size() ; iPlot++ ){
 	  if( sampleNames[iSample] == "GJets" )
-	    plotsEE[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
+          plotsEE[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);//*photonTriggerWeight(ntuple));
 	  else 
           plotsEE[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
 	}
@@ -250,9 +250,9 @@ int main(int argc, char** argv){
 
   TFile* outputFile;
   if( DR0p4 ) 
-    outputFile = new TFile("RzGamma_"+regionNames[region]+"_histo.root","RECREATE");
+    outputFile = new TFile("RzGamma_PUweightOnly_"+regionNames[region]+"_histo.root","RECREATE");
   else 
-    outputFile = new TFile("RzGamma_DR0p05_"+regionNames[region]+"_histo.root","RECREATE");
+    outputFile = new TFile("RzGamma_DR0p05_PUweightOnly_"+regionNames[region]+"_histo.root","RECREATE");
 
   TCanvas* can = new TCanvas("can","can",500,500);
 

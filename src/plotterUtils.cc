@@ -16,7 +16,7 @@ using namespace std;
 //double lumi=9200.;
 //double lumi=15000.;
 //double lumi=40000.;
-double lumi=36100.;
+double lumi=36300.;
 
 template <typename ntupleType> class plot{
 
@@ -130,6 +130,13 @@ template <typename ntupleType> class plot{
       return dataHist->Fill(fillerFunc(ntuple));
     else 
       return 0;
+  };
+    
+  int fillData(ntupleType* ntuple , float customWeight ){
+      if( dataHist )
+          return dataHist->Fill(fillerFunc(ntuple),customWeight);
+      else 
+          return 0;
   };
   
   void setFillColor(ntupleType* ntuple , int color=1){
@@ -303,7 +310,7 @@ template <typename ntupleType> class plot{
 
     char SF[16];
     sprintf(SF,"data/MC=%1.1f",dataHist->Integral()/sum->Integral());
-    TText* scaleFactor = new TText(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,2.1,SF);
+    TText* scaleFactor = new TText(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,1.6,SF);
     scaleFactor->SetTextFont(43);
     scaleFactor->SetTextSize(16);
     scaleFactor->Draw();
@@ -330,8 +337,12 @@ template <typename ntupleType> class plot{
     topPad->cd();
     gPad->SetLogy(false);
     can->SaveAs(dir+"/"+label+".png");
+    can->SaveAs(dir+"/"+label+".eps");
+    can->SaveAs(dir+"/"+label+".pdf");
     gPad->SetLogy(true);
     can->SaveAs(dir+"/"+label+"_LogY.png");
+    can->SaveAs(dir+"/"+label+"_LogY.eps");
+    can->SaveAs(dir+"/"+label+"_LogY.pdf");
 
 
   }
