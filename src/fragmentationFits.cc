@@ -89,6 +89,7 @@ int main(int argc, char** argv){
 
         int numEvents = ntuple->fChain->GetEntries();
         ntupleBranchStatus<RA2bTree>(ntuple);
+        double weight = 1.0;
         for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
             ntuple->GetEntry(iEvt);
             if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
@@ -102,32 +103,23 @@ int main(int argc, char** argv){
                 if( ntuple->Photons->size() != 1 ) continue;
                 if( ntuple->Photons->at(0).Pt() < 200. ) continue;
             }
- 
-            if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ){
-                analysisBin = Bins46plot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-                nJetBin = NJetsplot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-                PhotonMinDeltaR_inc.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-            }else{ 
-                analysisBin = Bins46plot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
-                nJetBin = NJetsplot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
-                PhotonMinDeltaR_inc.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
-            }
+
+            weight = lumi*ntuple->Weight*ntuple->puWeight;
+            if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP )
+                weight*=photonTriggerWeight(ntuple);
+            if( skims.sampleName[iSample] == "GJets" ) 
+                weight*=GJets0p4Weights(ntuple);
+
+            analysisBin = Bins46plot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
+            nJetBin = NJetsplot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
+            PhotonMinDeltaR_inc.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
+            
 
             if( analysisBin > 0 && analysisBin <= 46 ){
-                //cout << "MHT: " << ntuple->MHT << endl;
-                //cout << "deltaPhi(j,gam): " << fillRecoPhotonDeltaR(ntuple) << endl;
-                if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
-                    analysisBinnedPlots[analysisBin-1].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-                else
                     analysisBinnedPlots[analysisBin-1].fill(ntuple);
             }
 
             if( nJetBin > 0 && nJetBin <= 4 ){
-                //cout << "MHT: " << ntuple->MHT << endl;
-                //cout << "deltaPhi(j,gam): " << fillRecoPhotonDeltaR(ntuple) << endl;
-                if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
-                    nJetsBinnedPlots[nJetBin-1].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-                else
                     nJetsBinnedPlots[nJetBin-1].fill(ntuple);
             }
             
@@ -139,6 +131,7 @@ int main(int argc, char** argv){
     RA2bTree* ntuple = skims.dataNtuple;
     Bins46plot.addDataNtuple(ntuple,"data");
     NJetsplot.addDataNtuple(ntuple,"data");
+    PhotonMinDeltaR_inc.addDataNtuple(ntuple,"data");
     for( int iPlot = 0 ; iPlot < analysisBinnedPlots.size() ; iPlot++){
         analysisBinnedPlots[iPlot].addDataNtuple(ntuple,"data");
     }
@@ -160,10 +153,6 @@ int main(int argc, char** argv){
         analysisBin = Bins46plot.fillData(ntuple);        
         nJetBin = NJetsplot.fillData(ntuple);        
         PhotonMinDeltaR_inc.fillData(ntuple);
-
-        cout << "analysisBin: " << analysisBin << endl;
-        cout << "nJetBin: " << nJetBin << endl;
-        
         if( analysisBin > 0 && analysisBin <= 46 ){
                 analysisBinnedPlots[analysisBin-1].fillData(ntuple);
         }
@@ -216,23 +205,25 @@ int main(int argc, char** argv){
     }
     if( QCDindex < 0 || GJetsIndex < 0 ) 
         assert(0) ;
+
+    vector<plot> myPlots = nJetsBinnedPlots;
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-    for( int iPlot = 0 ; iPlot < analysisBinnedPlots.size() ; iPlot++){
+    for( int iPlot = 0 ; iPlot < myPlots.size() ; iPlot++){
         double MCerror=0,QCDerror=0;
         for( int iBin = 1 ; iBin <= 4 ; iBin++ ){
-            if( analysisBinnedPlots[iPlot].sum->GetBinContent(iBin) != 0 )
-                MCerror+=analysisBinnedPlots[iPlot].sum->GetBinError(iBin)*analysisBinnedPlots[iPlot].sum->GetBinError(iBin);
-            if( analysisBinnedPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->GetBinContent(iBin) != 0 )
-                QCDerror+=analysisBinnedPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->GetBinError(iBin)*analysisBinnedPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->GetBinError(iBin);
+            if( myPlots[iPlot].sum->GetBinContent(iBin) != 0 )
+                MCerror+=myPlots[iPlot].sum->GetBinError(iBin)*myPlots[iPlot].sum->GetBinError(iBin);
+            if( myPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->GetBinContent(iBin) != 0 )
+                QCDerror+=myPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->GetBinError(iBin)*myPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->GetBinError(iBin);
         }
         MCerror = sqrt(MCerror);
         QCDerror = sqrt(QCDerror);
-        double dataError=sqrt(analysisBinnedPlots[iPlot].dataHist->Integral(1,4));
-        double lowMC = analysisBinnedPlots[iPlot].sum->Integral(1,4);
-        double lowData = analysisBinnedPlots[iPlot].dataHist->Integral(1,4);
-        double highGJets = analysisBinnedPlots[iPlot].histoMap[skims.ntuples[GJetsIndex]]->Integral(4,40);
-        double highQCD = analysisBinnedPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->Integral(4,40);
-        double highData = analysisBinnedPlots[iPlot].dataHist->Integral(4,40);
+        double dataError=sqrt(myPlots[iPlot].dataHist->Integral(1,4));
+        double lowMC = myPlots[iPlot].sum->Integral(1,4);
+        double lowData = myPlots[iPlot].dataHist->Integral(1,4);
+        double highGJets = myPlots[iPlot].histoMap[skims.ntuples[GJetsIndex]]->Integral(4,40);
+        double highQCD = myPlots[iPlot].histoMap[skims.ntuples[QCDindex]]->Integral(4,40);
+        double highData = myPlots[iPlot].dataHist->Integral(4,40);
 
         cout << iPlot << " & " << lowMC << " $\\pm$ " << MCerror ;
         cout << std::setprecision(5) << " & " << lowData << " $\\pm$ " << std::setprecision(2) << dataError ; 
