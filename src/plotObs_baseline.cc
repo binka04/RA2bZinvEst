@@ -16,6 +16,8 @@
 
 using namespace std;
 
+static const int MAX_EVENTS=999999999;
+
 int main(int argc, char** argv){
 
     gROOT->ProcessLine(".L ~/tdrstyle.C");
@@ -51,6 +53,8 @@ int main(int argc, char** argv){
 
     plot PhotonMinDeltaR(*fillRecoPhotonDeltaR<RA2bTree>,"PhotonMinDeltaR_"+skims.regionNames[regInt]+"_baseline","min#Delta R(jet,#gamma)",40,0,4);
 
+    plot verticesplot(*fillNumVertices<RA2bTree>,"NumVertices_"+skims.regionNames[regInt]+"_baseline","n_{vtx}",40,0,80);
+
     vector<plot> plotsAllEvents;
     plotsAllEvents.push_back(MHTplot);
     plotsAllEvents.push_back(HTplot);
@@ -67,6 +71,7 @@ int main(int argc, char** argv){
     plotsAllEvents.push_back(PhotonPtplot);
     plotsAllEvents.push_back(PhotonEtaplot);
     plotsAllEvents.push_back(PhotonMinDeltaR);
+    plotsAllEvents.push_back(verticesplot);
 
     plot MHTplotEB(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline_EB","MHT [GeV]",64,200.,1800.);
     plot HTplotEB(*fillHT<RA2bTree>,"HT_"+skims.regionNames[regInt]+"_baseline_EB","H_{T} [GeV]",50,300,2800.);
@@ -87,6 +92,8 @@ int main(int argc, char** argv){
 
     plot PhotonMinDeltaREB(*fillRecoPhotonDeltaR<RA2bTree>,"PhotonMinDeltaR_"+skims.regionNames[regInt]+"_baseline_EB","min#Delta R(jet,#gamma)",40,0,4);
   
+    plot verticesplotEB(*fillNumVertices<RA2bTree>,"NumVertices_"+skims.regionNames[regInt]+"_baseline_EB","n_{vtx}",40,0,80);
+
     vector<plot> plotsEBevents;
     plotsEBevents.push_back(MHTplotEB);
     plotsEBevents.push_back(HTplotEB);
@@ -103,6 +110,7 @@ int main(int argc, char** argv){
     plotsEBevents.push_back(PhotonPtplotEB);
     plotsEBevents.push_back(PhotonEtaplotEB);
     plotsEBevents.push_back(PhotonMinDeltaREB);
+    plotsEBevents.push_back(verticesplotEB);
 
     plot MHTplotEE(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline_EE","MHT [GeV]",64,200.,1800.);
     plot HTplotEE(*fillHT<RA2bTree>,"HT_"+skims.regionNames[regInt]+"_baseline_EE","H_{T} [GeV]",50,300,2800.);
@@ -123,6 +131,8 @@ int main(int argc, char** argv){
 
     plot PhotonMinDeltaREE(*fillRecoPhotonDeltaR<RA2bTree>,"PhotonMinDeltaR_"+skims.regionNames[regInt]+"_baseline_EE","min#Delta R(jet,#gamma)",40,0,4);
 
+    plot verticesplotEE(*fillNumVertices<RA2bTree>,"NumVertices_"+skims.regionNames[regInt]+"_baseline_EE","n_{vtx}",40,0,80);
+
     vector<plot> plotsEEevents;
     plotsEEevents.push_back(MHTplotEE);
     plotsEEevents.push_back(HTplotEE);
@@ -139,6 +149,7 @@ int main(int argc, char** argv){
     plotsEEevents.push_back(PhotonPtplotEE);
     plotsEEevents.push_back(PhotonEtaplotEE);
     plotsEEevents.push_back(PhotonMinDeltaREE);
+    plotsEEevents.push_back(verticesplotEE);
 
     // background MC samples
     for( int iSample = 0 ; iSample < skims.ntuples.size() ; iSample++){
@@ -160,7 +171,10 @@ int main(int argc, char** argv){
 
         int numEvents = ntuple->fChain->GetEntries();
         ntupleBranchStatus<RA2bTree>(ntuple);
-        for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
+        double weight = 1.;
+        for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
+
+            //cout << "sample: " << skims.sampleName[iSample] << endl;
             ntuple->GetEntry(iEvt);
             if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
 
@@ -168,27 +182,26 @@ int main(int argc, char** argv){
             if( ( reg == skimSamples::kLDP || reg == skimSamples::kPhotonLDP || reg == skimSamples::kDYeLDP || reg == skimSamples::kDYmLDP ) && !RA2bLDPBaselineCut(ntuple) ) continue;
 
             if( skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
-                if( skims.sampleName[iSample] == "QCD" && ntuple->madMinPhotonDeltaR > 0.4 && isPromptPhoton(ntuple) ) continue;
-                if( skims.sampleName[iSample] == "GJets" && ( !isPromptPhoton(ntuple) || ntuple->madMinPhotonDeltaR<0.4 ) ) continue;
+                if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
+                if( skims.sampleName[iSample] == "GJets" && ( !isPromptPhoton(ntuple) || ntuple->madMinPhotonDeltaR < 0.4 ) ) continue;
                 if( ntuple->Photons->size() != 1 ) continue;
                 if( ntuple->Photons->at(0).Pt() < 200. ) continue;
             }
  
             for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++ ){
+                weight = lumi*ntuple->Weight*ntuple->puWeight;
                 if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
-                    plotsAllEvents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-                else 
-                    plotsAllEvents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
+                    weight *= photonTriggerWeight(ntuple);
+                if( skims.sampleName[iSample] == "GJets" ){
+                    //cout << "before: " << weight << endl;
+                    weight *= GJets0p4Weights(ntuple);
+                    //cout << "after: " << weight << endl;                    
+                }
+                plotsAllEvents[iPlot].fill(ntuple,weight);
                 if( ntuple->Photons_isEB->at(0) ){
-                    if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
-                        plotsEBevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-                    else 
-                        plotsEBevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
+                    plotsEBevents[iPlot].fill(ntuple,weight);
                 }else{
-                    if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP )
-                        plotsEEevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight*photonTriggerWeight(ntuple));
-                    else 
-                        plotsEEevents[iPlot].fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
+                    plotsEEevents[iPlot].fill(ntuple,weight);
                 }
             }
 
@@ -205,7 +218,7 @@ int main(int argc, char** argv){
   
     int numEvents = ntuple->fChain->GetEntries();
     ntupleBranchStatus<RA2bTree>(ntuple);
-    for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
+    for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
         ntuple->GetEntry(iEvt);
         if( iEvt % 1000000 == 0 ) cout << "data: " << iEvt << "/" << numEvents << endl;
 
