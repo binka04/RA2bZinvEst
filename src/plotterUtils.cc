@@ -283,7 +283,7 @@ template <typename ntupleType> class plot{
     //TGraphAsymmErrors* ratio = new TGraphAsymmErrors(sum,dataHist,"pois");
     ratio->SetMarkerStyle(8);
     ratio->GetYaxis()->SetTitle("Data/MC");
-    ratio->GetYaxis()->SetRangeUser(0.2,1.5);
+    ratio->GetYaxis()->SetRangeUser(0.2,2.0);
     ratio->GetXaxis()->SetRangeUser(lower,upper);
     ratio->GetXaxis()->SetTitle(xlabel);
 
@@ -310,7 +310,7 @@ template <typename ntupleType> class plot{
 
     char SF[16];
     sprintf(SF,"data/MC=%1.1f",dataHist->Integral()/sum->Integral());
-    TText* scaleFactor = new TText(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,1.6,SF);
+    TText* scaleFactor = new TText(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,2.1,SF);
     scaleFactor->SetTextFont(43);
     scaleFactor->SetTextSize(16);
     scaleFactor->Draw();
