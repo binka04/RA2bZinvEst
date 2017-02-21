@@ -23,7 +23,8 @@ int main(int argc, char** argv){
 
     if(argc != 2 ){
         cerr << "please provide a region index" << endl;
-        skimSamples::dumpRegions();
+        skimSamples s;
+        s.dumpRegions();
         return 1;
     }
 
@@ -153,6 +154,7 @@ int main(int argc, char** argv){
 
         int numEvents = ntuple->fChain->GetEntries();
         ntupleBranchStatus<RA2bTree>(ntuple);
+        double weight = 1.0;
         for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
             ntuple->GetEntry(iEvt);
             if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
@@ -172,25 +174,17 @@ int main(int argc, char** argv){
                 int iBin = projections[iProj].fill(ntuple);
                 if( iBin <= 0 ) continue;
 
-                //cout << "iBin:" << iBin << endl;
-                //cout << "isEB: " << ntuple->Photons_isEB->at(0) << endl;
-                //cout << "sieie: " << ntuple->Photons_sigmaIetaIeta->at(0) << endl;
-                //cout << "chrgIso: " << ntuple->Photons_pfChargedIsoRhoCorr->at(0) << endl;
                 if( ntuple->Photons_isEB->at(0) ){
                     if(ntuple->Photons_sigmaIetaIeta->at(0)>.0102){
-                        //cout << "high sieie" << endl;
                         chargeIsoEBHighSieieVersus[iProj][iBin-1].fill(ntuple);
                     }else{
-                        //cout << "low sieie" << endl;
                         chargeIsoEBLowSieieVersus[iProj][iBin-1].fill(ntuple);
                     }
                 }
                 else{
                     if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274){
-                        //cout << "high sieie" << endl;
                         chargeIsoEEHighSieieVersus[iProj][iBin-1].fill(ntuple);
                     }else{
-                        //cout << "low sieie" << endl;
                         chargeIsoEELowSieieVersus[iProj][iBin-1].fill(ntuple);
                     }
                 }
