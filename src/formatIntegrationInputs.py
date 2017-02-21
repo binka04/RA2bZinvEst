@@ -28,8 +28,8 @@ if region == "signal" :
     RzgHistoTag = "AnalysisBins_BTag0_RzGamma_signal"
     trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
     trigWeightTag = "AnalysisBins_BTag0_signal"
-    fragmentationFileName = "fragmentation.bin46.normal.txt"
-    purityFileName = "photonPurity_signal.txt"
+    fragmentationFileName = "../data/fragmentation.bin46.normal.txt"
+    purityFileName = "../data/photonPurity_signal.txt"
     outputFileName = "gJets_signal.dat"
 
 elif region == "ldp" : 
@@ -40,8 +40,8 @@ elif region == "ldp" :
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
     trigWeightFileName = "triggerUnc_DR0p05_LDP_histo.root"
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
-    fragmentationFileName = "fragmentation.bin59.ldp.normal.txt"
-    purityFileName = "photonPurity_QCD_CR.txt"
+    fragmentationFileName = "../data/fragmentation.bin59.ldp.normal.txt"
+    purityFileName = "../data/photonPurity_QCD_CR.txt"
     outputFileName = "gJets_ldp.dat"
 elif region == "hdp" :
     nBins = 59
@@ -51,8 +51,8 @@ elif region == "hdp" :
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
     trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
-    fragmentationFileName = "fragmentation.bin59.normal.txt"
-    purityFileName = "photonPurity_QCD_CR.txt"
+    fragmentationFileName = "../data/fragmentation.bin59.normal.txt"
+    purityFileName = "../data/photonPurity_QCD_CR.txt"
     outputFileName = "gJets_hdp.dat"
 else : 
     assert(0)
@@ -150,7 +150,7 @@ print fragFracErrDn
 print "------------------------------------------------------"
 
 print "================= ID SCALE FACTORS ==================="
-scaleFactorFile = TFile("SFcorrections.Photons.root","READ")
+scaleFactorFile = TFile("../data/SFcorrections.Photons.root","READ")
 scaleFactor = [scaleFactorFile.Get("h_inc").GetBinContent(1)]*nBins
 scaleFactorErr = [scaleFactorFile.Get("h_inc").GetBinError(1)]*nBins
 print scaleFactor
