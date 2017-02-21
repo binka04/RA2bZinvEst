@@ -32,6 +32,7 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
   ntuple->fChain->SetBranchStatus("Photons*",1);  
   ntuple->fChain->SetBranchStatus("madMinPhotonDeltaR",1);  
   ntuple->fChain->SetBranchStatus("GenParticles*",1); 
+  ntuple->fChain->SetBranchStatus("GenHT",1); 
   ntuple->fChain->SetBranchStatus("*Filter",1);
   ntuple->fChain->SetBranchStatus("NVtx",1);
   ntuple->fChain->SetBranchStatus("JetID",1);
@@ -41,6 +42,19 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
 /******************************************/
 /* custom weights			   */
 /******************************************/
+
+template<typename ntupleType> double GJets0p4Weights(ntupleType* ntuple){
+    if( ntuple->GenHT > 100. && ntuple->GenHT < 200. )
+        return 5391./5000.;
+    else if( ntuple->GenHT > 200. && ntuple->GenHT < 400. ) 
+        return 1168./1079.;
+    else if( ntuple->GenHT > 400. && ntuple->GenHT < 600. ) 
+        return 132.5/125.9;
+    else if( ntuple->GenHT > 600. ) 
+        return 44.05/43.36;
+    else 
+        return 1.;
+}
 
 TRandom randGen;
 
@@ -233,6 +247,10 @@ template<typename ntupleType> double fillPhotonChargedIso(ntupleType* ntuple){
 ////////////////////////////////////////////////////////////
 // - - - - - - - - EVENT LEVEL VARIABLES - - - - - - - -  //
 ////////////////////////////////////////////////////////////
+template<typename ntupleType> double fillNumVertices(ntupleType* ntuple){
+    return ntuple->NVtx;
+}
+
 template<typename ntupleType> double fillMadMinPhotonDeltaR(ntupleType* ntuple){
   return ntuple->madMinPhotonDeltaR;
 }
@@ -644,7 +662,7 @@ template<typename ntupleType> bool RA2bBaselineCut(ntupleType* ntuple){
   return ( (NJets==2 && DeltaPhi1>0.5 && DeltaPhi2>0.5) 
            || (NJets == 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3) 
            || (NJets > 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3 && DeltaPhi4 > 0.3 ) )
-      && MHT>250. && HT>300. 
+      && MHT>300. && HT>300. 
       && ntuple->HBHENoiseFilter==1 
       && ntuple->HBHEIsoNoiseFilter==1 
       && ntuple->eeBadScFilter==1 
