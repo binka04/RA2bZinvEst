@@ -16,7 +16,7 @@
 
 using namespace std;
 
-static const int MAX_EVENTS=999999999;
+static const int MAX_EVENTS=1000;//999999999;
 
 int main(int argc, char** argv){
 
@@ -238,7 +238,7 @@ int main(int argc, char** argv){
         }
     }
 
-    TFile* outputFile = new TFile("plotObs_baseline.root","UPDATE");
+    TFile* outputFile = new TFile("plotObs_"+skims.regionNames[regInt]+"_baseline.root","UPDATE");
 
     for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++){
         TCanvas* can = new TCanvas("can","can",500,500);
