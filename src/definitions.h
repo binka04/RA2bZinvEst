@@ -39,9 +39,55 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
 
 }
 
+/******************************************************************/
+/* - - - - - - - - - - - - cut flow function - - - - - - - - - -  */
+/******************************************************************/
+
+template<typename ntupleType> bool cutFlow_none(ntupleType* ntuple){
+    return true;
+}
+template<typename ntupleType> bool cutFlow_onePhoton(ntupleType* ntuple){
+    return ntuple->Photons->size()==1 
+        && isPromptPhoton(ntuple)
+        && ntuple->Photons_fullID->at(0)==1;    
+}
+
+template<typename ntupleType> bool cutFlow_photonPt200(ntupleType* ntuple){
+    return ntuple->Photons->at(0).Pt()>=200.;
+}
+template<typename ntupleType> bool cutFlow_minDR(ntupleType* ntuple){
+    return ntuple->madMinPhotonDeltaR>0.4;
+}
+template<typename ntupleType> bool cutFlow_HTbin1(ntupleType* ntuple){
+    return ntuple->HT>=300. && ntuple->HT<500.;
+}
+template<typename ntupleType> bool cutFlow_MHTbin1(ntupleType* ntuple){
+    return ntuple->MHT>=300. && ntuple->MHT<350;
+}
+template<typename ntupleType> bool cutFlow_nJetsTwo(ntupleType* ntuple){
+    return ntuple->NJets==2;
+}
+template<typename ntupleType> bool cutFlow_btagsZero(ntupleType* ntuple){
+    return ntuple->BTags==0;
+}
+template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
+    return ntuple->globalTightHalo2016Filter==1 
+        && ntuple->HBHENoiseFilter==1 
+        && ntuple->HBHEIsoNoiseFilter==1 
+        && ntuple->eeBadScFilter==1 
+        && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
+        && ntuple->NVtx>0 
+        && ntuple->JetID == 1 
+        ;
+}
+
 /******************************************/
 /* custom weights			   */
 /******************************************/
+template<typename ntupleType> double dRweights(ntupleType* ntuple){
+    double intercept,slope;
+    return 1./(min(ntuple->HT,900.)*slope+intercept);
+}
 
 template<typename ntupleType> double GJets0p4Weights(ntupleType* ntuple){
     if( ntuple->GenHT > 100. && ntuple->GenHT < 200. )
@@ -92,7 +138,7 @@ template<typename ntupleType> double photonTriggerWeightRand( ntupleType* ntuple
     }else if( MHT > 750. ){
         return truncGauss(EBtrigger[4],EBtriggerErrUp[4],EBtriggerErrDown[4]);
     }else
-        return -9999.;
+        return 1.;
   }else{
     if( MHT > 250. && MHT < 300. ){
         return truncGauss(ECtrigger[0],ECtriggerErrUp[0],ECtriggerErrDown[0]);
@@ -105,7 +151,7 @@ template<typename ntupleType> double photonTriggerWeightRand( ntupleType* ntuple
     }else if( MHT > 750. ){
         return truncGauss(ECtrigger[4],ECtriggerErrUp[4],ECtriggerErrDown[4]);
     }else
-      return -9999.;
+      return 1.;
   }
   
 }
@@ -130,7 +176,7 @@ template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
     }else if( MHT > 750. ){
       return EBtrigger[4];
     }else
-      return -9999.;
+      return 1.;
   }else{
     if( MHT > 250. && MHT < 300. ){
       return ECtrigger[0];
@@ -143,7 +189,7 @@ template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
     }else if( MHT > 750. ){
       return ECtrigger[4];
     }else
-      return -9999.;
+      return 1.;
   }
   
 }
@@ -663,12 +709,7 @@ template<typename ntupleType> bool RA2bBaselineCut(ntupleType* ntuple){
            || (NJets == 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3) 
            || (NJets > 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3 && DeltaPhi4 > 0.3 ) )
       && MHT>300. && HT>300. 
-      && ntuple->HBHENoiseFilter==1 
-      && ntuple->HBHEIsoNoiseFilter==1 
-      && ntuple->eeBadScFilter==1 
-      && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
-      && ntuple->NVtx>0 
-      && ntuple->JetID == 1 
+      && cutFlow_filters<ntupleType>(ntuple)
       ;
 
 }
@@ -686,53 +727,7 @@ template<typename ntupleType> bool RA2bLDPBaselineCut(ntupleType* ntuple){
 
   return NJets >= 2 && MHT > 250. && HT > 300. 
       && (DeltaPhi1 < 0.5 || DeltaPhi2 < 0.5 || DeltaPhi3 < 0.3 || DeltaPhi4 < 0.3)
-      && ntuple->HBHENoiseFilter==1 
-      && ntuple->HBHEIsoNoiseFilter==1 
-      && ntuple->eeBadScFilter==1 
-      && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
-      && ntuple->NVtx>0 
-      && ntuple->JetID == 1 
+      && cutFlow_filters<ntupleType>(ntuple);
       ;
 
-}
-
- /******************************************************************/
- /* - - - - - - - - - - - - cut flow function - - - - - - - - - -  */
- /******************************************************************/
-
-template<typename ntupleType> bool cutFlow_none(ntupleType* ntuple){
-    return true;
-}
-template<typename ntupleType> bool cutFlow_onePhoton(ntupleType* ntuple){
-    return ntuple->Photons->size()==1 
-        && isPromptPhoton(ntuple)
-        && ntuple->Photons_fullID->at(0)==1;    
-}
-
-template<typename ntupleType> bool cutFlow_photonPt200(ntupleType* ntuple){
-    return ntuple->Photons->at(0).Pt()>=200.;
-}
-template<typename ntupleType> bool cutFlow_minDR(ntupleType* ntuple){
-    return ntuple->madMinPhotonDeltaR>0.4;
-}
-template<typename ntupleType> bool cutFlow_HTbin1(ntupleType* ntuple){
-    return ntuple->HT>=300. && ntuple->HT<500.;
-}
-template<typename ntupleType> bool cutFlow_MHTbin1(ntupleType* ntuple){
-    return ntuple->MHT>=300. && ntuple->MHT<350;
-}
-template<typename ntupleType> bool cutFlow_nJetsTwo(ntupleType* ntuple){
-    return ntuple->NJets==2;
-}
-template<typename ntupleType> bool cutFlow_btagsZero(ntupleType* ntuple){
-    return ntuple->BTags==0;
-}
-template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
-    return ntuple->HBHENoiseFilter==1 
-        && ntuple->HBHEIsoNoiseFilter==1 
-        && ntuple->eeBadScFilter==1 
-        && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
-        && ntuple->NVtx>0 
-        && ntuple->JetID == 1 
-        ;
 }

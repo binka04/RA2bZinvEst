@@ -20,7 +20,7 @@ static const int MAX_EVENTS=999999999;
 
 int main(int argc, char** argv){
 
-    gROOT->ProcessLine(".L ~/tdrstyle.C");
+    gROOT->ProcessLine(".L tdrstyle.C");
     gROOT->ProcessLine("setTDRStyle()");
 
     if(argc != 2 ) return 1;

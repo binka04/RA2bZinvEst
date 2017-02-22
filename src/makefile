@@ -4,14 +4,14 @@ LIBS=`root-config --cflags --glibs` -L $(ROOTSYS)/lib
 INCLUDES=-I$(CMSSW_BASE)/src/
 EXECS=plotObs_baseline plotRzGamma triggerEffInputs plotPurityProperties triggerUncertainties cutFlow fragmentationFits photonNbExtrapolation
 $(EXECS):RA2bTree.cc definitions.h skimSamples.cc plotterUtils.cc cutFlow.cc fragmentationFits.cc triggerUncertainties.cc photonNbExtrapolation.cc
-plotObs_baseline:plotObs_baseline.cc
+plotObs_baseline: plotObs_baseline.cc
 plotRzGamma:plotRzGamma.cc CMS_lumi.h CMS_lumi.cc
-triggerEffInputs:triggerEffInputs.cc
-plotPurityProperties:plotPurityProperties.cc
-triggerUncertainties:triggerUncertainties.cc
-photonNbExtrapolation:photonNbExtrapolation.cc
-cutFlow:cutFlow.cc
-fragmentationFits:fragmentationFits.cc
+triggerEffInputs:triggerEffInputs.cc  
+plotPurityProperties:plotPurityProperties.cc  
+triggerUncertainties:triggerUncertainties.cc 
+photonNbExtrapolation:photonNbExtrapolation.cc  
+cutFlow:cutFlow.cc  
+fragmentationFits:fragmentationFits.cc  
 
 all:$(EXECS)
 
@@ -33,4 +33,4 @@ plotObs_baseline:
 	$(CC) -pg $(CFLAGS) $(LIBS) $(INCLUDES) plotObs_baseline.cc -o ../bin/$@
 
 clean : 
-	rm $(EXECS) 
+	rm ../bin/*

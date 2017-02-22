@@ -37,7 +37,7 @@ int main(int argc, char** argv){
 
     TString regionNames[2] = {"signal","LDP"};
 
-    gROOT->ProcessLine(".L ~/tdrstyle.C");
+    gROOT->ProcessLine(".L tdrstyle.C");
     gROOT->ProcessLine("setTDRStyle()");
 
     typedef plot<RA2bTree> plot;

@@ -92,7 +92,7 @@ int main(int argc, char** argv){
         assert( region == 0 || region == 1 );
     }
 
-    gROOT->ProcessLine(".L ~/tdrstyle.C");
+    gROOT->ProcessLine(".L tdrstyle.C");
     gROOT->ProcessLine("setTDRStyle()");
 
     typedef plot<RA2bTree> plot;

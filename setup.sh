@@ -12,13 +12,14 @@ fi
 if [ ! -d "plots/fragmentationFits" ]; then
     mkdir plots/plotObs_baseline_plots
 fi
-if [ ! -d "plots/plotPurity" ]; then
-    mkdir plots/purityFits  
-fi
-if [ ! -d "plots/Properties_plots" ]; then
-    mkdir plots/Properties_plots
+if [ ! -d "plots/plotPurityProperties_plots" ]; then
+    mkdir plots/plotPurityProperties_plots
 fi
 if [ ! -d "plots/purityResults" ]; then 
+    mkdir plots/purityResults
+    
+fi
+if [ ! -d "plots/triggerEff_plots" ]; then
     mkdir plots/triggerEff_plots
 fi
 

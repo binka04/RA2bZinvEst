@@ -6,8 +6,8 @@
 #include <vector>
 
 static const TString BASE_DIR = "root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/";
-
-
+static const bool RE_MINIAOD = true;
+ 
 class skimSamples{
 
 public : 
@@ -21,7 +21,7 @@ public :
     std::vector<TString> sampleName, signalSampleName;
     std::vector<TString> dataSampleName; 
     std::vector<int> fillColor, lineColor;
-
+    
     enum region {kSignal,kLDP,kPhoton,kPhotonLoose,kPhotonLDP,kPhotonLDPLoose,kDYe,kDYm,kDYeLDP,kDYmLDP,kNumRegions};
     TString regionNames[kNumRegions]={"signal","LDP","photon","photonLoose","photonLDP","photonLDPLoose","DYe","DYm","DYeLDP","DYmLDP"};
 
@@ -195,20 +195,25 @@ public :
         //     sampleName.push_back("GJets");
         //     fillColor.push_back(kGreen);
         // }
-\
+
         ////////////////////////////////////////////////////////////
         // - - - - - - - - - - - DATA INPUTS - - - - - - - - - -  //
         ////////////////////////////////////////////////////////////
 
         vector<TString> HTMHTFileNames;
-        HTMHTFileNames.push_back("tree_HTMHT_2016B.root");
-        HTMHTFileNames.push_back("tree_HTMHT_2016C.root");
-        HTMHTFileNames.push_back("tree_HTMHT_2016D.root");
-        HTMHTFileNames.push_back("tree_HTMHT_2016E.root");
-        HTMHTFileNames.push_back("tree_HTMHT_2016F.root");
-        HTMHTFileNames.push_back("tree_HTMHT_2016G.root");
-        HTMHTFileNames.push_back("tree_HTMHT_2016H2.root");
-        HTMHTFileNames.push_back("tree_HTMHT_2016H3.root");
+        TString basename;
+        if( RE_MINIAOD )
+            basename="tree_HTMHT_";
+        else 
+            basename="tree_HTMHT_re";
+        HTMHTFileNames.push_back(basename+"2016B.root");
+        HTMHTFileNames.push_back(basename+"2016C.root");
+        HTMHTFileNames.push_back(basename+"2016D.root");
+        HTMHTFileNames.push_back(basename+"2016E.root");
+        HTMHTFileNames.push_back(basename+"2016F.root");
+        HTMHTFileNames.push_back(basename+"2016G.root");
+        HTMHTFileNames.push_back(basename+"2016H2.root");
+        HTMHTFileNames.push_back(basename+"2016H3.root");
 
         if( r == kSignal ){
             data = new TChain("tree");
@@ -219,13 +224,17 @@ public :
         }
 
         vector<TString> SingleElectronNames;
-        SingleElectronNames.push_back("tree_SingleElectron_2016C.root");
-        SingleElectronNames.push_back("tree_SingleElectron_2016D.root");
-        SingleElectronNames.push_back("tree_SingleElectron_2016E.root");
-        SingleElectronNames.push_back("tree_SingleElectron_2016F.root");
-        SingleElectronNames.push_back("tree_SingleElectron_2016G.root");
-        SingleElectronNames.push_back("tree_SingleElectron_2016H2.root");
-        SingleElectronNames.push_back("tree_SingleElectron_2016H3.root");
+        if( RE_MINIAOD )
+            basename="tree_SingleElectron_";
+        else 
+            basename="tree_SingleElectron_re";
+        SingleElectronNames.push_back(basename+"2016C.root");
+        SingleElectronNames.push_back(basename+"2016D.root");
+        SingleElectronNames.push_back(basename+"2016E.root");
+        SingleElectronNames.push_back(basename+"2016F.root");
+        SingleElectronNames.push_back(basename+"2016G.root");
+        SingleElectronNames.push_back(basename+"2016H2.root");
+        SingleElectronNames.push_back(basename+"2016H3.root");
 
         if( r == kDYe || r == kDYeLDP ){
             data = new TChain("tree");
@@ -236,14 +245,18 @@ public :
         }
 
         vector<TString> SingleMuonNames;
-        SingleMuonNames.push_back("tree_SingleMuon_2016B.root");
-        SingleMuonNames.push_back("tree_SingleMuon_2016C.root");
-        SingleMuonNames.push_back("tree_SingleMuon_2016D.root");
-        SingleMuonNames.push_back("tree_SingleMuon_2016E.root");
-        SingleMuonNames.push_back("tree_SingleMuon_2016F.root");
-        SingleMuonNames.push_back("tree_SingleMuon_2016G.root");
-        SingleMuonNames.push_back("tree_SingleMuon_2016H2.root");
-        SingleMuonNames.push_back("tree_SingleMuon_2016H3.root");
+        if( RE_MINIAOD )
+            basename="tree_SingleMuon_";
+        else 
+            basename="tree_SingleMuon_re";
+        SingleMuonNames.push_back(basename+"2016B.root");
+        SingleMuonNames.push_back(basename+"2016C.root");
+        SingleMuonNames.push_back(basename+"2016D.root");
+        SingleMuonNames.push_back(basename+"2016E.root");
+        SingleMuonNames.push_back(basename+"2016F.root");
+        SingleMuonNames.push_back(basename+"2016G.root");
+        SingleMuonNames.push_back(basename+"2016H2.root");
+        SingleMuonNames.push_back(basename+"2016H3.root");
 
         if( r == kDYm || r == kDYmLDP ){
             data = new TChain("tree");
@@ -254,14 +267,18 @@ public :
         }
 
         vector<TString> SinglePhotonFileNames;
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016B.root");
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016C.root");
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016D.root");
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016E.root");
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016F.root");
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016G.root");
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016H2.root");
-        SinglePhotonFileNames.push_back("tree_SinglePhoton_2016H3.root");
+        if( RE_MINIAOD )
+            basename="tree_SinglePhoton_";
+        else
+            basename="tree_SinglePhoton_re";
+        SinglePhotonFileNames.push_back(basename+"2016B.root");
+        SinglePhotonFileNames.push_back(basename+"2016C.root");
+        SinglePhotonFileNames.push_back(basename+"2016D.root");
+        SinglePhotonFileNames.push_back(basename+"2016E.root");
+        SinglePhotonFileNames.push_back(basename+"2016F.root");
+        SinglePhotonFileNames.push_back(basename+"2016G.root");
+        SinglePhotonFileNames.push_back(basename+"2016H2.root");
+        SinglePhotonFileNames.push_back(basename+"2016H3.root");
         if( r == kPhoton || r == kPhotonLDP || r == kPhotonLoose || r == kPhotonLDPLoose ){
             data = new TChain("tree");
             for( int i = 0 ; i < SinglePhotonFileNames.size() ; i++ ){
