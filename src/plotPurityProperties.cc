@@ -233,7 +233,7 @@ int main(int argc, char** argv){
         ntuple->GetEntry(iEvt);
         if( iEvt % 1000000 == 0 ) cout << "data: " << iEvt << "/" << numEvents << endl;
     
-        if( ntuple->TriggerPass->size() < 50 || !ntuple->TriggerPass->at(51) ) continue;
+        if( ntuple->TriggerPass->size() < 53 || !ntuple->TriggerPass->at(52) ) continue;
 
         if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.) ) continue;
         if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 

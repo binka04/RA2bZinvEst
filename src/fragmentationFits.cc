@@ -148,7 +148,7 @@ int main(int argc, char** argv){
         if( ( reg == skimSamples::kLDP || reg == skimSamples::kPhotonLDP || reg == skimSamples::kDYeLDP || reg == skimSamples::kDYmLDP ) && !RA2bLDPBaselineCut(ntuple) ) continue;    
         if( ( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) && ntuple->Photons->at(0).Pt()<200. ) continue;
 
-        if( ntuple->TriggerPass->size() < 44 || !ntuple->TriggerPass->at(51) ) continue;
+        if( ntuple->TriggerPass->size() < 53 || !ntuple->TriggerPass->at(52) ) continue;
 
         analysisBin = Bins46plot.fillData(ntuple);        
         nJetBin = NJetsplot.fillData(ntuple);        
