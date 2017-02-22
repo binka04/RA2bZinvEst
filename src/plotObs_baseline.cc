@@ -227,7 +227,7 @@ int main(int argc, char** argv){
     
         if( ( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) && ntuple->Photons->at(0).Pt()<200. ) continue;
 
-        if( ntuple->TriggerPass->size() < 44 || !ntuple->TriggerPass->at(51) ) continue;
+        if( ntuple->TriggerPass->size() < 53 || !ntuple->TriggerPass->at(52) ) continue;
 
         for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++){
             plotsAllEvents[iPlot].fillData(ntuple);
