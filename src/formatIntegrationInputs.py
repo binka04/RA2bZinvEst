@@ -44,7 +44,7 @@ elif region == "ldp" :
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
     trigWeightFileName = "~/eos/RA2bZinvEst/{0}/triggerUnc_LDP_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
-    fragmentationFileName = "../data/fragmentation.bin59.ldp.normal.txt"
+    fragmentationFileName = "../data/fragmentation.11022017_ldp.txt"
     purityFileName = "../data/photonPurity_QCD_CR.txt"
     outputFileName = "gJets_ldp.dat"
 elif region == "hdp" :
