@@ -7,10 +7,14 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.add_option("-r", "--region", dest="region", default="signal",
                   help="region -- signal, ldp, hdp -- only")
+parser.add_option("-d", "--dir", dest="hash", default="",
+                  help="hash code corresponding to your git commit or the directory on eos where your outputs were stored")
 (options, args) = parser.parse_args()
 assert( options.region == "signal" or options.region == "ldp" or options.region == "hdp" )
+assert( options.hash != "" )
 
 region = options.region
+hash = options.hash
 nBins = 0
 MChistoFileName=""
 MChistoTag=""
@@ -22,36 +26,36 @@ outputFileName=""
 
 if region == "signal" :
     nBins = 46
-    MChistoFileName = "plotObs_baseline.root"
+    MChistoFileName = "~/eos/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0_photon_baseline"
-    RzgHistoFileName = "RzGamma_DR0p05_PUweightOnly_signal_histo.root"
+    RzgHistoFileName = "~/eos/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0_RzGamma_signal"
-    trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
+    trigWeightFileName = "~/eos/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0_signal"
-    fragmentationFileName = "../data/fragmentation.bin46.normal.txt"
+    fragmentationFileName = "../data/fragmentation.11022017_signal.txt"
     purityFileName = "../data/photonPurity_signal.txt"
     outputFileName = "gJets_signal.dat"
 
 elif region == "ldp" : 
     nBins = 59
-    MChistoFileName = "plotObs_baseline.root"
+    MChistoFileName = "~/eos/RA2bZinvEst/{0}/plotObs_photonLDP_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0plusQCDCR_photonLDP_baseline"
-    RzgHistoFileName = "RzGamma_DR0p05_PUweightOnly_LDP_histo.root"
+    RzgHistoFileName = "~/eos/RA2bZinvEst/{0}/RzGamma_PUweightOnly_LDP_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
-    trigWeightFileName = "triggerUnc_DR0p05_LDP_histo.root"
+    trigWeightFileName = "~/eos/RA2bZinvEst/{0}/triggerUnc_LDP_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
     fragmentationFileName = "../data/fragmentation.bin59.ldp.normal.txt"
     purityFileName = "../data/photonPurity_QCD_CR.txt"
     outputFileName = "gJets_ldp.dat"
 elif region == "hdp" :
     nBins = 59
-    MChistoFileName = "plotObs_baseline.root"
+    MChistoFileName = "~/eos/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0plusQCDCR_photon_baseline"
-    RzgHistoFileName = "RzGamma_DR0p05_PUweightOnly_signal_histo.root"
+    RzgHistoFileName = "~/eos/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
-    trigWeightFileName = "triggerUnc_DR0p05_signal_histo.root"
+    trigWeightFileName = "~/eos/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
-    fragmentationFileName = "../data/fragmentation.bin59.normal.txt"
+    fragmentationFileName = "../data/fragmentation.11022017_hdp.txt"
     purityFileName = "../data/photonPurity_QCD_CR.txt"
     outputFileName = "gJets_hdp.dat"
 else : 
@@ -150,7 +154,7 @@ print fragFracErrDn
 print "------------------------------------------------------"
 
 print "================= ID SCALE FACTORS ==================="
-scaleFactorFile = TFile("../data/SFcorrections.Photons.root","READ")
+scaleFactorFile = TFile("../data/SFcorrections.Photons.Feb132017.root","READ")
 scaleFactor = [scaleFactorFile.Get("h_inc").GetBinContent(1)]*nBins
 scaleFactorErr = [scaleFactorFile.Get("h_inc").GetBinError(1)]*nBins
 print scaleFactor
