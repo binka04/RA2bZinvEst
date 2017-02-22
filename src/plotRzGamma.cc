@@ -158,7 +158,7 @@ int main(int argc, char** argv){
             
             weight = lumi*ntuple->Weight*ntuple->puWeight;//*photonTriggerWeight(ntuple));
             if( sampleNames[iSample] == "GJets" && DR0p4 ) 
-                weight*=GJets0p4Weights(ntuple);
+                weight*=GJets0p4Weights(ntuple)*dRweights(ntuple);
 
             for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++ ){
                 if( sampleNames[iSample] == "GJets" ){ 

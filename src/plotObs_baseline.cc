@@ -194,7 +194,7 @@ int main(int argc, char** argv){
                     weight *= photonTriggerWeight(ntuple);
                 if( skims.sampleName[iSample] == "GJets" ){
                     //cout << "before: " << weight << endl;
-                    weight *= GJets0p4Weights(ntuple);
+                    weight *= GJets0p4Weights(ntuple)*dRweights(ntuple);
                     //cout << "after: " << weight << endl;                    
                 }
                 plotsAllEvents[iPlot].fill(ntuple,weight);

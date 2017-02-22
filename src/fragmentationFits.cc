@@ -108,7 +108,7 @@ int main(int argc, char** argv){
             if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP )
                 weight*=photonTriggerWeight(ntuple);
             if( skims.sampleName[iSample] == "GJets" ) 
-                weight*=GJets0p4Weights(ntuple);
+                weight*=GJets0p4Weights(ntuple)*dRweights(ntuple);
 
             analysisBin = Bins46plot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
             nJetBin = NJetsplot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
