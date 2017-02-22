@@ -16,7 +16,7 @@
 
 using namespace std;
 
-static const int MAX_EVENTS=1000;//999999999;
+static const int MAX_EVENTS=999999999;
 
 int main(int argc, char** argv){
 
