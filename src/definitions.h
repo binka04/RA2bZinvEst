@@ -1,9 +1,13 @@
 #include "TRandom.h"
 #include "TLorentzVector.h"
+#include "TH1F.h"
+#include "TFile.h"
 
 // constants
 // ==============================================
 double bbtagCut = 0.4;
+TFile* puWeightFile = new TFile("PileupHistograms_0121_69p2mb_pm4p6.root");
+TH1F* puWeightHist = (TH1F*) puWeightFile->Get("pu_weights_down");
 // ==============================================
 
 double CalcdPhi( double phi1 , double phi2 ){
@@ -42,7 +46,6 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
 /******************************************************************/
 /* - - - - - - - - - - - - cut flow function - - - - - - - - - -  */
 /******************************************************************/
-
 template<typename ntupleType> bool cutFlow_none(ntupleType* ntuple){
     return true;
 }
@@ -84,6 +87,14 @@ template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
 /******************************************/
 /* custom weights			   */
 /******************************************/
+template<typename ntupleType> double dRweights(ntupleType* ntuple){
+    double intercept,slope;
+    return 1./(min(ntuple->HT,900.)*slope+intercept);
+}
+template<typename ntupleType> double customPUweights(ntupleType* ntuple){
+    int nVtx = ntuple->NVtx;
+    return puWeightHist->GetBinContent(puWeightHist->FindBin(nVtx));
+}
 template<typename ntupleType> double dRweights(ntupleType* ntuple){
     double intercept,slope;
     return 1./(min(ntuple->HT,900.)*slope+intercept);
