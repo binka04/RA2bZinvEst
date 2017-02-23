@@ -203,9 +203,9 @@ public :
         vector<TString> HTMHTFileNames;
         TString basename;
         if( RE_MINIAOD )
-            basename="tree_HTMHT_";
-        else 
             basename="tree_HTMHT_re";
+        else 
+            basename="tree_HTMHT_";
         HTMHTFileNames.push_back(basename+"2016B.root");
         HTMHTFileNames.push_back(basename+"2016C.root");
         HTMHTFileNames.push_back(basename+"2016D.root");
@@ -225,9 +225,9 @@ public :
 
         vector<TString> SingleElectronNames;
         if( RE_MINIAOD )
-            basename="tree_SingleElectron_";
-        else 
             basename="tree_SingleElectron_re";
+        else 
+            basename="tree_SingleElectron_";
         SingleElectronNames.push_back(basename+"2016C.root");
         SingleElectronNames.push_back(basename+"2016D.root");
         SingleElectronNames.push_back(basename+"2016E.root");
@@ -246,9 +246,9 @@ public :
 
         vector<TString> SingleMuonNames;
         if( RE_MINIAOD )
-            basename="tree_SingleMuon_";
-        else 
             basename="tree_SingleMuon_re";
+        else 
+            basename="tree_SingleMuon_";
         SingleMuonNames.push_back(basename+"2016B.root");
         SingleMuonNames.push_back(basename+"2016C.root");
         SingleMuonNames.push_back(basename+"2016D.root");
@@ -268,9 +268,9 @@ public :
 
         vector<TString> SinglePhotonFileNames;
         if( RE_MINIAOD )
-            basename="tree_SinglePhoton_";
-        else
             basename="tree_SinglePhoton_re";
+        else
+            basename="tree_SinglePhoton_";
         SinglePhotonFileNames.push_back(basename+"2016B.root");
         SinglePhotonFileNames.push_back(basename+"2016C.root");
         SinglePhotonFileNames.push_back(basename+"2016D.root");
