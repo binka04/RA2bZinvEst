@@ -93,7 +93,7 @@ template<typename ntupleType> double customPUweights(ntupleType* ntuple){
     return puWeightHist->GetBinContent(puWeightHist->FindBin(nVtx));
 }
 template<typename ntupleType> double dRweights(ntupleType* ntuple){
-    double intercept,slope;
+    double intercept=0.9071,slope=0.00009615;
     return 1./(min(ntuple->HT,900.)*slope+intercept);
 }
 
