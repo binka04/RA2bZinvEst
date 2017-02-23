@@ -74,7 +74,8 @@ template<typename ntupleType> bool cutFlow_btagsZero(ntupleType* ntuple){
     return ntuple->BTags==0;
 }
 template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
-    return ntuple->globalTightHalo2016Filter==1 
+    return ntuple->HT5/ntuple->HT < 2.
+        && ntuple->globalTightHalo2016Filter==1 
         && ntuple->HBHENoiseFilter==1 
         && ntuple->HBHEIsoNoiseFilter==1 
         && ntuple->eeBadScFilter==1 
@@ -87,10 +88,6 @@ template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
 /******************************************/
 /* custom weights			   */
 /******************************************/
-template<typename ntupleType> double dRweights(ntupleType* ntuple){
-    double intercept,slope;
-    return 1./(min(ntuple->HT,900.)*slope+intercept);
-}
 template<typename ntupleType> double customPUweights(ntupleType* ntuple){
     int nVtx = ntuple->NVtx;
     return puWeightHist->GetBinContent(puWeightHist->FindBin(nVtx));
