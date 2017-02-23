@@ -6,7 +6,7 @@
 // constants
 // ==============================================
 double bbtagCut = 0.4;
-TFile* puWeightFile = new TFile("PileupHistograms_0121_69p2mb_pm4p6.root");
+TFile* puWeightFile = new TFile("../data/PileupHistograms_0121_69p2mb_pm4p6.root");
 TH1F* puWeightHist = (TH1F*) puWeightFile->Get("pu_weights_down");
 // ==============================================
 
