@@ -115,7 +115,7 @@ int main(int argc, char** argv){
             for( int iCut = 0 ; iCut < cutFlow.size() ; iCut++ ){
                 if( ! cutFlow[iCut](ntuple) ) break;
                 for( int iPlot = 0 ; iPlot < plots[iCut].size() ; iPlot++ ){
-                    weight = ntuple->Weight*lumi*ntuple->puWeight;
+                    weight = ntuple->Weight*lumi*customPUweights(ntuple);
                     if( sampleNames[iSample] == "GJets" ){
                         weight*=photonTriggerWeight(ntuple)*GJets0p4Weights(ntuple)*dRweights(ntuple);
                         plots[iCut][iPlot].fill(ntuple,weight);

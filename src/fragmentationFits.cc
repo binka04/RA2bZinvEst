@@ -104,15 +104,15 @@ int main(int argc, char** argv){
                 if( ntuple->Photons->at(0).Pt() < 200. ) continue;
             }
 
-            weight = lumi*ntuple->Weight*ntuple->puWeight;
+            weight = lumi*ntuple->Weight*customPUweights(ntuple);
             if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP )
                 weight*=photonTriggerWeight(ntuple);
             if( skims.sampleName[iSample] == "GJets" ) 
                 weight*=GJets0p4Weights(ntuple)*dRweights(ntuple);
 
-            analysisBin = Bins46plot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
-            nJetBin = NJetsplot.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
-            PhotonMinDeltaR_inc.fill(ntuple,lumi*ntuple->Weight*ntuple->puWeight);
+            analysisBin = Bins46plot.fill(ntuple,lumi*ntuple->Weight*customPUweights(ntuple));
+            nJetBin = NJetsplot.fill(ntuple,lumi*ntuple->Weight*customPUweights(ntuple));
+            PhotonMinDeltaR_inc.fill(ntuple,lumi*ntuple->Weight*customPUweights(ntuple));
             
 
             if( analysisBin > 0 && analysisBin <= 46 ){

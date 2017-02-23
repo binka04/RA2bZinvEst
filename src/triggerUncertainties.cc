@@ -93,9 +93,9 @@ int main(int argc, char** argv){
       if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;
 
       for( int i=0 ; i<100 ; i++ ){
-          MHTplot->Fill(ntuple->MHT,photonTriggerWeightRand(ntuple),ntuple->Weight*ntuple->puWeight);
-          Bins46plot->Fill(fillRA2b46Bins(ntuple),photonTriggerWeightRand(ntuple),ntuple->Weight*ntuple->puWeight);           
-          Bins59plot->Fill(fillRA2b59Bins(ntuple),photonTriggerWeightRand(ntuple),ntuple->Weight*ntuple->puWeight);
+          MHTplot->Fill(ntuple->MHT,photonTriggerWeightRand(ntuple),ntuple->Weight*customPUweights(ntuple));
+          Bins46plot->Fill(fillRA2b46Bins(ntuple),photonTriggerWeightRand(ntuple),ntuple->Weight*customPUweights(ntuple));
+          Bins59plot->Fill(fillRA2b59Bins(ntuple),photonTriggerWeightRand(ntuple),ntuple->Weight*customPUweights(ntuple));
       }
 
     }

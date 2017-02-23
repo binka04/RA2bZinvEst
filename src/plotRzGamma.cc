@@ -156,7 +156,7 @@ int main(int argc, char** argv){
             if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;      
             if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;
             
-            weight = lumi*ntuple->Weight*ntuple->puWeight;//*photonTriggerWeight(ntuple));
+            weight = lumi*ntuple->Weight*customPUweights(ntuple);//*photonTriggerWeight(ntuple));
             if( sampleNames[iSample] == "GJets" && DR0p4 ) 
                 weight*=GJets0p4Weights(ntuple)*dRweights(ntuple);
 

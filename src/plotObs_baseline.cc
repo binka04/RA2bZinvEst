@@ -171,7 +171,7 @@ int main(int argc, char** argv){
 
         int numEvents = ntuple->fChain->GetEntries();
         ntupleBranchStatus<RA2bTree>(ntuple);
-        double weight = 1.;
+        double weight = 1.0;
         for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
 
             //cout << "sample: " << skims.sampleName[iSample] << endl;
@@ -189,7 +189,7 @@ int main(int argc, char** argv){
             }
  
             for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++ ){
-                weight = lumi*ntuple->Weight*ntuple->puWeight;
+                weight = lumi*ntuple->Weight*customPUweights(ntuple);
                 if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
                     weight *= photonTriggerWeight(ntuple);
                 if( skims.sampleName[iSample] == "GJets" ){
