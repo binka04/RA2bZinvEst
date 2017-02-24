@@ -167,7 +167,7 @@ int main(int argc, char** argv){
       
             if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.)) continue;
             if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 
-                ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineCut(ntuple)) ) continue;
+                ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
 
             for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
 
@@ -237,7 +237,7 @@ int main(int argc, char** argv){
 
         if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.) ) continue;
         if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 
-            ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineCut(ntuple)) ) continue;
+            ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
 
         for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
             int iBin = projections[iProj].fillData(ntuple);

@@ -723,6 +723,26 @@ template<typename ntupleType> bool RA2bBaselineCut(ntupleType* ntuple){
 
 }
 
+template<typename ntupleType> bool RA2bBaselineWideCut(ntupleType* ntuple){
+
+  double DeltaPhi1 = ntuple->DeltaPhi1;
+  double DeltaPhi2 = ntuple->DeltaPhi2;
+  double DeltaPhi3 = ntuple->DeltaPhi3;
+  double DeltaPhi4 = ntuple->DeltaPhi4;
+
+  double HT = ntuple->HT;
+  double MHT = ntuple->MHT;
+  int NJets = ntuple->NJets;
+
+  return ( (NJets==2 && DeltaPhi1>0.5 && DeltaPhi2>0.5) 
+           || (NJets == 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3) 
+           || (NJets > 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3 && DeltaPhi4 > 0.3 ) )
+      && MHT>250. && HT>300. 
+      && cutFlow_filters<ntupleType>(ntuple)
+      ;
+
+}
+
 template<typename ntupleType> bool RA2bLDPBaselineCut(ntupleType* ntuple){
 
   double DeltaPhi1 = ntuple->DeltaPhi1;
