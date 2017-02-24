@@ -15,17 +15,18 @@ parser.add_option("-e", "--encap", dest="endcap", default=False,action="store_tr
                   help="fit endcap photons")
 parser.add_option("-b", "--binLabel", dest="binLabel", default="MHT_200",
                   help="histo bin label")
-
+parser.add_option("-d", "--inputDir", dest="inputDir", default="",
+                  help="path to the location of input root files")
 (options, args) = parser.parse_args()
 
 saveTag = options.saveTag
 endcap = options.endcap
 binLabel = options.binLabel
-
+inputDir = options.inputDir
 print "saveTag:",saveTag
 print "endcap:",endcap
 print "binLabel:",binLabel
-
+print "inputDir:",inputDir
 EEorEB=""
 if endcap : 
     EEorEB="EE"
@@ -149,7 +150,7 @@ def main() :
     ###########################################################
     # - - - - - - - - - - grab histo inputs - - - - - - - - - #
     ###########################################################
-    inputFile = TFile("plotPurityProperties_photonLoose.root","READ")
+    inputFile = TFile(inputDir+"/plotPurityProperties_photonLoose.root","READ")
     prompt_hist = inputFile.Get("photonIsoChrgLowSieie_{0}_{1}_photonLoose_GJets".format(EEorEB,binLabel))
     ### ADD HACK BECAUSE THERE AREN'T ENOUGH EVENTS IN THE
     ### MC ALT MHT_500 BIN....
