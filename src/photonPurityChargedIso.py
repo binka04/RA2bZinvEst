@@ -131,7 +131,7 @@ def runFit( promptHisto,nonPromptHisto,dataHisto,isEndcap,tag) :
     lumiText = TPaveText(.72,.9,.97,.96,"NDC")
     lumiText.SetFillColor(0)
     lumiText.SetBorderSize(0)
-    lumiText.AddText("24.5 fb^{-1} (13 TeV)")
+    lumiText.AddText("35.9 fb^{-1} (13 TeV)")
     
     fitPad.cd()
     lumiText.Draw()
