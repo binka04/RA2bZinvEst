@@ -40,7 +40,6 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
   ntuple->fChain->SetBranchStatus("*Filter",1);
   ntuple->fChain->SetBranchStatus("NVtx",1);
   ntuple->fChain->SetBranchStatus("JetID",1);
-
 }
 
 /******************************************************************/
@@ -80,6 +79,8 @@ template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
         && ntuple->HBHEIsoNoiseFilter==1 
         && ntuple->eeBadScFilter==1 
         && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
+        && BadChargedCandidateFilter == 1 
+        && BadPFMuonFilter == 1
         && ntuple->NVtx>0 
         && ntuple->JetID == 1 
         ;
