@@ -71,6 +71,8 @@ public :
    Int_t           HBHENoiseFilter;
    Double_t        HT;
    Double_t        GenHT;
+   Double_t        madHT;
+   Double_t        TrueNumInteractions;
    Double_t        puWeight;
    Double_t        madMinPhotonDeltaR;
    Double_t        Weight;
@@ -236,6 +238,8 @@ public :
    TBranch        *b_HBHENoiseFilter;   //!
    TBranch        *b_HT;   //!
    TBranch        *b_GenHT;   //!
+   TBranch        *b_madHT;   //!
+   TBranch        *b_TrueNumInteractions;   //!
    TBranch        *b_Weight;   //!
    TBranch        *b_puWeight;   //!
    TBranch        *b_madMinPhotonDeltaR;   //!
@@ -575,6 +579,8 @@ void RA2bTree::Init(TTree *tree)
    fChain->SetBranchAddress("HBHENoiseFilter", &HBHENoiseFilter, &b_HBHENoiseFilter);
    fChain->SetBranchAddress("HT", &HT, &b_HT);
    fChain->SetBranchAddress("GenHT", &GenHT, &b_GenHT);
+   fChain->SetBranchAddress("madHT", &madHT, &b_madHT);
+   fChain->SetBranchAddress("TrueNumInteractions", &TrueNumInteractions, &b_TrueNumInteractions);
    fChain->SetBranchAddress("Weight", &Weight, &b_Weight);
    fChain->SetBranchAddress("puWeight", &puWeight, &b_puWeight);
    fChain->SetBranchAddress("madMinPhotonDeltaR", &madMinPhotonDeltaR, &b_madMinPhotonDeltaR);
