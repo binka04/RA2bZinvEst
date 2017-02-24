@@ -36,8 +36,9 @@ template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
   ntuple->fChain->SetBranchStatus("Photons*",1);  
   ntuple->fChain->SetBranchStatus("madMinPhotonDeltaR",1);  
   ntuple->fChain->SetBranchStatus("GenParticles*",1); 
-  ntuple->fChain->SetBranchStatus("GenHT",1); 
+  ntuple->fChain->SetBranchStatus("madHT",1); 
   ntuple->fChain->SetBranchStatus("*Filter",1);
+  ntuple->fChain->SetBranchStatus("TrueNumInteractions",1);
   ntuple->fChain->SetBranchStatus("NVtx",1);
   ntuple->fChain->SetBranchStatus("JetID",1);
 }
@@ -79,8 +80,8 @@ template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
         && ntuple->HBHEIsoNoiseFilter==1 
         && ntuple->eeBadScFilter==1 
         && ntuple->EcalDeadCellTriggerPrimitiveFilter == 1 
-        && BadChargedCandidateFilter == 1 
-        && BadPFMuonFilter == 1
+        && ntuple->BadChargedCandidateFilter == 1 
+        && ntuple->BadPFMuonFilter == 1
         && ntuple->NVtx>0 
         && ntuple->JetID == 1 
         ;
@@ -90,8 +91,8 @@ template<typename ntupleType> bool cutFlow_filters(ntupleType* ntuple){
 /* custom weights			   */
 /******************************************/
 template<typename ntupleType> double customPUweights(ntupleType* ntuple){
-    int nVtx = ntuple->NVtx;
-    return puWeightHist->GetBinContent(puWeightHist->FindBin(nVtx));
+    int nVtx = ntuple->TrueNumInteractions;
+    return puWeightHist->GetBinContent(puWeightHist->GetXaxis()->FindBin(min(ntuple->TrueNumInteractions,puWeightHist->GetBinLowEdge(puWeightHist->GetNbinsX()+1))));
 }
 template<typename ntupleType> double dRweights(ntupleType* ntuple){
     double intercept=0.9071,slope=0.00009615;
@@ -99,13 +100,13 @@ template<typename ntupleType> double dRweights(ntupleType* ntuple){
 }
 
 template<typename ntupleType> double GJets0p4Weights(ntupleType* ntuple){
-    if( ntuple->GenHT > 100. && ntuple->GenHT < 200. )
+    if( ntuple->madHT > 100. && ntuple->madHT < 200. )
         return 5391./5000.;
-    else if( ntuple->GenHT > 200. && ntuple->GenHT < 400. ) 
+    else if( ntuple->madHT > 200. && ntuple->madHT < 400. ) 
         return 1168./1079.;
-    else if( ntuple->GenHT > 400. && ntuple->GenHT < 600. ) 
+    else if( ntuple->madHT > 400. && ntuple->madHT < 600. ) 
         return 132.5/125.9;
-    else if( ntuple->GenHT > 600. ) 
+    else if( ntuple->madHT > 600. ) 
         return 44.05/43.36;
     else 
         return 1.;
