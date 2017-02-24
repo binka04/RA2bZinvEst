@@ -42,8 +42,6 @@ int main(int argc, char** argv){
 
   typedef plot<RA2bTree> plot;
   
-  lumi = 24500;
-
   TH2F* MHTplot = new TH2F("MHT_"+regionNames[region],"H_{T}^{miss} [GeV]",15,300.,1800.,1000.,0.,1.);
   TH2F* Bins46plot = new TH2F("AnalysisBins_BTag0_"+regionNames[region],"i^{th} Bin",46,0.5,46.5,1000.,0.,1.);
   TH2F* Bins59plot = new TH2F("AnalysisBins_BTag0plusQCDCR_RzGamma_"+regionNames[region],"i^{th} Bin",59,0.5,59.5,1000.,0.,1.);

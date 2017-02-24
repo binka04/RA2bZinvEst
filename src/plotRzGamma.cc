@@ -42,8 +42,6 @@ int main(int argc, char** argv){
 
     typedef plot<RA2bTree> plot;
   
-    lumi = 24500;
-
     vector<TString> xlabels;
     xlabels.push_back("MHT [GeV]");
     xlabels.push_back("H_{T} [GeV]");

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <cassert>
+#include <stdlib.h>
 
 #include "CMS_lumi.cc"
 
@@ -97,8 +98,6 @@ int main(int argc, char** argv){
 
     typedef plot<RA2bTree> plot;
   
-    lumi = 36300;
-
     vector<TString> xlabels;
     xlabels.push_back("H_{T}^{miss} [GeV]");
     xlabels.push_back("p_{T,#gamma} [GeV]");
@@ -340,7 +339,9 @@ int main(int argc, char** argv){
         leg->Draw();
         writeExtraText = true;
         extraText = "Preliminary";
-        lumi_13TeV = "36.3";
+        TString lumi_s="";
+        lumi_s+=lumi;
+        lumi_13TeV = lumi_s;
         CMS_lumi( can , 4 , 0 );
         can->Update();
         can->RedrawAxis();
