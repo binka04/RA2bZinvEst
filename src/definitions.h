@@ -718,7 +718,7 @@ template<typename ntupleType> bool RA2bBaselineCut(ntupleType* ntuple){
   return ( (NJets==2 && DeltaPhi1>0.5 && DeltaPhi2>0.5) 
            || (NJets == 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3) 
            || (NJets > 3 && DeltaPhi1 > 0.5 && DeltaPhi2 > 0.5 && DeltaPhi3 > 0.3 && DeltaPhi4 > 0.3 ) )
-      && MHT>300. && HT>300. 
+      && MHT>250. && HT>300. 
       && cutFlow_filters<ntupleType>(ntuple)
       ;
 
