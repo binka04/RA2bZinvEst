@@ -3,11 +3,43 @@
 #include "TH1F.h"
 #include "TFile.h"
 
+// ==============================================
+// class for loading and retrieving GJets NLO 
+// weights
+// ----------------------------------------------
+enum NLO_weight_type {kLO,kNLO,kUpVar,kDnVar};
+
+class NLO_weights{
+ public:
+    TFile* inputFile;
+    TH1F *LO,*NLO,*UpVar,*DnVar;
+    vector<TH1F*> histo;
+
+    NLO_weights(){
+        inputFile = new TFile("../data/kfactors.root");
+        LO = (TH1F*) inputFile->Get("GJets_LO/inv_pt_G");
+        NLO = (TH1F*) inputFile->Get("GJets_1j_NLO/nominal_G");
+        UpVar = (TH1F*) inputFile->Get("GJets_1j_NLO/ren_up_G");
+        DnVar = (TH1F*) inputFile->Get("GJets_1j_NLO/ren_down_G");
+        histo.push_back(LO);
+        histo.push_back(NLO);
+        histo.push_back(UpVar);
+        histo.push_back(DnVar);
+    }
+
+    double get(double pt, NLO_weight_type weightType=kLO){
+        return histo[weightType]->GetBinContent(histo[weightType]->FindBin(pt));
+    }
+};
+
+// ==============================================
+
 // constants
 // ==============================================
 double bbtagCut = 0.4;
 TFile* puWeightFile = new TFile("../data/PileupHistograms_0121_69p2mb_pm4p6.root");
 TH1F* puWeightHist = (TH1F*) puWeightFile->Get("pu_weights_central");
+NLO_weights NLOw;
 // ==============================================
 
 double CalcdPhi( double phi1 , double phi2 ){
@@ -20,7 +52,6 @@ double CalcdPhi( double phi1 , double phi2 ){
   return fabs(dPhi);
 
 }
-
 
 template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
   ntuple->fChain->SetBranchStatus("*",0);
