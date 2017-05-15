@@ -48,7 +48,7 @@ int main(int argc, char** argv){
     plot DeltaPhi3plot(*fillDeltaPhi3<RA2bTree>,"DeltaPhi3_"+skims.regionNames[regInt]+"_baseline","#Delta#Phi_{3}",20,0.,3.1415);
     plot DeltaPhi4plot(*fillDeltaPhi4<RA2bTree>,"DeltaPhi4_"+skims.regionNames[regInt]+"_baseline","#Delta#Phi_{4}",20,0.,3.1415);
 
-    plot PhotonPtplot(*photonPt<RA2bTree>,"PhotonPt_"+skims.regionNames[regInt]+"_baseline","p_{T,#gamma} [GeV]",50,0,1000);
+    plot PhotonPtplot(*photonPt<RA2bTree>,"PhotonPt_"+skims.regionNames[regInt]+"_baseline","p_{T,#gamma} [GeV]",50,200,1400);
     plot PhotonEtaplot(*photonEta<RA2bTree>,"PhotonEta_"+skims.regionNames[regInt]+"_baseline","#eta_{#gamma}",60,-3.,3.);
 
     plot PhotonMinDeltaR(*fillRecoPhotonDeltaR<RA2bTree>,"PhotonMinDeltaR_"+skims.regionNames[regInt]+"_baseline","min#Delta R(jet,#gamma)",40,0,4);
@@ -87,7 +87,7 @@ int main(int argc, char** argv){
     plot DeltaPhi3plotEB(*fillDeltaPhi3<RA2bTree>,"DeltaPhi3_"+skims.regionNames[regInt]+"_baseline_EB","#Delta#Phi_{3}",20,0.,3.1415);
     plot DeltaPhi4plotEB(*fillDeltaPhi4<RA2bTree>,"DeltaPhi4_"+skims.regionNames[regInt]+"_baseline_EB","#Delta#Phi_{4}",20,0.,3.1415);
 
-    plot PhotonPtplotEB(*photonPt<RA2bTree>,"PhotonPt_"+skims.regionNames[regInt]+"_baseline_EB","p_{T,#gamma} [GeV]",50,0,1000);
+    plot PhotonPtplotEB(*photonPt<RA2bTree>,"PhotonPt_"+skims.regionNames[regInt]+"_baseline_EB","p_{T,#gamma} [GeV]",50,200,1400);
     plot PhotonEtaplotEB(*photonEta<RA2bTree>,"PhotonEta_"+skims.regionNames[regInt]+"_baseline_EB","#eta_{#gamma}",60,-3.,3.);
 
     plot PhotonMinDeltaREB(*fillRecoPhotonDeltaR<RA2bTree>,"PhotonMinDeltaR_"+skims.regionNames[regInt]+"_baseline_EB","min#Delta R(jet,#gamma)",40,0,4);
@@ -126,7 +126,7 @@ int main(int argc, char** argv){
     plot DeltaPhi3plotEE(*fillDeltaPhi3<RA2bTree>,"DeltaPhi3_"+skims.regionNames[regInt]+"_baseline_EE","#Delta#Phi_{3}",20,0.,3.1415);
     plot DeltaPhi4plotEE(*fillDeltaPhi4<RA2bTree>,"DeltaPhi4_"+skims.regionNames[regInt]+"_baseline_EE","#Delta#Phi_{4}",20,0.,3.1415);
 
-    plot PhotonPtplotEE(*photonPt<RA2bTree>,"PhotonPt_"+skims.regionNames[regInt]+"_baseline_EE","p_{T,#gamma} [GeV]",50,0,1000);
+    plot PhotonPtplotEE(*photonPt<RA2bTree>,"PhotonPt_"+skims.regionNames[regInt]+"_baseline_EE","p_{T,#gamma} [GeV]",50,200,1400);
     plot PhotonEtaplotEE(*photonEta<RA2bTree>,"PhotonEta_"+skims.regionNames[regInt]+"_baseline_EE","#eta_{#gamma}",60,-3.,3.);
 
     plot PhotonMinDeltaREE(*fillRecoPhotonDeltaR<RA2bTree>,"PhotonMinDeltaR_"+skims.regionNames[regInt]+"_baseline_EE","min#Delta R(jet,#gamma)",40,0,4);
