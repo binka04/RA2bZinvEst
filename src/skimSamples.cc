@@ -33,6 +33,8 @@ public :
 
         if( r == kSignal )
             skimType=BASE_DIR+"tree_signal/";
+        if( r == kLDP )
+            skimType=BASE_DIR+"tree_LDP/";
         if( r == kPhoton )
             skimType=BASE_DIR+"tree_GJet_CleanVars/";
         if( r == kPhotonLDP )
@@ -65,7 +67,7 @@ public :
         for( int i = 0 ; i < ZJetsFileNames.size() ; i++ ){
             ZJets->Add(skimType+"/"+ZJetsFileNames[i]);
         }
-        if( r == kSignal ){ 
+        if( r == kSignal || r == kLDP ){ 
             ntuples.push_back(new RA2bTree(ZJets));
             sampleName.push_back("ZJets");
             fillColor.push_back(kGreen+1);
@@ -84,7 +86,7 @@ public :
         for( int i = 0 ; i < QCDFileNames.size() ; i++ ){
             QCD->Add(skimType+"/"+QCDFileNames[i]);
         }
-        if( r == kSignal || r == kPhoton || r == kPhotonLDP || r == kPhotonLoose || r == kPhotonLDPLoose ){ 
+        if( r == kSignal || r == kLDP || r == kPhoton || r == kPhotonLDP || r == kPhotonLoose || r == kPhotonLDPLoose ){ 
             ntuples.push_back(new RA2bTree(QCD));
             sampleName.push_back("QCD");
             fillColor.push_back(kGray);
@@ -102,7 +104,7 @@ public :
         for( int i = 0 ; i < WJetsFileNames.size() ; i++ ){
             WJets->Add(skimType+"/"+WJetsFileNames[i]);
         }
-        if( r == kSignal ){
+        if( r == kSignal || r == kLDP ){
             ntuples.push_back(new RA2bTree(WJets));
             sampleName.push_back("WJets");
             fillColor.push_back(kBlue);
@@ -215,7 +217,7 @@ public :
         HTMHTFileNames.push_back(basename+"2016H2.root");
         HTMHTFileNames.push_back(basename+"2016H3.root");
 
-        if( r == kSignal ){
+        if( r == kSignal || r == kLDP ){
             data = new TChain("tree");
             for( int i = 0 ; i < HTMHTFileNames.size() ; i++ ){
                 data->Add(skimType+"/"+HTMHTFileNames[i]);

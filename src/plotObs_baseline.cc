@@ -16,7 +16,7 @@
 
 using namespace std;
 
-static const int MAX_EVENTS=999999999;
+static const int MAX_EVENTS=10000;//999999999;
 
 int main(int argc, char** argv){
 
@@ -34,14 +34,14 @@ int main(int argc, char** argv){
         cout << "sample name: " << skims.sampleName[i] << endl;
     }
   
-    plot MHTplot(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline","MHT [GeV]",64,200.,1800.);
+    plot MHTplot(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline","H_{T}^{miss} [GeV]",64,200.,1800.);
     plot HTplot(*fillHT<RA2bTree>,"HT_"+skims.regionNames[regInt]+"_baseline","H_{T} [GeV]",50,300,2800.);
-    plot NJetsplot(*fillNJets<RA2bTree>,"NJets_"+skims.regionNames[regInt]+"_baseline","n_{j}",14,1.5,15.5);
-    plot BTagsplot(*fillBTags<RA2bTree>,"BTags_"+skims.regionNames[regInt]+"_baseline","n_{b}",6,-0.5,5.5);
-    plot Binsplot(*fillRA2b174Bins<RA2bTree>,"AnalysisBins_"+skims.regionNames[regInt]+"_baseline","i^{th} Bin",174,0.5,174.5);
-    plot Bins46plot(*fillRA2b46Bins<RA2bTree>,"AnalysisBins_BTag0_"+skims.regionNames[regInt]+"_baseline","i^{th} Bin",46,0.5,46.5);
-    plot Bins59plot(*fillRA2b59Bins<RA2bTree>,"AnalysisBins_BTag0plusQCDCR_"+skims.regionNames[regInt]+"_baseline","i^{th} Bin",59,0.5,59.5);
-    plot BinsNJet2plot(*fillRA2bNJet2Bins<RA2bTree>,"AnalysisBins_NJet2_"+skims.regionNames[regInt]+"_baseline","i^{th} Bin",30,0.5,30.5);
+    plot NJetsplot(*fillNJets<RA2bTree>,"NJets_"+skims.regionNames[regInt]+"_baseline","N_{jet}",14,1.5,15.5);
+    plot BTagsplot(*fillBTags<RA2bTree>,"BTags_"+skims.regionNames[regInt]+"_baseline","N_{b-jet}",6,-0.5,5.5);
+    plot Binsplot(*fillRA2b174Bins<RA2bTree>,"AnalysisBins_"+skims.regionNames[regInt]+"_baseline","Search Bin",174,0.5,174.5);
+    plot Bins46plot(*fillRA2b46Bins<RA2bTree>,"AnalysisBins_BTag0_"+skims.regionNames[regInt]+"_baseline","Search Bin",46,0.5,46.5);
+    plot Bins59plot(*fillRA2b59Bins<RA2bTree>,"AnalysisBins_BTag0plusQCDCR_"+skims.regionNames[regInt]+"_baseline","Search Bin",59,0.5,59.5);
+    plot BinsNJet2plot(*fillRA2bNJet2Bins<RA2bTree>,"AnalysisBins_NJet2_"+skims.regionNames[regInt]+"_baseline","Search Bin",30,0.5,30.5);
 
     plot DeltaPhi1plot(*fillDeltaPhi1<RA2bTree>,"DeltaPhi1_"+skims.regionNames[regInt]+"_baseline","#Delta#Phi_{1}",20,0.,3.1415);
     plot DeltaPhi2plot(*fillDeltaPhi2<RA2bTree>,"DeltaPhi2_"+skims.regionNames[regInt]+"_baseline","#Delta#Phi_{2}",20,0.,3.1415);
@@ -73,14 +73,14 @@ int main(int argc, char** argv){
     plotsAllEvents.push_back(PhotonMinDeltaR);
     plotsAllEvents.push_back(verticesplot);
 
-    plot MHTplotEB(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline_EB","MHT [GeV]",64,200.,1800.);
+    plot MHTplotEB(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline_EB","H_{T}^{miss} [GeV]",64,200.,1800.);
     plot HTplotEB(*fillHT<RA2bTree>,"HT_"+skims.regionNames[regInt]+"_baseline_EB","H_{T} [GeV]",50,300,2800.);
-    plot NJetsplotEB(*fillNJets<RA2bTree>,"NJets_"+skims.regionNames[regInt]+"_baseline_EB","n_{j}",14,1.5,15.5);
-    plot BTagsplotEB(*fillBTags<RA2bTree>,"BTags_"+skims.regionNames[regInt]+"_baseline_EB","n_{b}",6,-0.5,5.5);
-    plot BinsplotEB(*fillRA2b174Bins<RA2bTree>,"AnalysisBins_"+skims.regionNames[regInt]+"_baseline_EB","i^{th} Bin",174,0.5,174.5);
-    plot Bins46plotEB(*fillRA2b46Bins<RA2bTree>,"AnalysisBins_BTag0_"+skims.regionNames[regInt]+"_baseline_EB","i^{th} Bin",46,0.5,46.5);
-    plot Bins59plotEB(*fillRA2b59Bins<RA2bTree>,"AnalysisBins_BTag0plusQCDCR_"+skims.regionNames[regInt]+"_baseline_EB","i^{th} Bin",59,0.5,59.5);
-    plot BinsNJet2plotEB(*fillRA2bNJet2Bins<RA2bTree>,"AnalysisBins_NJet2_"+skims.regionNames[regInt]+"_baseline_EB","i^{th} Bin",30,0.5,30.5);
+    plot NJetsplotEB(*fillNJets<RA2bTree>,"NJets_"+skims.regionNames[regInt]+"_baseline_EB","N_{jet}",14,1.5,15.5);
+    plot BTagsplotEB(*fillBTags<RA2bTree>,"BTags_"+skims.regionNames[regInt]+"_baseline_EB","N_{b-jet}",6,-0.5,5.5);
+    plot BinsplotEB(*fillRA2b174Bins<RA2bTree>,"AnalysisBins_"+skims.regionNames[regInt]+"_baseline_EB","Search Bin",174,0.5,174.5);
+    plot Bins46plotEB(*fillRA2b46Bins<RA2bTree>,"AnalysisBins_BTag0_"+skims.regionNames[regInt]+"_baseline_EB","Search Bin",46,0.5,46.5);
+    plot Bins59plotEB(*fillRA2b59Bins<RA2bTree>,"AnalysisBins_BTag0plusQCDCR_"+skims.regionNames[regInt]+"_baseline_EB","Search Bin",59,0.5,59.5);
+    plot BinsNJet2plotEB(*fillRA2bNJet2Bins<RA2bTree>,"AnalysisBins_NJet2_"+skims.regionNames[regInt]+"_baseline_EB","Search Bin",30,0.5,30.5);
 
     plot DeltaPhi1plotEB(*fillDeltaPhi1<RA2bTree>,"DeltaPhi1_"+skims.regionNames[regInt]+"_baseline_EB","#Delta#Phi_{1}",20,0.,3.1415);
     plot DeltaPhi2plotEB(*fillDeltaPhi2<RA2bTree>,"DeltaPhi2_"+skims.regionNames[regInt]+"_baseline_EB","#Delta#Phi_{2}",20,0.,3.1415);
@@ -112,14 +112,14 @@ int main(int argc, char** argv){
     plotsEBevents.push_back(PhotonMinDeltaREB);
     plotsEBevents.push_back(verticesplotEB);
 
-    plot MHTplotEE(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline_EE","MHT [GeV]",64,200.,1800.);
+    plot MHTplotEE(*fillMHT<RA2bTree>,"MHT_"+skims.regionNames[regInt]+"_baseline_EE","H_{T}^{miss} [GeV]",64,200.,1800.);
     plot HTplotEE(*fillHT<RA2bTree>,"HT_"+skims.regionNames[regInt]+"_baseline_EE","H_{T} [GeV]",50,300,2800.);
-    plot NJetsplotEE(*fillNJets<RA2bTree>,"NJets_"+skims.regionNames[regInt]+"_baseline_EE","n_{j}",14,1.5,15.5);
-    plot BTagsplotEE(*fillBTags<RA2bTree>,"BTags_"+skims.regionNames[regInt]+"_baseline_EE","n_{b}",6,-0.5,5.5);
-    plot BinsplotEE(*fillRA2b174Bins<RA2bTree>,"AnalysisBins_"+skims.regionNames[regInt]+"_baseline_EE","i^{th} Bin",174,0.5,174.5);
-    plot Bins46plotEE(*fillRA2b46Bins<RA2bTree>,"AnalysisBins_BTag0_"+skims.regionNames[regInt]+"_baseline_EE","i^{th} Bin",46,0.5,46.5);
-    plot Bins59plotEE(*fillRA2b59Bins<RA2bTree>,"AnalysisBins_BTag0plusQCDCR_"+skims.regionNames[regInt]+"_baseline_EE","i^{th} Bin",59,0.5,59.5);
-    plot BinsNJet2plotEE(*fillRA2bNJet2Bins<RA2bTree>,"AnalysisBins_NJet2_"+skims.regionNames[regInt]+"_baseline_EE","i^{th} Bin",30,0.5,30.5);
+    plot NJetsplotEE(*fillNJets<RA2bTree>,"NJets_"+skims.regionNames[regInt]+"_baseline_EE","N_{jet}",14,1.5,15.5);
+    plot BTagsplotEE(*fillBTags<RA2bTree>,"BTags_"+skims.regionNames[regInt]+"_baseline_EE","N_{b-jet}",6,-0.5,5.5);
+    plot BinsplotEE(*fillRA2b174Bins<RA2bTree>,"AnalysisBins_"+skims.regionNames[regInt]+"_baseline_EE","Search Bin",174,0.5,174.5);
+    plot Bins46plotEE(*fillRA2b46Bins<RA2bTree>,"AnalysisBins_BTag0_"+skims.regionNames[regInt]+"_baseline_EE","Search Bin",46,0.5,46.5);
+    plot Bins59plotEE(*fillRA2b59Bins<RA2bTree>,"AnalysisBins_BTag0plusQCDCR_"+skims.regionNames[regInt]+"_baseline_EE","Search Bin",59,0.5,59.5);
+    plot BinsNJet2plotEE(*fillRA2bNJet2Bins<RA2bTree>,"AnalysisBins_NJet2_"+skims.regionNames[regInt]+"_baseline_EE","Search Bin",30,0.5,30.5);
 
     plot DeltaPhi1plotEE(*fillDeltaPhi1<RA2bTree>,"DeltaPhi1_"+skims.regionNames[regInt]+"_baseline_EE","#Delta#Phi_{1}",20,0.,3.1415);
     plot DeltaPhi2plotEE(*fillDeltaPhi2<RA2bTree>,"DeltaPhi2_"+skims.regionNames[regInt]+"_baseline_EE","#Delta#Phi_{2}",20,0.,3.1415);

@@ -215,8 +215,10 @@ template <typename ntupleType> class plot{
     
     TPad* topPad = new TPad("topPad","topPad",0.,0.4,.99,.99);
     TPad* botPad = new TPad("botPad","botPad",0.,0.01,.99,.39);
-    botPad->SetBottomMargin(0.2);
+    botPad->SetBottomMargin(0.25);
+    botPad->SetTopMargin(0.02);
     topPad->SetTopMargin(0.06);
+    topPad->SetBottomMargin(0.17);
     topPad->Draw();
     botPad->Draw();
     topPad->cd();
@@ -234,20 +236,20 @@ template <typename ntupleType> class plot{
     }
     
     for(int iSample = 0 ; iSample < signalNtuples.size() ; iSample++){
-      TH1F* temp = signalHistoMap[signalNtuples[iSample]];
-      if( temp ){
-	//temp->Scale(sum->Integral()/temp->Integral());
-	temp->Draw("histo,SAME");
-	if( temp->GetMaximum() > max ) 
-	  max = temp->GetMaximum();
-      }
+        TH1F* temp = signalHistoMap[signalNtuples[iSample]];
+        if( temp ){
+            //temp->Scale(sum->Integral()/temp->Integral());
+            temp->Draw("histo,SAME");
+            if( temp->GetMaximum() > max ) 
+                max = temp->GetMaximum();
+        }
     }
     if( dataHist ){
-      dataHist->Draw("e1,SAME");
-      if( dataHist->GetMaximum() > max ) 
-	max = dataHist->GetMaximum();
+        dataHist->Draw("e1,SAME");
+        if( dataHist->GetMaximum() > max ) 
+            max = dataHist->GetMaximum();
     }
-
+    
     stack->SetMaximum(max);
     stack->SetMinimum(0.1);
 
@@ -261,18 +263,18 @@ template <typename ntupleType> class plot{
     stack->GetXaxis()->SetLabelSize(14);
     stack->GetXaxis()->SetTitleFont(63);
     stack->GetXaxis()->SetTitleSize(20);
-    stack->GetXaxis()->SetTitleOffset(1.6);
+    stack->GetXaxis()->SetTitleOffset(1.7);
 
     writeExtraText = true;
-    extraText="Preliminary";
+    extraText="Supplementary";
     char lumiString[4];
-    sprintf(lumiString,"%.1f",lumi/1000.);
+    sprintf(lumiString,"%.1f fb^{-1}",lumi/1000.);
     lumi_13TeV = lumiString;
     CMS_lumi( can , 4 , 0 );
     can->Update();
     can->RedrawAxis();
     can->GetFrame()->Draw();
-
+    
     botPad->cd();
     TH1F* ratio = new TH1F(*dataHist);
     ratio->SetNameTitle(sum->GetName()+TString("ratio"),sum->GetTitle());
@@ -294,7 +296,7 @@ template <typename ntupleType> class plot{
     ratio->GetXaxis()->SetLabelSize(14);
     ratio->GetXaxis()->SetTitleFont(63);
     ratio->GetXaxis()->SetTitleSize(20);
-    ratio->GetXaxis()->SetTitleOffset(2.);
+    ratio->GetXaxis()->SetTitleOffset(2.3);
 
     ratio->Draw("e1");
     TLine one(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,1.,ratio->GetBinCenter(ratio->GetNbinsX())+ratio->GetBinWidth(ratio->GetNbinsX())/2.,1.);
@@ -305,15 +307,16 @@ template <typename ntupleType> class plot{
     one.Draw();
     avg.Draw();
 
+    //can->cd();
+    topPad->cd();
     char SF[16];
     sprintf(SF,"data/MC=%1.1f",dataHist->Integral()/sum->Integral());
-    TText* scaleFactor = new TText(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,2.1,SF);
+    //TText* scaleFactor = new TText(ratio->GetBinCenter(1)-ratio->GetBinWidth(1)/2.,2.1,SF);
+    TText* scaleFactor = new TText(0.17,0.02,SF);
+    scaleFactor->SetNDC();
     scaleFactor->SetTextFont(43);
     scaleFactor->SetTextSize(16);
     scaleFactor->Draw();
-
-    can->cd();
-    topPad->cd();
 
     //TCanvas* legCan = new TCanvas("legCan","legCan",500,500);
     TLegend* leg = new TLegend(0.8,.6,.9,.9);
