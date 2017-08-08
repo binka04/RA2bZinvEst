@@ -17,69 +17,10 @@
 #include "CMS_lumi.cc"
 
 #include "plotterUtils.cc"
-#include "skimSamples.cc"
 #include "definitions.h"
 #include "RA2bTree.cc"
 
 using namespace std;
-
-//////////////////////////////////////////////////////////////////////////
-//  - - - -  - - - - Prduction V11 Trigger Indices - - - - - - - - - -  //
-// 0 HLT_CaloJet500_NoJetID_v5                                          //
-// 1 HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT300_v10                  //
-// 2 HLT_DoubleMu8_Mass8_PFHT300_v9                                     //
-// 3 HLT_Ele105_CaloIdVT_GsfTrkIdT_v8                                   //
-// 4 HLT_Ele115_CaloIdVT_GsfTrkIdT_v7                                   //
-// 5 HLT_Ele15_IsoVVVL_PFHT350_PFMET50_v                                //
-// 6 HLT_Ele15_IsoVVVL_PFHT350_v                                        //
-// 7 HLT_Ele15_IsoVVVL_PFHT400_v6                                       //
-// 8 HLT_Ele15_IsoVVVL_PFHT600_v9                                       //
-// 9 HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ_v9                       //
-// 10 HLT_Ele25_eta2p1_WPTight_Gsf_v                                    //
-// 11 HLT_Ele27_WPTight_Gsf_v7                                          //
-// 12 HLT_Ele27_eta2p1_WPLoose_Gsf_v                                    //
-// 13 HLT_Ele45_WPLoose_Gsf_v                                           //
-// 14 HLT_Ele50_IsoVVVL_PFHT400_v6                                      //
-// 15 HLT_IsoMu16_eta2p1_MET30_v4                                       //
-// 16 HLT_IsoMu22_eta2p1_v4                                             //
-// 17 HLT_IsoMu22_v5                                                    //
-// 18 HLT_IsoMu24_v                                                     //
-// 19 HLT_IsoTkMu22_v5                                                  //
-// 20 HLT_IsoTkMu24_v4                                                  //
-// 21 HLT_Mu15_IsoVVVL_PFHT350_PFMET50_v                                //
-// 22 HLT_Mu15_IsoVVVL_PFHT350_v                                        //
-// 23 HLT_Mu15_IsoVVVL_PFHT400_v5                                       //
-// 24 HLT_Mu15_IsoVVVL_PFHT600_v8                                       //
-// 25 HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_v6                               //
-// 26 HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_v5                             //
-// 27 HLT_Mu45_eta2p1_v5                                                //
-// 28 HLT_Mu50_IsoVVVL_PFHT400_v5                                       //
-// 29 HLT_Mu50_v5                                                       //
-// 30 HLT_PFHT200_v6                                                    //
-// 31 HLT_PFHT250_v6                                                    //
-// 32 HLT_PFHT300_PFMET100_v                                            //
-// 33 HLT_PFHT300_PFMET110_v6                                           //
-// 34 HLT_PFHT300_v7                                                    //
-// 35 HLT_PFHT350_v8                                                    //
-// 36 HLT_PFHT400_v7                                                    //
-// 37 HLT_PFHT475_v7                                                    //
-// 38 HLT_PFHT600_v8                                                    //
-// 39 HLT_PFHT650_v8                                                    //
-// 40 HLT_PFHT800_v                                                     //
-// 41 HLT_PFHT900_v6                                                    //
-// 42 HLT_PFMET100_PFMHT100_IDTight_v                                   //
-// 43 HLT_PFMET110_PFMHT110_IDTight_v7                                  //
-// 44 HLT_PFMET120_PFMHT120_IDTight_v7                                  //
-// 45 HLT_PFMET90_PFMHT90_IDTight_v                                     //
-// 46 HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v                           //
-// 47 HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v7                          //
-// 48 HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v7                          //
-// 49 HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v                             //
-// 50 HLT_Photon165_HE10_v8                                             //
-// 51 HLT_Photon175_v8                                                  //
-// 52 HLT_Photon90_CaloIdL_PFHT500_v                                    //
-// 53 HLT_TkMu50_v3                                                     //
-//////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char** argv){
 
@@ -185,20 +126,9 @@ int main(int argc, char** argv){
     //skim inputs
     vector<RA2bTree*> samples;
     vector<TString> sampleNames;
-    TString skimType;
-    if( region == 0 )
-        skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJet_CleanVars/";
-    if( region == 1 )
-        skimType="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV11/tree_GJetLDP_CleanVars/";
-    TChain* JetHTdata = new TChain("tree");
-    JetHTdata->Add(skimType+"tree_JetHT_2016B.root");
-    JetHTdata->Add(skimType+"tree_JetHT_2016C.root");
-    JetHTdata->Add(skimType+"tree_JetHT_2016D.root");
-    JetHTdata->Add(skimType+"tree_JetHT_2016E.root");
-    JetHTdata->Add(skimType+"tree_JetHT_2016F.root");
-    JetHTdata->Add(skimType+"tree_JetHT_2016G.root");
-    JetHTdata->Add(skimType+"tree_JetHT_2016H2.root");
-    JetHTdata->Add(skimType+"tree_JetHT_2016H3.root");
+    TChain* JetHTdata = new TChain("TreeMaker2/PreSelection");
+    JetHTdata->Add("/eos/uscms/store/user/rgp230/Run2017/Run2017B-PromptReco-v2.JetHT_*_RA2AnalysisTree.root");
+
     samples.push_back(new RA2bTree(JetHTdata));
     sampleNames.push_back("JetHTdata");
 
@@ -250,7 +180,7 @@ int main(int argc, char** argv){
 
             if( ntuple->Photons->size() == 0 ) continue;
             if( ntuple->Photons->at(0).Pt() < 200. ) continue;
-            if( ntuple->HT<300. || ntuple->MHT<250. ) continue;
+            //if( ntuple->HT<300. || ntuple->MHT<250. ) continue;
 
             int HTbin = -1;
             for( int iHT = 0 ; iHT < HTbins-1 ; iHT++ ){
