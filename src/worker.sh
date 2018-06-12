@@ -1,14 +1,16 @@
 #!/bin/sh
 output_dir=$1
 executable=$2
-args=$3
+cmssw=$3
+args=$4
 echo "output_dir ${output_dir}"
 echo "executable ${executable}"
+echo "cmssw ${cmssw}"
 echo "args ${args}"
 
 mv ../../workingArea.tar .
 tar -xf workingArea.tar
-cd CMSSW_7_4_2/src/
+cd ${cmssw}/src/
 eval `scramv1 runtime -sh`
 echo "step 2"
 cd RA2bZinvEst
