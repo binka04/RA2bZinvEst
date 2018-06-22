@@ -1,3 +1,4 @@
+from os import environ
 from ROOT import *
 from math import sqrt
 gROOT.ProcessLine(".L ~/tdrstyle.C")
@@ -9,6 +10,8 @@ parser.add_option("-r", "--region", dest="region", default="signal",
                   help="region -- signal, ldp, hdp -- only")
 parser.add_option("-d", "--dir", dest="hash", default="",
                   help="hash code corresponding to your git commit or the directory on eos where your outputs were stored")
+parser.add_option("-u", "--user", dest="user", default=environ.get('USER'),
+                  help="cmslpc username for input files, default taken from env")
 (options, args) = parser.parse_args()
 assert( options.region == "signal" or options.region == "ldp" or options.region == "hdp" )
 assert( options.hash != "" )
@@ -26,11 +29,12 @@ outputFileName=""
 
 if region == "signal" :
     nBins = 46
-    MChistoFileName = "~/eos/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
+    
+    MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0_photon_baseline"
-    RzgHistoFileName = "~/eos/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
+    RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0_RzGamma_signal"
-    trigWeightFileName = "~/eos/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
+    trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0_signal"
     fragmentationFileName = "../data/fragmentation.11022017_signal.txt"
     purityFileName = "../data/photonPurity_signal.txt"
@@ -38,22 +42,22 @@ if region == "signal" :
 
 elif region == "ldp" : 
     nBins = 59
-    MChistoFileName = "~/eos/RA2bZinvEst/{0}/plotObs_photonLDP_baseline.root".format(hash)
+    MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photonLDP_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0plusQCDCR_photonLDP_baseline"
-    RzgHistoFileName = "~/eos/RA2bZinvEst/{0}/RzGamma_PUweightOnly_LDP_histo.root".format(hash)
+    RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_LDP_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
-    trigWeightFileName = "~/eos/RA2bZinvEst/{0}/triggerUnc_LDP_histo.root".format(hash)
+    trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_LDP_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
     fragmentationFileName = "../data/fragmentation.11022017_ldp.txt"
     purityFileName = "../data/photonPurity_QCD_CR.txt"
     outputFileName = "gJets_ldp.dat"
 elif region == "hdp" :
     nBins = 59
-    MChistoFileName = "~/eos/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
+    MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0plusQCDCR_photon_baseline"
-    RzgHistoFileName = "~/eos/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
+    RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
-    trigWeightFileName = "~/eos/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
+    trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
     fragmentationFileName = "../data/fragmentation.11022017_hdp.txt"
     purityFileName = "../data/photonPurity_QCD_CR.txt"
