@@ -1,26 +1,9 @@
 #!/bin/bash
 
-if [ ! -d "bin" ]; then
-    mkdir bin 
-fi
-if [ ! -d "plots" ]; then
-    mkdir plots
-fi
-if [ ! -d "plots/RzGamma_DR0p05_plots" ]; then
-    mkdir plots/RzGamma_plots  
-fi
-if [ ! -d "plots/fragmentationFits" ]; then
-    mkdir plots/plotObs_baseline_plots
-fi
-if [ ! -d "plots/plotPurityProperties_plots" ]; then
-    mkdir plots/plotPurityProperties_plots
-fi
-if [ ! -d "plots/purityResults" ]; then 
-    mkdir plots/purityResults
-    
-fi
-if [ ! -d "plots/triggerEff_plots" ]; then
-    mkdir plots/triggerEff_plots
+dir_list="bin plots/RzGamma_DR0p05_plots plots/RzGamma_plots plots/fragmentationFits plots/plotPurity plots/Properties_plots plots/purityResults plots/plotObs_baseline_plots plots/plotObs_weightGJets_plots plots/plotPurityProperties_plots plots/purityFits plots/triggerEff_plots"
+
+if [ ! -d $d ]; then
+    mkdir $d
 fi
 
 export PATH=$PWD/bin/:$PATH
