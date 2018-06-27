@@ -14,6 +14,7 @@ cd ${cmssw}/src/
 eval `scramv1 runtime -sh`
 echo "step 2"
 cd RA2bZinvEst
+source setup.sh
 export PATH=$PWD/bin/:$PATH
 echo "PWD ${PWD}"
 echo "PATH ${PATH}"
