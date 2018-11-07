@@ -30,9 +30,11 @@ outputFileName=""
 if region == "signal" :
     nBins = 46
     
-    MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
+    #MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
+    MChistoFileName = "plotObs_photon_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0_photon_baseline"
-    RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
+    #RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
+    RzgHistoFileName = "RzGamma_PUweightOnly_signal_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0_RzGamma_signal"
     trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0_signal"
@@ -42,9 +44,11 @@ if region == "signal" :
 
 elif region == "ldp" : 
     nBins = 59
-    MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photonLDP_baseline.root".format(hash)
+    #MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photonLDP_baseline.root".format(hash)
+    MChistoFileName = "plotObs_photonLDP_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0plusQCDCR_photonLDP_baseline"
-    RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_LDP_histo.root".format(hash)
+    #RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_LDP_histo.root".format(hash)
+    RzgHistoFileName = "RzGamma_PUweightOnly_LDP_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
     trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_LDP_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_LDP"
@@ -53,9 +57,11 @@ elif region == "ldp" :
     outputFileName = "gJets_ldp.dat"
 elif region == "hdp" :
     nBins = 59
-    MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
+    #MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
+    MChistoFileName = "plotObs_photon_baseline.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0plusQCDCR_photon_baseline"
-    RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
+    #RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
+    RzgHistoFileName = "RzGamma_PUweightOnly_signal_histo.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
     trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0plusQCDCR_RzGamma_signal"
@@ -244,11 +250,15 @@ for i in range(nBins) :
         outputDict["nMCerr"].append(sqrt(poisZeroErr*poisZeroErr+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
     else:
         outputDict["nMCerr"].append(sqrt(GJetsHisto.GetBinError(i+1)*GJetsHisto.GetBinError(i+1)/outputDict["nMCGJ"][i]/outputDict["nMCGJ"][i]+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
-    outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
-    outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
+ #   outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
+ #   outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
+    outputDict["Nobs"].append(GJetsHisto.GetBinContent(i+1))
+    outputDict["nEB"].append(GJetsEBHisto.GetBinContent(i+1))
+    outputDict["nEC"].append(GJetsEEHisto.GetBinContent(i+1))
+
     outputDict["pEB"].append(purityEBAll[i])
     outputDict["pEBerr"].append(purityEBerrAll[i]/outputDict["pEB"][i])
-    outputDict["nEC"].append(dataEEHisto.GetBinContent(i+1))    
+ #   outputDict["nEC"].append(dataEEHisto.GetBinContent(i+1))    
     outputDict["pEC"].append(purityEEAll[i])
     outputDict["pECerr"].append(purityEEerrAll[i]/outputDict["pEC"][i])
     if( RzGamma.GetBinContent(i+1) == 0. or RzGamma.GetBinContent(i+1) == 1. ):
@@ -271,7 +281,10 @@ for i in range(nBins) :
     outputDict["DRup"].append(0.000)
     outputDict["DRlow"].append(0.000)
     
-    outputDict["Yield"].append(outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i]*outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i]))
+   # outputDict["Yield"].append(outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i]*outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i]))
+
+    outputDict["Yield"].append(outputDict["ZgR"][i]*(outputDict["nEB"][i]+outputDict["nEC"][i]))
+
     if( outputDict["nEB"][i] == 0 and outputDict["nEC"][i] != 0 ):
         outputDict["YstatUp"].append(sqrt(poisZeroErr*poisZeroErr+outputDict["nEC"][i])/outputDict["Yield"][i])
         outputDict["YstatLow"].append(sqrt(poisZeroErr*poisZeroErr+outputDict["nEC"][i])/outputDict["Yield"][i])
@@ -288,7 +301,34 @@ for i in range(nBins) :
     outputDict["YsysUp"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferrUp"][i]*outputDict["ferrUp"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["trigWsysErr"][i]*outputDict["trigWsysErr"][i]+outputDict["fsysErr"][i]*outputDict["fsysErr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
     outputDict["YsysLow"].append(sqrt(outputDict["REr1"][i]*outputDict["REr1"][i]+outputDict["pErr"][i]*outputDict["pErr"][i]+outputDict["ferrDn"][i]*outputDict["ferrDn"][i]+outputDict["trigWerr"][i]*outputDict["trigWerr"][i]+outputDict["trigWsysErr"][i]*outputDict["trigWsysErr"][i]+outputDict["fsysErr"][i]*outputDict["fsysErr"][i]+outputDict["SFerr"][i]*outputDict["SFerr"][i]))
 
+    #if (i == nBins):
+    print " YIELD here :"
+    print outputDict["Yield"]
+    print "    "
+
+    print " YIELD stat here :"
+    print outputDict["YstatUp"]
+    print "    "
+
+    print " YIELD sys here  :"
+    print outputDict["YsysUp"]
+    print "    "
+
+    print " nEC+nEB  :"
+    print outputDict["nEC"]+outputDict["nEB"]
+    print "    "
+
+
+    print " nEC  :"
+    print outputDict["nEC"]
+    print "    "
+
 columnNames=["binIndex","nMCGJ","nMCerr","nMCEBt","nMCECt","Nobs","nEB","pEB","pEBerr","nEC","pEC","pECerr","trigW","trigWsysErr","trigWerr","SF","SFerr","ZgR","REr1","f","fsysErr","ferrUp","ferrDn","purity","pErr","DR","DRup","DRlow","Yield","YstatUp","YstatLow","YsysUp","YsysLow"]
+
+
+
+
+
 ## Final table
 outputFile = open(outputFileName,"w")
 formattingString=" {0} : {1}( {2})|{3} |{4} |{5} |{6}| {7}({8}) |{9}| {10}({11}) | {12}({13},{14}) | {15}({16}) |{17}({18}) |{19}({20},+{21}-{22}) |{23}({24})| {25}(+{26}-{27})| {28}(+{29}-{30},+{31}-{32})"

@@ -133,6 +133,10 @@ int main(int argc, char** argv){
     }
     samples.push_back(new RA2bTree(GJets));
     sampleNames.push_back("GJets");
+    
+    // int icount[8];
+  //  icount[0] = 0, icount[1] = 0,icount[2] = 0,icount[3] = 0,icount[4] = 0,icount[5] = 0,icount[6] = 0,icount[7] = 0;
+
 
     for( int iSample = 0 ; iSample < samples.size() ; iSample++){
 
@@ -145,27 +149,36 @@ int main(int argc, char** argv){
         ntupleBranchStatus<RA2bTree>(ntuple);
         double weight = 1.0;
         for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
+        //for( int iEvt = 0 ; iEvt < 60000 ; iEvt++ ){
             ntuple->GetEntry(iEvt);
             if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;      
             if( sampleNames[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons_fullID->at(0)!=1 ) continue;
             if( sampleNames[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
-            if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;      
-            if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;
+            if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue; 
+            if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;                        
+            //if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
+            //if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>2)continue;
+
             
             weight = lumi*ntuple->Weight*customPUweights(ntuple);//*photonTriggerWeight(ntuple));
             if( sampleNames[iSample] == "GJets" && DR0p4 ) 
-                weight*=GJets0p4Weights(ntuple)*dRweights(ntuple);
+                weight*=GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
 
             for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++ ){
-                if( sampleNames[iSample] == "GJets" ){ 
+                if( sampleNames[iSample] == "GJets"){
                     plots[iPlot].fill(ntuple,weight);
-                }else 
+                 
+		}else 
                     plots[iPlot].fill(ntuple,weight);
+
             }// end loop over iPlots
         }// end loop over events
     }// end loop over iSamples
+
+    
+//     cout<<" GJets entry  BEFORE and after eta cut  "<<icount[1]<<"\n"<<icount[2];
 
     TFile* outputFile;
     if( DR0p4 ) 
