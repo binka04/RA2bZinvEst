@@ -180,7 +180,7 @@ template<typename ntupleType> double photonTriggerWeightRand( ntupleType* ntuple
         return truncGauss(EBtrigger[4],EBtriggerErrUp[4],EBtriggerErrDown[4]);
     }else
         return 1.;
-  }else{
+  }else  {
     if( MHT > 250. && MHT < 300. ){
         return truncGauss(ECtrigger[0],ECtriggerErrUp[0],ECtriggerErrDown[0]);
     }else if( MHT > 300. && MHT < 350. ){
@@ -218,7 +218,7 @@ template<typename ntupleType> double photonTriggerWeight( ntupleType* ntuple ){
       return EBtrigger[4];
     }else
       return 1.;
-  }else{
+  }else {
     if( MHT > 250. && MHT < 300. ){
       return ECtrigger[0];
     }else if( MHT > 300. && MHT < 350. ){

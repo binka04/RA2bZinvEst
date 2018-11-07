@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 output_dir=$1
 executable=$2
 cmssw=$3
@@ -25,11 +25,11 @@ make all
 
 for file in $(ls *root)
 do
-    xrdcp -f $file root://cmseos.fnal.gov//store/user/awhitbe1/RA2bZinvEst/$output_dir/$file
+    xrdcp -f $file root://cmseos.fnal.gov//store/user/tmishra/RA2bZinvEst/$output_dir/$file
 done
 
 cd ../
 for file in $(ls plots/*/*)
 do 
-    xrdcp -f $file root://cmseos.fnal.gov//store/user/awhitbe1/RA2bZinvEst/$output_dir/$file
+    xrdcp -f $file root://cmseos.fnal.gov//store/user/tmishra/RA2bZinvEst/$output_dir/$file
 done

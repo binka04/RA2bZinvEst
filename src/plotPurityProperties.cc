@@ -155,6 +155,7 @@ int main(int argc, char** argv){
         int numEvents = ntuple->fChain->GetEntries();
         ntupleBranchStatus<RA2bTree>(ntuple);
         double weight = 1.0;
+        int count;
         for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
             ntuple->GetEntry(iEvt);
             if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
@@ -169,6 +170,8 @@ int main(int argc, char** argv){
             if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 
                 ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
 
+
+            count++;
             for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
 
                 int iBin = projections[iProj].fill(ntuple);
@@ -181,7 +184,7 @@ int main(int argc, char** argv){
                         chargeIsoEBLowSieieVersus[iProj][iBin-1].fill(ntuple);
                     }
                 }
-                else{
+                else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)   {
                     if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274){
                         chargeIsoEEHighSieieVersus[iProj][iBin-1].fill(ntuple);
                     }else{
@@ -190,10 +193,12 @@ int main(int argc, char** argv){
                 }
             }
       
+
+     //       cout<<"count is " <<count<<"\n";
             for( int iPlot = 0 ; iPlot < plotsEB.size()-2 ; iPlot++ ){
                 if( ntuple->Photons_isEB->at(0) ) 
                     plotsEB[iPlot].fill(ntuple);
-                else 
+                else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)
                     plotsEE[iPlot].fill(ntuple);
             }
             if( ntuple->Photons_isEB->at(0) ){
@@ -201,7 +206,7 @@ int main(int argc, char** argv){
                     plotsEB[plotsEB.size()-2].fill(ntuple);
                 else
                     plotsEB[plotsEB.size()-1].fill(ntuple);
-            }else{
+            }else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
                 if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274)
                     plotsEE[plotsEB.size()-2].fill(ntuple);
                 else
@@ -210,6 +215,7 @@ int main(int argc, char** argv){
         }
     }
 
+   // cout<<"count is " <<count<<"\n";
     // Data samples
     RA2bTree* ntuple = skims.dataNtuple;
     for( int iPlot = 0 ; iPlot < plotsEB.size() ; iPlot++){
@@ -228,6 +234,7 @@ int main(int argc, char** argv){
     }
   
     int numEvents = ntuple->fChain->GetEntries();
+    int count1;
     ntupleBranchStatus<RA2bTree>(ntuple);
     for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
         ntuple->GetEntry(iEvt);
@@ -238,7 +245,8 @@ int main(int argc, char** argv){
         if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.) ) continue;
         if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 
             ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
-
+       
+        count1++;
         for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
             int iBin = projections[iProj].fillData(ntuple);
             if( iBin <= 0 ) continue;
@@ -248,7 +256,7 @@ int main(int argc, char** argv){
                 else
                     chargeIsoEBLowSieieVersus[iProj][iBin-1].fillData(ntuple);
             }
-            else{
+            else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)  {
                 if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274)
                     chargeIsoEEHighSieieVersus[iProj][iBin-1].fillData(ntuple);
                 else
@@ -256,11 +264,10 @@ int main(int argc, char** argv){
             }
         }
     
-      
         for( int iPlot = 0 ; iPlot < plotsEB.size()-2 ; iPlot++ ){
             if( ntuple->Photons_isEB->at(0) ) 
                 plotsEB[iPlot].fillData(ntuple);
-            else 
+            else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)
                 plotsEE[iPlot].fillData(ntuple);
         }
         if( ntuple->Photons_isEB->at(0) ){
@@ -268,7 +275,7 @@ int main(int argc, char** argv){
                 plotsEB[plotsEB.size()-2].fillData(ntuple);
             else
                 plotsEB[plotsEB.size()-1].fillData(ntuple);
-        }else{
+        }else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
             if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274)
                 plotsEE[plotsEB.size()-2].fillData(ntuple);
             else
@@ -276,7 +283,8 @@ int main(int argc, char** argv){
         }
 
     }
-  
+   
+//    cout<< "count1 is :"<<count1<<"\n";
     TFile* outputFile = new TFile("plotPurityProperties_"+skims.regionNames[regInt]+".root","RECREATE");
 
     for( int iPlot = 0 ; iPlot < plotsEB.size() ; iPlot++){
@@ -329,4 +337,7 @@ int main(int argc, char** argv){
         }
     }
     outputFile->Close();
+
+   cout<< "count1 is :"<<count1<<"\n";
+
 }

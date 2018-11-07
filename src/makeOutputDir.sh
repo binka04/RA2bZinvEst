@@ -8,12 +8,12 @@ if [ -d /eos/uscms/store/user/$USER/RA2bZinvEst/$newDir ]
     exit 1
 fi
 
-mkdir /eos/uscms/store/user/$USER/RA2bZinvEst/$newDir
-mkdir /eos/uscms/store/user/$USER/RA2bZinvEst/$newDir/plots
+mkdir -p /eos/uscms/store/user/$USER/RA2bZinvEst/$newDir
+mkdir -p /eos/uscms/store/user/$USER/RA2bZinvEst/$newDir/plots
 plotsDirList="Properties_plots RzGamma_DR0p05_plots RzGamma_plots fragmentationFits plotObs_baseline_plots plotPurityProperties_plots purityFits purityResults triggerEff_plots"
 for i in $plotsDirList 
 do 
-    mkdir /eos/uscms/store/user/$USER/RA2bZinvEst/$newDir/plots/$i
+    mkdir -p /eos/uscms/store/user/$USER/RA2bZinvEst/$newDir/plots/$i
 done
 
 

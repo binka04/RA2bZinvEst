@@ -2,7 +2,7 @@
 // This class has been automatically generated on
 // Thu Feb 23 07:39:33 2017 by ROOT version 6.02/05
 // from TTree tree/all observables, GJet_CleanVars
-// found on file: /uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_GJet_CleanVars/tree_SinglePhoton_re2016H3.root
+// found on file: /uscms/home/tmishra/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_GJet_CleanVars/tree_SinglePhoton_re2016H3.root
 //////////////////////////////////////////////////////////
 
 #ifndef RA2bTree_h
@@ -376,9 +376,9 @@ RA2bTree::RA2bTree(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_GJet_CleanVars/tree_SinglePhoton_re2016H3.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/uscms/home/tmishra/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_GJet_CleanVars/tree_SinglePhoton_re2016H3.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/uscms/home/awhitbe1/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_GJet_CleanVars/tree_SinglePhoton_re2016H3.root");
+         f = new TFile("/uscms/home/tmishra/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_GJet_CleanVars/tree_SinglePhoton_re2016H3.root");
       }
       f->GetObject("tree",tree);
 
