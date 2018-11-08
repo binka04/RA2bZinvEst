@@ -201,7 +201,7 @@ int main(int argc, char** argv){
                     plotsAllEvents[iPlot].fill(ntuple,weight);
                     plotsEBevents[iPlot].fill(ntuple,weight);
                 }
-                else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
+                else {
                     plotsAllEvents[iPlot].fill(ntuple,weight);
                     plotsEEevents[iPlot].fill(ntuple,weight);
                 }
@@ -236,7 +236,7 @@ int main(int argc, char** argv){
                 plotsAllEvents[iPlot].fillData(ntuple);
                 plotsEBevents[iPlot].fillData(ntuple);
             }
-            else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.){
+            else {
                 plotsAllEvents[iPlot].fillData(ntuple);
                 plotsEEevents[iPlot].fillData(ntuple);
             }

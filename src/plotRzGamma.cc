@@ -153,8 +153,8 @@ int main(int argc, char** argv){
             if( sampleNames[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue; 
             if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;                        
-            if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
-            if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>2)continue;
+ //           if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
+ //           if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>2)continue;
 
             
             weight = lumi*ntuple->Weight*customPUweights(ntuple);//*photonTriggerWeight(ntuple));
