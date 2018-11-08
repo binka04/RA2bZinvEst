@@ -250,15 +250,15 @@ for i in range(nBins) :
         outputDict["nMCerr"].append(sqrt(poisZeroErr*poisZeroErr+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
     else:
         outputDict["nMCerr"].append(sqrt(GJetsHisto.GetBinError(i+1)*GJetsHisto.GetBinError(i+1)/outputDict["nMCGJ"][i]/outputDict["nMCGJ"][i]+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
- #   outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
- #   outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
+ #  outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
+ #  outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
     outputDict["Nobs"].append(GJetsHisto.GetBinContent(i+1))
     outputDict["nEB"].append(GJetsEBHisto.GetBinContent(i+1))
     outputDict["nEC"].append(GJetsEEHisto.GetBinContent(i+1))
 
     outputDict["pEB"].append(purityEBAll[i])
     outputDict["pEBerr"].append(purityEBerrAll[i]/outputDict["pEB"][i])
- #   outputDict["nEC"].append(dataEEHisto.GetBinContent(i+1))    
+ #  outputDict["nEC"].append(dataEEHisto.GetBinContent(i+1))    
     outputDict["pEC"].append(purityEEAll[i])
     outputDict["pECerr"].append(purityEEerrAll[i]/outputDict["pEC"][i])
     if( RzGamma.GetBinContent(i+1) == 0. or RzGamma.GetBinContent(i+1) == 1. ):
@@ -281,8 +281,7 @@ for i in range(nBins) :
     outputDict["DRup"].append(0.000)
     outputDict["DRlow"].append(0.000)
     
-   # outputDict["Yield"].append(outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i]*outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i]))
-
+  # outputDict["Yield"].append(outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i]*outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i]))
     outputDict["Yield"].append(outputDict["ZgR"][i]*(outputDict["nEB"][i]+outputDict["nEC"][i]))
 
     if( outputDict["nEB"][i] == 0 and outputDict["nEC"][i] != 0 ):

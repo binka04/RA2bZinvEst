@@ -4,7 +4,7 @@ set dir_list="bin plots/RzGamma_DR0p05_plots plots/RzGamma_plots plots/fragmenta
 
 foreach d ($dir_list)
     if ( ! -d $d ) then
-        mkdir $d
+        mkdir -p $d
     endif
 end
 

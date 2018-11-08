@@ -175,36 +175,33 @@ int main(int argc, char** argv){
         for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
 
             //cout << "sample: " << skims.sampleName[iSample] << endl;
+           
             ntuple->GetEntry(iEvt);
             if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
 
             if( ( reg == skimSamples::kSignal || reg == skimSamples::kPhoton || reg == skimSamples::kDYe || reg == skimSamples::kDYm ) && !RA2bBaselineCut(ntuple) ) continue;
             if( ( reg == skimSamples::kLDP || reg == skimSamples::kPhotonLDP || reg == skimSamples::kDYeLDP || reg == skimSamples::kDYmLDP ) && !RA2bLDPBaselineCut(ntuple) ) continue;
-
+ 
             if( skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
             if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
             if( skims.sampleName[iSample] == "GJets" && ( !isPromptPhoton(ntuple) || ntuple->madMinPhotonDeltaR < 0.4 ) ) continue;
             if( ntuple->Photons->size() != 1 ) continue;
             if( ntuple->Photons->at(0).Pt() < 200. ) continue;
             }
- 
+
             for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++ ){
                 weight = lumi*ntuple->Weight*customPUweights(ntuple);
-         //       if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
-         //       weight *= photonTriggerWeight(ntuple);
-             //   if( skims.sampleName[iSample] == "GJets" ){
-                     if( skims.sampleName[iSample] == "GJets" ){
-                    //cout << "before: " << weight << endl;
-                    weight *= GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
-                    //cout << "after: " << weight << endl;                    
+                //   if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
+                //   weight *= photonTriggerWeight(ntuple);
+                if( skims.sampleName[iSample] == "GJets" ){
+                weight *= GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
                 }
-                //plotsAllEvents[iPlot].fill(ntuple,weight);
+                
                 if( ntuple->Photons_isEB->at(0) ){
                     plotsAllEvents[iPlot].fill(ntuple,weight);
                     plotsEBevents[iPlot].fill(ntuple,weight);
                 }
-               // else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
-                else {
+                else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
                     plotsAllEvents[iPlot].fill(ntuple,weight);
                     plotsEEevents[iPlot].fill(ntuple,weight);
                 }
@@ -235,13 +232,11 @@ int main(int argc, char** argv){
         if( ntuple->TriggerPass->size() < 53 || !ntuple->TriggerPass->at(52) ) continue;
 
         for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++){
-          //  plotsAllEvents[iPlot].fillData(ntuple);
             if( ntuple->Photons_isEB->at(0) ){
                 plotsAllEvents[iPlot].fillData(ntuple);
                 plotsEBevents[iPlot].fillData(ntuple);
             }
-          //  else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.){
-            else {
+            else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.){
                 plotsAllEvents[iPlot].fillData(ntuple);
                 plotsEEevents[iPlot].fillData(ntuple);
             }
