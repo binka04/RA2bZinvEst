@@ -172,7 +172,9 @@ int main(int argc, char** argv){
         int numEvents = ntuple->fChain->GetEntries();
         ntupleBranchStatus<RA2bTree>(ntuple);
         double weight = 1.0;
-        for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
+        //for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
+        for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
+      //  for( int iEvt = 0 ; iEvt < 90000 ; iEvt++ ){
 
             //cout << "sample: " << skims.sampleName[iSample] << endl;
            
@@ -183,11 +185,17 @@ int main(int argc, char** argv){
             if( ( reg == skimSamples::kLDP || reg == skimSamples::kPhotonLDP || reg == skimSamples::kDYeLDP || reg == skimSamples::kDYmLDP ) && !RA2bLDPBaselineCut(ntuple) ) continue;
  
             if( skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
-            if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
-            if( skims.sampleName[iSample] == "GJets" && ( !isPromptPhoton(ntuple) || ntuple->madMinPhotonDeltaR < 0.4 ) ) continue;
-            if( ntuple->Photons->size() != 1 ) continue;
-            if( ntuple->Photons->at(0).Pt() < 200. ) continue;
+     //       if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
+            if( skims.sampleName[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
+            if( skims.sampleName[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;
+            if( skims.sampleName[iSample] == "GJets" && ntuple->Photons_fullID->at(0)!=1 ) continue;
+            if( skims.sampleName[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
+            if( skims.sampleName[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;
+        //    if( skims.sampleName[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
+        //    if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;
             }
+     //       if( ntuple->Photons->at(0).Pt() < 200. ) continue;
+     //       }
 
             for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++ ){
                 weight = lumi*ntuple->Weight*customPUweights(ntuple);
@@ -197,11 +205,12 @@ int main(int argc, char** argv){
                 weight *= GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
                 }
                 
-                if( ntuple->Photons_isEB->at(0) ){
+               if( ntuple->Photons_isEB->at(0) ){
                     plotsAllEvents[iPlot].fill(ntuple,weight);
                     plotsEBevents[iPlot].fill(ntuple,weight);
                 }
-                else {
+ //               else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
+                else  {
                     plotsAllEvents[iPlot].fill(ntuple,weight);
                     plotsEEevents[iPlot].fill(ntuple,weight);
                 }
@@ -220,7 +229,8 @@ int main(int argc, char** argv){
   
     int numEvents = ntuple->fChain->GetEntries();
     ntupleBranchStatus<RA2bTree>(ntuple);
-    for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
+    //for( int iEvt = 0 ; iEvt < min(MAX_EVENTS,numEvents) ; iEvt++ ){
+    for( int iEvt = 0 ; iEvt < 1 ; iEvt++ ){
         ntuple->GetEntry(iEvt);
         if( iEvt % 1000000 == 0 ) cout << "data: " << iEvt << "/" << numEvents << endl;
 
@@ -236,7 +246,7 @@ int main(int argc, char** argv){
                 plotsAllEvents[iPlot].fillData(ntuple);
                 plotsEBevents[iPlot].fillData(ntuple);
             }
-            else {
+            else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
                 plotsAllEvents[iPlot].fillData(ntuple);
                 plotsEEevents[iPlot].fillData(ntuple);
             }
