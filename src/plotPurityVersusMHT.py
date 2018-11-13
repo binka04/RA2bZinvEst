@@ -4,45 +4,48 @@ from array import array
 #purity_fb6795fa13173ba165a794d7c5e9ee8e93864edd.log
 inputs="""
 REGION: EB MHT_250
-purity in SR:  0.970072782157 +/- 0.00136602160643
+purity in SR:  0.970072782179 +/- 0.00136602160239
 purity in SR:  0.96222903804 +/- 0.00149095022757
 purity in SR:  0.97787263305 +/- 0.00125217306914
 --
 REGION: EB MHT_300
-purity in SR:  0.97523036316 +/- 0.00150818460732
+purity in SR:  0.97523036316 +/- 0.00150818460738
 purity in SR:  0.963595415959 +/- 0.00172326615353
 purity in SR:  0.974449800538 +/- 0.00152582602709
 --
 REGION: EB MHT_350
-purity in SR:  0.980033307465 +/- 0.00143769915835
+purity in SR:  0.980033307476 +/- 0.00143769914999
 purity in SR:  0.967815378706 +/- 0.00172267690574
 purity in SR:  0.985009747136 +/- 0.00132221247893
 --
 REGION: EB MHT_500
-purity in SR:  0.988211430582 +/- 0.00235128300672
+purity in SR:  0.988211430578 +/- 0.00235128301394
 purity in SR:  0.980910541007 +/- 0.0028044913712
 purity in SR:  0.991095137429 +/- 0.00213863122215
 --
 REGION: EE MHT_250
-purity in SR:  0.884321695715 +/- 0.003466860633
-purity in SR:  0.86986702468 +/- 0.0036059959668
-purity in SR:  0.904829765363 +/- 0.00323331385249
+purity in SR:  0.915912882256 +/- 0.00591356013738
+purity in SR:  0.909699599595 +/- 0.00602921647167
+purity in SR:  0.931123616469 +/- 0.00550656371304
 --
 REGION: EE MHT_300
-purity in SR:  0.886698891883 +/- 0.00419281860175
-purity in SR:  0.875215113269 +/- 0.00441566463469
-purity in SR:  0.910811972406 +/- 0.00387791892028
+purity in SR:  0.910329788185 +/- 0.00742733973238
+purity in SR:  0.903858936754 +/- 0.0076629447208
+purity in SR:  0.930375175186 +/- 0.00680518379369
 --
 REGION: EE MHT_350
-purity in SR:  0.929309029784 +/- 0.00410202414936
-purity in SR:  0.890895741795 +/- 0.00487684556097
-purity in SR:  0.951967071981 +/- 0.00367223653087
+purity in SR:  0.946772967647 +/- 0.00670336891048
+purity in SR:  0.900207277712 +/- 0.00874839571211
+purity in SR:  0.963996255512 +/- 0.00600308165446
 --
 REGION: EE MHT_500
-purity in SR:  0.962466415653 +/- 0.00841728977682
-purity in SR:  0.941161211622 +/- 0.0100389692654
-purity in SR:  0.974722278126 +/- 0.00750304307425
+purity in SR:  0.980177080456 +/- 0.0106777356102
+purity in SR:  0.961787485556 +/- 0.0140432356269
+purity in SR:  0.986845268989 +/- 0.0094294928825
 """
+
+f= open("Purity_Output_FINAL.txt","a")
+f.write("#purity EB:      purity EB error:      purity EE:      purity EE error:\n")
 
 x=[275,325,425,650]
 xErr=[25,25,75,150]
@@ -72,10 +75,14 @@ EB["avgErr"] = []
 EE["avg"] = []
 EE["avgErr"] = []
 
+f.write("#purity EB:       purity EE: \n")
+
 for i in range(len(EE["nom"])):
     EB["avg"].append((EB["nom"][i]+EB["mcalt"][i]+EB["alt"][i])/3.)
     EE["avg"].append((EE["nom"][i]+EE["mcalt"][i]+EE["alt"][i])/3.)
+    f.write(str(EB["avg"][i])+"    "+str(EE["avg"][i])+"\n")
 
+f.write("#purity EB error:       purity EE error: \n")
 for i in range(len(EE["nom"])):
     EB["avgErr"].append(0.)
     EE["avgErr"].append(0.)
@@ -92,6 +99,7 @@ for i in range(len(EE["nom"])):
         EE["avgErr"][i]=abs(EE["avg"][i] - EE["alt"][i])
     if( abs(EE["avg"][i] - EE["mcalt"][i]) > EE["avgErr"][i] ):  
         EE["avgErr"][i]=abs(EE["avg"][i] - EE["mcalt"][i])
+    f.write(str(EB["avgErr"][i])+"    "+str(EE["avgErr"][i])+"\n")
 
 print "x:",x
 print "EB['nom']:",EB["nom"]
@@ -114,6 +122,8 @@ print "EB['avg']",EB["avg"]
 print "EB['avgErr']",EB["avgErr"]
 print "EE['avg']",EE["avg"]
 print "EE['avgErr']",EE["avgErr"]
+
+#f.write(str(EB["avg"])+"    "+str(EB["avgErr"])+"    "+str(EE["avg"])+"    "+str(EE["avgErr"])+ "\n")
 
 gROOT.ProcessLine(".L ~/tdrstyle.C")
 gROOT.ProcessLine("setTDRStyle()")

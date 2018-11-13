@@ -160,10 +160,13 @@ int main(int argc, char** argv){
             ntuple->GetEntry(iEvt);
             if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
 
-            if( skims.regionNames[regInt] == "photonLDPLoose" || skims.regionNames[regInt] == "photonLoose" || 
-                skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
-                if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
-                if( skims.sampleName[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
+            if( skims.regionNames[regInt] == "photonLDPLoose" || skims.regionNames[regInt] == "photonLoose" || skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
+            if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
+            if( skims.sampleName[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
+
+            if ( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;    //For eta Cut
+            if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;            //For eta Cut 
+
             }
       
             if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.)) continue;
@@ -184,7 +187,7 @@ int main(int argc, char** argv){
                         chargeIsoEBLowSieieVersus[iProj][iBin-1].fill(ntuple);
                     }
                 }
-                else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)   {
+                else {
                     if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274){
                         chargeIsoEEHighSieieVersus[iProj][iBin-1].fill(ntuple);
                     }else{
@@ -198,7 +201,7 @@ int main(int argc, char** argv){
             for( int iPlot = 0 ; iPlot < plotsEB.size()-2 ; iPlot++ ){
                 if( ntuple->Photons_isEB->at(0) ) 
                     plotsEB[iPlot].fill(ntuple);
-                else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)
+                else 
                     plotsEE[iPlot].fill(ntuple);
             }
             if( ntuple->Photons_isEB->at(0) ){
@@ -206,7 +209,7 @@ int main(int argc, char** argv){
                     plotsEB[plotsEB.size()-2].fill(ntuple);
                 else
                     plotsEB[plotsEB.size()-1].fill(ntuple);
-            }else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
+            }else{
                 if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274)
                     plotsEE[plotsEB.size()-2].fill(ntuple);
                 else
@@ -239,12 +242,12 @@ int main(int argc, char** argv){
     for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
         ntuple->GetEntry(iEvt);
         if( iEvt % 1000000 == 0 ) cout << "data: " << iEvt << "/" << numEvents << endl;
-    
         if( ntuple->TriggerPass->size() < 53 || !ntuple->TriggerPass->at(52) ) continue;
-
         if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.) ) continue;
-        if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple)) || 
-            ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
+        if (fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;    //For eta Cut
+        if(fabs(ntuple->Photons->at(0).Eta())>=2)continue;                                                       //For eta Cut 
+
+        if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple))||((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
        
         count1++;
         for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
@@ -256,7 +259,7 @@ int main(int argc, char** argv){
                 else
                     chargeIsoEBLowSieieVersus[iProj][iBin-1].fillData(ntuple);
             }
-            else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)  {
+            else {
                 if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274)
                     chargeIsoEEHighSieieVersus[iProj][iBin-1].fillData(ntuple);
                 else
@@ -267,7 +270,7 @@ int main(int argc, char** argv){
         for( int iPlot = 0 ; iPlot < plotsEB.size()-2 ; iPlot++ ){
             if( ntuple->Photons_isEB->at(0) ) 
                 plotsEB[iPlot].fillData(ntuple);
-            else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)
+            else
                 plotsEE[iPlot].fillData(ntuple);
         }
         if( ntuple->Photons_isEB->at(0) ){
@@ -275,7 +278,7 @@ int main(int argc, char** argv){
                 plotsEB[plotsEB.size()-2].fillData(ntuple);
             else
                 plotsEB[plotsEB.size()-1].fillData(ntuple);
-        }else if(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.) {
+        }else{
             if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274)
                 plotsEE[plotsEB.size()-2].fillData(ntuple);
             else

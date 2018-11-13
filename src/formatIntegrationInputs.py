@@ -4,7 +4,6 @@ from math import sqrt
 gROOT.ProcessLine(".L ~/tdrstyle.C")
 gROOT.ProcessLine("setTDRStyle()")
 from optparse import OptionParser
-
 parser = OptionParser()
 parser.add_option("-r", "--region", dest="region", default="signal",
                   help="region -- signal, ldp, hdp -- only")
@@ -41,7 +40,9 @@ if region == "signal" :
     trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0_signal"
     fragmentationFileName = "../data/fragmentation.11022017_signal.txt"
-    purityFileName = "../data/photonPurity_signal.txt"
+    #purityFileName = "../data/photonPurity_signal.txt"
+    #purityFileName = "../data/photonPurity_signal_modified_etaCut.txt"
+    purityFileName = "../data/photonPurity_signal_modified.txt"
     outputFileName = "gJets_signal.dat"
 
 elif region == "ldp" : 
@@ -262,7 +263,7 @@ for i in range(nBins) :
         outputDict["nMCerr"].append(sqrt(GJetsHisto.GetBinError(i+1)*GJetsHisto.GetBinError(i+1)/outputDict["nMCGJ"][i]/outputDict["nMCGJ"][i]+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
  #  outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
  #  outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
-    outputDict["Nobs"].append(1/GJetsHisto.GetBinContent(i+1))
+    outputDict["Nobs"].append(GJetsHisto.GetBinContent(i+1))
     outputDict["nEB"].append(GJetsEBHisto.GetBinContent(i+1))
     outputDict["nEC"].append(GJetsEEHisto.GetBinContent(i+1))
 
@@ -291,10 +292,10 @@ for i in range(nBins) :
     outputDict["DRup"].append(0.000)
     outputDict["DRlow"].append(0.000)
     
-#    outputDict["Yield"].append(outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i]*outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i]))
+    # outputDict["Yield"].append(outputDict["ZgR"][i]/outputDict["trigW"][i]/outputDict["SF"][i]*outputDict["f"][i]*(outputDict["nEB"][i]*outputDict["pEB"][i]+outputDict["nEC"][i]*outputDict["pEC"][i]))
 #   outputDict["Yield"].append(outputDict["ZgR"][i]*(outputDict["nEB"][i]+outputDict["nEC"][i]))   # YieldRaw
 
-    outputDict["Yield"].append(sqrt((outputDict["REr1"][i]*outputDict["REr1"][i]) + outputDict["Nobs"][i]))
+    outputDict["Yield"].append(sqrt((outputDict["REr1"][i]*outputDict["REr1"][i]) + (1/outputDict["Nobs"][i])+ (outputDict["pErr"][i]*outputDict["pErr"][i])))
 
     if( outputDict["nEB"][i] == 0 and outputDict["nEC"][i] != 0 ):
         outputDict["YstatUp"].append(sqrt(poisZeroErr*poisZeroErr+outputDict["nEC"][i])/outputDict["Yield"][i])
@@ -356,7 +357,13 @@ for i in range(nBins) :
     print outputDict["REr1"]
     print "    "
    
+    print " purity  :"
+    print outputDict["purity"]
+    print "    "
 
+    print " pErr  :"
+    print outputDict["pErr"]
+    print "    "
    
 
 

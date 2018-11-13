@@ -1,3 +1,5 @@
+#Before running delete the existing .txt file
+#./runPurity.sh /uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/
 from ROOT import *
 gROOT.SetBatch(True)
 from optparse import OptionParser
@@ -36,6 +38,7 @@ else:
 ################################################
 # - - - - - - - - - FITTER - - - - - - - - - - #
 ################################################
+f= open("Purity_Output.txt","a")
 def runFit( promptHisto,nonPromptHisto,dataHisto,isEndcap,tag) : 
 
     IsoChrg = RooRealVar("iso","Iso_{chrg} [GeV]",0,10.)
@@ -110,11 +113,15 @@ def runFit( promptHisto,nonPromptHisto,dataHisto,isEndcap,tag) :
 
     r_prompt = promptSRIntegral.getVal()/promptIntegral.getVal() 
     r_nonprompt = nonpromptSRIntegral.getVal()/nonpromptIntegral.getVal()
-
+    
+   
     print "REGION: {0} {1}".format(EEorEB,binLabel)
     purity=frac.getVal()/( (1.-frac.getVal()) * r_nonprompt/r_prompt + frac.getVal() )
     print "purity in SR: ",purity,"+/-",frac.getError()/frac.getVal()*purity
-
+    
+   # f.write("REGION: {0} {1}".format(EEorEB,binLabel)+"\n")
+    f.write("purity in SR:  "+ str(purity) + " +/- "+ str(frac.getError()/frac.getVal()*purity)+"\n")
+    
     ##############################################################
     # - - - - - - - - - - - make pretty plots - - - - - - - - -  #
     ##############################################################
@@ -167,9 +174,12 @@ def main() :
      ####################################################
      # - - - - - - - - - run fits - - - - - - - - - - - #
      ####################################################
+    f.write("REGION: {0} {1}".format(EEorEB,binLabel)+"\n")
     runFit(prompt_hist,nonPromptMC_hist,data_hist,endcap,"ALT_")
     runFit(prompt_hist,nonPrompt_hist,data_hist,endcap,"")
     runFit(prompt_hist,nonPromptMCALT_hist,data_hist,endcap,"MC_ALT_")
+    f.write("--\n")
 
 if __name__ == "__main__":
     main()
+

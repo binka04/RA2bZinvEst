@@ -154,36 +154,16 @@ int main(int argc, char** argv){
             if( sampleNames[iSample] == "GJets" && ntuple->Photons_fullID->at(0)!=1 ) continue;
             if( sampleNames[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue; 
-           // if( sampleNames[iSample] == "GJets" && (fabs(ntuple->Photons->at(0).Eta())>=1.442)) continue;
-  //          if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;              
+         // if( sampleNames[iSample] == "GJets" && (fabs(ntuple->Photons->at(0).Eta())>=1.442)) continue;
+         // if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;              
 
-
-    //       if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
-    //       if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;
-
-
-
-
-
-           //if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta()) >= 2.0)continue;  
-         //    if( sampleNames[iSample] == "GJets" &&  fabs(ntuple->Photons->at(0).Eta() <= 1.566 )) continue;
-
-          // if( sampleNames[iSample] == "GJets" &&  !ntuple->Photons_isEB->at(0) ) continue;
-         //   if( sampleNames[iSample] == "GJets" && !(fabs(ntuple->Photons->at(0).Eta())<1.442)) continue;
-          // if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta()) >= 1.4442 && fabs(ntuple->Photons->at(0).Eta() <= 1.566))))continue;
-       //if( sampleNames[iSample] == "GJets" && !( fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.)) continue;
-     //  if( sampleNames[iSample] == "GJets" && ( fabs(ntuple->Photons->at(0).Eta()) <= 1.566 )) continue;
-    //     if( sampleNames[iSample] == "GJets" && !(fabs(ntuple->Photons->at(0).Eta())<1.442)) continue;
-     //      if( sampleNames[iSample] == "GJets" ) count++;   
             weight = lumi*ntuple->Weight*customPUweights(ntuple);//*photonTriggerWeight(ntuple));
             if( sampleNames[iSample] == "GJets" && DR0p4 ) 
                 weight*=GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
 
             for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++ ){
                 if( sampleNames[iSample] == "GJets"){
-                   // if(ntuple->Photons_isEB->at(0) ||(fabs(ntuple->Photons->at(0).Eta())>1.566 && fabs(ntuple->Photons->at(0).Eta())<2.))                 
                     plots[iPlot].fill(ntuple,weight);
-                 
 		}else 
                     plots[iPlot].fill(ntuple,weight);
 

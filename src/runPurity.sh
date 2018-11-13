@@ -2,8 +2,11 @@
 
 inputDir=$1
 
+
+
 #python photonPurityChargedIso.py -s "MHT200_225" -b "MHT_200" -d $inputDir
 #python photonPurityChargedIso.py -s "MHT225_250" -b "MHT_225" -d $inputDir
+
 python photonPurityChargedIso.py -s "MHT250_300" -b "MHT_250" -d $inputDir
 python photonPurityChargedIso.py -s "MHT300_350" -b "MHT_300" -d $inputDir
 python photonPurityChargedIso.py -s "MHT350_500" -b "MHT_350" -d $inputDir
