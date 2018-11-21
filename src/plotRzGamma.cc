@@ -84,9 +84,8 @@ int main(int argc, char** argv){
     plots.push_back(DeltaPhi2plot);
     plots.push_back(DeltaPhi3plot);
     plots.push_back(DeltaPhi4plot);
-
-    // background MC samples
-    vector<RA2bTree*> samples;
+// background MC samples
+   vector<RA2bTree*> samples;
     vector<TString> sampleNames;
 
     TString skimType;
@@ -145,38 +144,35 @@ int main(int argc, char** argv){
         ntupleBranchStatus<RA2bTree>(ntuple);
         double weight = 1.0;
         for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
-     //   for( int iEvt = 0 ; iEvt <90000; iEvt++ ){
             ntuple->GetEntry(iEvt);
-            if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
+            if( iEvt % 1000000== 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
             if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue; 
             if( sampleNames[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;      
             if( sampleNames[iSample] == "GJets" && ntuple->Photons_fullID->at(0)!=1 ) continue;
             if( sampleNames[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue; 
-         // if( sampleNames[iSample] == "GJets" && (fabs(ntuple->Photons->at(0).Eta())>=1.442)) continue;
-         // if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;              
-
-            weight = lumi*ntuple->Weight*customPUweights(ntuple);//*photonTriggerWeight(ntuple));
+            if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;     
+            if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
+    
+            weight = lumi*ntuple->Weight*customPUweights(ntuple);
             if( sampleNames[iSample] == "GJets" && DR0p4 ) 
                 weight*=GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
-
+         
             for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++ ){
                 if( sampleNames[iSample] == "GJets"){
                     plots[iPlot].fill(ntuple,weight);
+                    if(iPlot == 0) count++;
 		}else 
                     plots[iPlot].fill(ntuple,weight);
-
-            }// end loop over iPlots
-        }// end loop over events
-    }// end loop over iSamples
-
-
-   cout<< "count is : "<<count;
+            }
+       }
+  }
+    cout<< "count is : "<<count;
     
     TFile* outputFile;
     if( DR0p4 ) 
-        outputFile = new TFile("RzGamma_PUweightOnly_"+regionNames[region]+"_histo.root","RECREATE");
+        outputFile = new TFile("RzGamma_PUweightOnly_"+regionNames[region]+"_histo_ETA.root","RECREATE");
     else 
         outputFile = new TFile("RzGamma_DR0p05_PUweightOnly_"+regionNames[region]+"_histo.root","RECREATE");
 
@@ -188,7 +184,7 @@ int main(int argc, char** argv){
         ratio->SetMarkerStyle(8);
         ratio->GetXaxis()->SetTitle(xlabels[iPlot]);
         ratio->GetYaxis()->SetTitle("R_{Z/#gamma}");
-        ratio->GetYaxis()->SetRangeUser(0.,2.);//min(2.,ratio->GetMaximum()));
+        ratio->GetYaxis()->SetRangeUser(0.,2.);
         ratio->Draw("Ap");
         writeExtraText = true;
         extraText = "Simulation";
@@ -200,14 +196,15 @@ int main(int argc, char** argv){
     
         if( DR0p4 ){
             can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
-            can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
-            can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
+           // can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
+           // can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
         }else{
             can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
-            can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
-            can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
+           // can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
+           // can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
         }
     }
 
     outputFile->Close();
 }
+     

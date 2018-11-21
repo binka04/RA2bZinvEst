@@ -38,7 +38,7 @@ else:
 ################################################
 # - - - - - - - - - FITTER - - - - - - - - - - #
 ################################################
-f= open("Purity_Output.txt","a")
+f= open("Purity_Output_with18_data.txt","a")
 def runFit( promptHisto,nonPromptHisto,dataHisto,isEndcap,tag) : 
 
     IsoChrg = RooRealVar("iso","Iso_{chrg} [GeV]",0,10.)
@@ -157,7 +157,7 @@ def main() :
     ###########################################################
     # - - - - - - - - - - grab histo inputs - - - - - - - - - #
     ###########################################################
-    inputFile = TFile(inputDir+"/plotPurityProperties_photonLoose.root","READ")
+    inputFile = TFile(inputDir+"/plotPurityProperties_photonLoose_with18_data.root","READ")
     prompt_hist = inputFile.Get("photonIsoChrgLowSieie_{0}_{1}_photonLoose_GJets".format(EEorEB,binLabel))
     ### ADD HACK BECAUSE THERE AREN'T ENOUGH EVENTS IN THE
     ### MC ALT MHT_500 BIN....

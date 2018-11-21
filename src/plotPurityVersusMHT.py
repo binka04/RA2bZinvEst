@@ -4,48 +4,48 @@ from array import array
 #purity_fb6795fa13173ba165a794d7c5e9ee8e93864edd.log
 inputs="""
 REGION: EB MHT_250
-purity in SR:  0.970072782179 +/- 0.00136602160239
-purity in SR:  0.96222903804 +/- 0.00149095022757
-purity in SR:  0.97787263305 +/- 0.00125217306914
+purity in SR:  0.929142887387 +/- 0.00147209753355
+purity in SR:  0.903939587931 +/- 0.00166859695551
+purity in SR:  0.945649191401 +/- 0.00139938119256
 --
 REGION: EB MHT_300
-purity in SR:  0.97523036316 +/- 0.00150818460738
-purity in SR:  0.963595415959 +/- 0.00172326615353
-purity in SR:  0.974449800538 +/- 0.00152582602709
+purity in SR:  0.932150933047 +/- 0.0017174829031
+purity in SR:  0.897097391889 +/- 0.00197470412796
+purity in SR:  0.929532765936 +/- 0.00173700719891
 --
 REGION: EB MHT_350
-purity in SR:  0.980033307476 +/- 0.00143769914999
-purity in SR:  0.967815378706 +/- 0.00172267690574
-purity in SR:  0.985009747136 +/- 0.00132221247893
+purity in SR:  0.933619817001 +/- 0.00172633665335
+purity in SR:  0.902787368165 +/- 0.00201920257343
+purity in SR:  0.946850989732 +/- 0.00167696287771
 --
 REGION: EB MHT_500
-purity in SR:  0.988211430578 +/- 0.00235128301394
-purity in SR:  0.980910541007 +/- 0.0028044913712
-purity in SR:  0.991095137429 +/- 0.00213863122215
+purity in SR:  0.947003007205 +/- 0.00310591261701
+purity in SR:  0.922515622013 +/- 0.00361987569961
+purity in SR:  0.957472680292 +/- 0.00300997518557
 --
 REGION: EE MHT_250
-purity in SR:  0.915912882256 +/- 0.00591356013738
-purity in SR:  0.909699599595 +/- 0.00602921647167
-purity in SR:  0.931123616469 +/- 0.00550656371304
+purity in SR:  0.825387382506 +/- 0.00345180560192
+purity in SR:  0.842887921917 +/- 0.00326767590427
+purity in SR:  0.854190996196 +/- 0.00325117875827
 --
 REGION: EE MHT_300
-purity in SR:  0.910329788185 +/- 0.00742733973238
-purity in SR:  0.903858936754 +/- 0.0076629447208
-purity in SR:  0.930375175186 +/- 0.00680518379369
+purity in SR:  0.81846527905 +/- 0.00412257830156
+purity in SR:  0.844165056942 +/- 0.00399367658108
+purity in SR:  0.855824310959 +/- 0.0038372579723
 --
 REGION: EE MHT_350
-purity in SR:  0.946772967647 +/- 0.00670336891048
-purity in SR:  0.900207277712 +/- 0.00874839571211
-purity in SR:  0.963996255512 +/- 0.00600308165446
+purity in SR:  0.874648190342 +/- 0.00420853799963
+purity in SR:  0.858568638902 +/- 0.00440572701014
+purity in SR:  0.913155403595 +/- 0.00382667940352
 --
 REGION: EE MHT_500
-purity in SR:  0.980177080456 +/- 0.0106777356102
-purity in SR:  0.961787485556 +/- 0.0140432356269
-purity in SR:  0.986845268989 +/- 0.0094294928825
+purity in SR:  0.916913304962 +/- 0.00955464901439
+purity in SR:  0.906226566431 +/- 0.00998737177659
+purity in SR:  0.942313232218 +/- 0.00871149799625
 """
 
-f= open("Purity_Output_FINAL.txt","a")
-f.write("#purity EB:      purity EB error:      purity EE:      purity EE error:\n")
+f= open("Purity_Output_FINAL_with18_data.txt","a")
+f.write("#purity EB:              purity EB error:      purity EE:          purity EE error:\n")
 
 x=[275,325,425,650]
 xErr=[25,25,75,150]
@@ -215,9 +215,9 @@ LUMItext.SetTextFont(51)
 LUMItext.SetTextSize(0.045)
 LUMItext.Draw()
 
-can.SaveAs("../plots/purityResults/photonPurity_ALL_MHT.pdf")
+#can.SaveAs("../plots/purityResults/photonPurity_ALL_MHT.pdf")
 can.SaveAs("../plots/purityResults/photonPurity_ALL_MHT.png")
-can.SaveAs("../plots/purityResults/photonPurity_ALL_MHT.eps")
+#can.SaveAs("../plots/purityResults/photonPurity_ALL_MHT.eps")
 
 # - - - - - - - - 
 canAvg = TCanvas("canAvg","canAvg",500,500)
@@ -237,6 +237,6 @@ CMStext.Draw()
 SIMtext.Draw()
 LUMItext.Draw()
 
-canAvg.SaveAs("../plots/purityResults/photonPurity_MHT.pdf")
+#canAvg.SaveAs("../plots/purityResults/photonPurity_MHT.pdf")
 canAvg.SaveAs("../plots/purityResults/photonPurity_MHT.png")
-canAvg.SaveAs("../plots/purityResults/photonPurity_MHT.eps")
+#canAvg.SaveAs("../plots/purityResults/photonPurity_MHT.eps")

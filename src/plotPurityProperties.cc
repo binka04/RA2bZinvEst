@@ -163,9 +163,8 @@ int main(int argc, char** argv){
             if( skims.regionNames[regInt] == "photonLDPLoose" || skims.regionNames[regInt] == "photonLoose" || skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
             if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
             if( skims.sampleName[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
-
-            if ( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;    //For eta Cut
-            if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;            //For eta Cut 
+           // if ( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;//For eta Cut
+           // if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;            //For eta Cut 
 
             }
       
@@ -244,8 +243,8 @@ int main(int argc, char** argv){
         if( iEvt % 1000000 == 0 ) cout << "data: " << iEvt << "/" << numEvents << endl;
         if( ntuple->TriggerPass->size() < 53 || !ntuple->TriggerPass->at(52) ) continue;
         if( ntuple->Photons->size() == 0 || (ntuple->Photons->size() > 0 && ntuple->Photons->at(0).Pt()<200.) ) continue;
-        if (fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;    //For eta Cut
-        if(fabs(ntuple->Photons->at(0).Eta())>=2)continue;                                                       //For eta Cut 
+     //   if (fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;    //For eta Cut
+     //   if(fabs(ntuple->Photons->at(0).Eta())>=2)continue;                                                       //For eta Cut 
 
         if( ((skims.regionNames[regInt] == "photonLDPLoose"||skims.regionNames[regInt] == "photonLDP")&&!RA2bLDPBaselineCut(ntuple))||((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
        
@@ -288,7 +287,7 @@ int main(int argc, char** argv){
     }
    
 //    cout<< "count1 is :"<<count1<<"\n";
-    TFile* outputFile = new TFile("plotPurityProperties_"+skims.regionNames[regInt]+".root","RECREATE");
+    TFile* outputFile = new TFile("plotPurityProperties_"+skims.regionNames[regInt]+"_with18_data.root","RECREATE");
 
     for( int iPlot = 0 ; iPlot < plotsEB.size() ; iPlot++){
         TCanvas* can = new TCanvas("can","can",500,500);

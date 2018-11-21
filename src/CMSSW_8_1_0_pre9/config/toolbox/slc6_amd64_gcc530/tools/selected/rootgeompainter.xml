@@ -1,6 +1,0 @@
-<tool name="rootgeompainter" version="6.06.04-giojec4">
-  <info url="http://root.cern.ch/root/"/>
-  <lib name="GeomPainter"/>
-  <use name="rootgeom"/>
-  <use name="rootgraphics"/>
-</tool>
