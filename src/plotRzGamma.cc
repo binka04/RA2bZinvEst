@@ -21,6 +21,45 @@ using namespace std;
 
 int main(int argc, char** argv){
 
+    TFile *f1 = new TFile("L1PrefiringMaps_new.root");
+    TH2F* h_photon = (TH2F*)f1->Get("L1prefiring_photonptvseta_2016BtoH");
+    TH2F* h_jet = (TH2F*)f1->Get("L1prefiring_jetptvseta_2016BtoH");
+    int c = 0, d = 0;
+    TAxis* xAxis_photon = h_photon->GetXaxis();
+    TAxis* yAxis_photon = h_photon->GetYaxis();
+    double binXLow_photon[72] ,binXUp_photon[72] ,binYLow_photon[72] ,binYUp_photon[72] ,binCont_photon[72], binContErr_photon[72];
+    for(int i = 1; i<= h_photon->GetNbinsY(); i++ ){
+                for(int j = 1; j<= h_photon->GetNbinsX(); j++ ) {
+                        if(h_photon->GetBinContent(j,i) != 0){
+          	                 binXLow_photon[c] = xAxis_photon->GetBinLowEdge(j);
+                	         binXUp_photon[c] = xAxis_photon->GetBinUpEdge(j);
+                       	         binYLow_photon[c] = yAxis_photon->GetBinLowEdge(i);
+                   		 binYUp_photon[c] = yAxis_photon->GetBinUpEdge(i);
+                                 binCont_photon[c] = h_photon->GetBinContent(j,i);
+                                 binContErr_photon[c] = h_photon->GetBinError(j,i);
+                                 c++;
+                        }
+                }
+     }
+
+    TAxis* xAxis_jet = h_jet->GetXaxis();
+    TAxis* yAxis_jet = h_jet->GetYaxis();
+    double binXLow_jet[89] ,binXUp_jet[89] ,binYLow_jet[89] ,binYUp_jet[89] ,binCont_jet[89], binContErr_jet[89];
+    for(int i = 1; i<= h_jet->GetNbinsY(); i++ ){
+                for(int j = 1; j<= h_jet->GetNbinsX(); j++ ) {
+                        if(h_jet->GetBinContent(j,i) != 0){
+          	                 binXLow_jet[d] = xAxis_jet->GetBinLowEdge(j);
+                	         binXUp_jet[d] = xAxis_jet->GetBinUpEdge(j);
+                       	         binYLow_jet[d] = yAxis_jet->GetBinLowEdge(i);
+                   		 binYUp_jet[d] = yAxis_jet->GetBinUpEdge(i);
+                                 binCont_jet[d] = h_jet->GetBinContent(j,i);
+                                 binContErr_jet[d] = h_jet->GetBinError(j,i);
+                                 d++;
+                        }
+                }
+     }
+
+
     bool DR0p4 = true;
 
     if( argc != 2 ){ 
@@ -132,9 +171,10 @@ int main(int argc, char** argv){
     }
     samples.push_back(new RA2bTree(GJets));
     sampleNames.push_back("GJets");
-    int count = 0;
-    for( int iSample = 0 ; iSample < samples.size() ; iSample++){
 
+    int count = 0, count1 = 0, count2 = 0, count_jet = 0, count4 = 0, count5 = 0;
+   
+    for( int iSample = 0 ; iSample < samples.size() ; iSample++){
         RA2bTree* ntuple = samples[iSample];
         for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++){
             plots[iPlot].addNtuple(ntuple,sampleNames[iSample]);
@@ -145,34 +185,74 @@ int main(int argc, char** argv){
         double weight = 1.0;
         for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
             ntuple->GetEntry(iEvt);
-            if( iEvt % 1000000== 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
-            if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue; 
-            if( sampleNames[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
+            if( iEvt % 1000000 == 0 ) cout << sampleNames[iSample] << ": " << iEvt << "/" << numEvents << endl;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;      
+            if( sampleNames[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
             if( sampleNames[iSample] == "GJets" && ntuple->Photons_fullID->at(0)!=1 ) continue;
             if( sampleNames[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
-            if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue; 
-            if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;     
-            if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
-    
+            if( sampleNames[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;      
+            if( ( region == 0 && !RA2bBaselineCut(ntuple) ) || ( region == 1 && !RA2bLDPBaselineCut(ntuple) ) ) continue;
+         //   if( sampleNames[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;     
+         //   if( sampleNames[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
+            double prefiring_weight_photon = 1.0;
+ 
+             if( sampleNames[iSample] == "ZJets" || sampleNames[iSample] == "GJets" ) {   count_jet++;          }
+
+/*************************************************************** prefiring weight Photon *************************************************************************/
+            if( sampleNames[iSample] == "GJets" ){  
+             count++;            
+    	        for(int x = 0; x < 72; x++){
+       		      if(binXLow_photon[x] <= (ntuple->Photons->at(0).Eta()) && (ntuple->Photons->at(0).Eta()) < binXUp_photon[x] &&  binYLow_photon[x] <= (ntuple->Photons->at(0).Pt()) && (ntuple->Photons->at(0).Pt()) < binYUp_photon[x])
+             		      prefiring_weight_photon = (1 - binCont_photon[x]);
+                }
+            }
+
+
+
+
+/******************************************************prefiring weight Jet**************************************************************************************/
+
+
+             double prefiring_weight_jet[ntuple->Jets->size()] ;
+             for (int unsigned s = 0; s < ntuple->Jets->size();s++){
+	        prefiring_weight_jet[s] = 1 ;
+    	        for(int x = 0; x < 89; x++){
+
+       		      if(binXLow_jet[x] <= (ntuple->Jets->at(s).Eta()) && (ntuple->Jets->at(s).Eta()) < binXUp_jet[x] &&  binYLow_jet[x] <= (ntuple->Jets->at(s).Pt()) && (ntuple->Jets->at(s).Pt()) < binYUp_jet[x])
+             		      prefiring_weight_jet[s] = (1 - binCont_jet[x]) ;
+                }
+            }
+
+
+         if(sampleNames[iSample] == "GJets" && prefiring_weight_photon != 1 ) count1++;
+         if( prefiring_weight_jet[0] != 1 ) count2++;
+         if(sampleNames[iSample] == "GJets" && prefiring_weight_jet[0] != 1 ) count4++;
+         if(sampleNames[iSample] == "ZJets" && prefiring_weight_jet[0] != 1 ) count5++;
+
             weight = lumi*ntuple->Weight*customPUweights(ntuple);
+            
+            for (int unsigned s = 0; s < ntuple->Jets->size();s++){
+            	weight*=prefiring_weight_jet[s];
+            }
+  
+
             if( sampleNames[iSample] == "GJets" && DR0p4 ) 
-                weight*=GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
+                weight*=GJets0p4Weights(ntuple)*dRweights(ntuple)*prefiring_weight_photon;
          
             for( int iPlot = 0 ; iPlot < plots.size() ; iPlot++ ){
                 if( sampleNames[iSample] == "GJets"){
                     plots[iPlot].fill(ntuple,weight);
-                    if(iPlot == 0) count++;
 		}else 
                     plots[iPlot].fill(ntuple,weight);
             }
-       }
-  }
-    cout<< "count is : "<<count;
+        }       
+    }
+    cout<< " \tTotal GJets events\t "<<count<<"\tprefiring weighted != 1  events\t"<<count1;
+    cout<< " \tTotal Jets events\t "<<count_jet<<"\tprefiring weighted != 1  events\t"<<count2<<"from GJets\t"<<count4<<"\tfrom ZJets\t"<<count5<<"\t";
     
     TFile* outputFile;
     if( DR0p4 ) 
-        outputFile = new TFile("RzGamma_PUweightOnly_"+regionNames[region]+"_histo_ETA.root","RECREATE");
+        outputFile = new TFile("RzGamma_PUweightOnly_"+regionNames[region]+"_hist0_prefire_in_photon&Jets.root","RECREATE");
     else 
         outputFile = new TFile("RzGamma_DR0p05_PUweightOnly_"+regionNames[region]+"_histo.root","RECREATE");
 
@@ -196,15 +276,15 @@ int main(int argc, char** argv){
     
         if( DR0p4 ){
             can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
-           // can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
-           // can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
+            can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
+            can->SaveAs("../plots/RzGamma_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
         }else{
             can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".png");
-           // can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
-           // can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
+            can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".pdf");
+            can->SaveAs("../plots/RzGamma_DR0p05_plots/"+TString(plots[iPlot].histoMap[samples[0]]->GetName())+".eps");
         }
     }
 
     outputFile->Close();
 }
-     
+    

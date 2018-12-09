@@ -4,11 +4,9 @@
 #include "TROOT.h"
 #include "THStack.h"
 #include "TPad.h"
-
 #include <vector>
 #include <map>
 #include <iostream>
-
 #include "plotterUtils.cc"
 #include "skimSamples.cc"
 #include "definitions.h"
@@ -17,7 +15,6 @@
 using namespace std;
 
 static const int MAX_EVENTS=999999999;
-
 int main(int argc, char** argv){
 
     gROOT->ProcessLine(".L tdrstyle.C");
@@ -150,7 +147,8 @@ int main(int argc, char** argv){
     plotsEEevents.push_back(PhotonEtaplotEE);
     plotsEEevents.push_back(PhotonMinDeltaREE);
     plotsEEevents.push_back(verticesplotEE);
-
+    
+    int count_QCD = 0, count_TT = 0, count_Others = 0, count_GJets = 0, count_QCD_jet = 0, count_TT_jet = 0, count_Others_jet = 0, count_GJets_jet = 0, TT_total = 0, Others_total = 0, GJets_total = 0, QCD_total = 0 ; 
     // background MC samples
     for( int iSample = 0 ; iSample < skims.ntuples.size() ; iSample++){
 
@@ -179,24 +177,46 @@ int main(int argc, char** argv){
 
             if( ( reg == skimSamples::kSignal || reg == skimSamples::kPhoton || reg == skimSamples::kDYe || reg == skimSamples::kDYm ) && !RA2bBaselineCut(ntuple) ) continue;
             if( ( reg == skimSamples::kLDP || reg == skimSamples::kPhotonLDP || reg == skimSamples::kDYeLDP || reg == skimSamples::kDYmLDP ) && !RA2bLDPBaselineCut(ntuple) ) continue;
- 
+
             if( skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
             if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
-            if( skims.sampleName[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
-            if( skims.sampleName[iSample] == "GJets" && ntuple->Photons->size() != 1 ) continue;
-            if( skims.sampleName[iSample] == "GJets" && ntuple->Photons_fullID->at(0)!=1 ) continue;
-            if( skims.sampleName[iSample] == "GJets" && !( ntuple->madMinPhotonDeltaR>0.4 ) ) continue;
-            if( skims.sampleName[iSample] == "GJets" && ntuple->Photons->at(0).Pt() < 200. ) continue;
-         //   if( skims.sampleName[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
-         //   if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;
+            if( skims.sampleName[iSample] == "GJets" && ( !isPromptPhoton(ntuple) || ntuple->madMinPhotonDeltaR < 0.4 ) ) continue;
+            if( ntuple->Photons->size() != 1 ) continue;
+            if( ntuple->Photons->at(0).Pt() < 200. ) continue;
+       //   if( skims.sampleName[iSample] == "GJets" && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
+       //   if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;
             }
 
-            for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++ ){
-                weight = lumi*ntuple->Weight*customPUweights(ntuple);
+    
+         /* for (int unsigned s = 0; s < ntuple->Jets->size();s++){
+            weight*=prefiring_weight_jet(ntuple,iEvt,s);
+           }
+         */  
+
+  //         if( skims.sampleName[iSample] == "QCD") {QCD_total ++ ; }
+           if( skims.sampleName[iSample] == "QCD" && prefiring_weight_photon(ntuple,iEvt) != 1) {count_QCD ++ ; }
+           if( skims.sampleName[iSample] == "QCD" && prefiring_weight_jet(ntuple,iEvt,0) != 1) {count_QCD_jet ++ ; }
+
+  //           if( skims.sampleName[iSample] == "TT") { TT_total ++ ; }
+           if( skims.sampleName[iSample] == "TT" && prefiring_weight_photon(ntuple,iEvt) != 1) { count_TT ++ ; }
+           if( skims.sampleName[iSample] == "TT" && prefiring_weight_jet(ntuple,iEvt,0) != 1) { count_TT_jet ++ ; }
+           
+  //         if( skims.sampleName[iSample] == "Others") {Others_total ++ ; }
+           if( skims.sampleName[iSample] == "Others" && prefiring_weight_photon(ntuple,iEvt) != 1) {count_Others ++ ; }
+           if( skims.sampleName[iSample] == "Others" && prefiring_weight_jet(ntuple,iEvt,0) != 1) {count_Others_jet ++ ; }
+           
+  //         if( skims.sampleName[iSample] == "GJets") { GJets_total ++ ; }  
+           if( skims.sampleName[iSample] == "GJets" && prefiring_weight_photon(ntuple,iEvt) != 1) { count_GJets ++ ; }  
+           if( skims.sampleName[iSample] == "GJets" && prefiring_weight_jet(ntuple,iEvt,0) != 1) { count_GJets_jet ++ ; }  
+     
+  
+
+           for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++ ){
+                weight = lumi*ntuple->Weight*customPUweights(ntuple)/**prefiring_weight_photon(ntuple,iEvt)*/;              // prefiring weight here
                 if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
                    weight *= photonTriggerWeight(ntuple);
                 if( skims.sampleName[iSample] == "GJets" ){
-                   weight *= GJets0p4Weights(ntuple)/**dRweights(ntuple)*/;
+                   weight *= GJets0p4Weights(ntuple)*dRweights(ntuple);
                 }
                 
                if( ntuple->Photons_isEB->at(0) ){
@@ -212,6 +232,9 @@ int main(int argc, char** argv){
         }
     }
 
+    cout<<"QCD Total \t"<<QCD_total<<"\t TT total\t "<<TT_total<<"\tOthers total\t"<<Others_total<<"\tGJets total\t"<<GJets_total<<"\n";
+    cout<<"QCD count PHOTONS PREFIRED \t"<<count_QCD<<"\t TT count\t "<<count_TT<<"\t Others count\t"<<count_Others<<"\tGJets count\t"<<count_GJets<<"\n";
+    cout<<"QCD count Jets Prefired \t"<<count_QCD_jet<<"\t TT count\t "<<count_TT_jet<<"\t Others count\t"<<count_Others_jet<<"\tGJets count\t"<<count_GJets_jet<<"\n";
 
     // Data samples
     RA2bTree* ntuple = skims.dataNtuple;
@@ -233,7 +256,6 @@ int main(int argc, char** argv){
      //   if( ( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) && ((fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))))continue;
      //   if( ( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) && fabs(ntuple->Photons->at(0).Eta())>=2)continue;
                     
-
         if( ntuple->TriggerPass->size() < 53 || !ntuple->TriggerPass->at(52) ) continue;
 
         for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++){
@@ -248,7 +270,7 @@ int main(int argc, char** argv){
         }
     }
 
-    TFile* outputFile = new TFile("plotObs_"+skims.regionNames[regInt]+"_baseline_TOTAL.root","UPDATE");
+    TFile* outputFile = new TFile("plotObs_"+skims.regionNames[regInt]+"_No_prefire.root","UPDATE");
 
     for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++){
         TCanvas* can = new TCanvas("can","can",500,500);

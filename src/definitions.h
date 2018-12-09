@@ -53,6 +53,26 @@ double CalcdPhi( double phi1 , double phi2 ){
 
 }
 
+TFile *f1 = new TFile("L1PrefiringMaps_new.root");
+TH2F* h_photon = (TH2F*)f1->Get("L1prefiring_photonptvseta_2016BtoH");
+TH2F* h_jet = (TH2F*)f1->Get("L1prefiring_jetptvseta_2016BtoH");
+
+double prefiring_weight_photon(RA2bTree* ntuple,int iEvt )
+{
+           ntuple->GetEntry(iEvt);
+ //          double prefiring_weight_photon = 1.0;
+           return ( 1 - h_photon->GetBinContent(h_photon->GetXaxis()->FindBin(ntuple->Photons->at(0).Eta()),h_photon->GetYaxis()->FindBin(ntuple->Photons->at(0).Pt())));
+}
+
+double prefiring_weight_jet(RA2bTree* ntuple,int iEvt,int unsigned s )
+{
+                       ntuple->GetEntry(iEvt);
+ //                      // double prefiring_weight_jet[ntuple->Jets->size()] ;
+                       return ( 1 - h_jet->GetBinContent(h_jet->GetXaxis()->FindBin(ntuple->Jets->at(s).Eta()),h_jet->GetYaxis()->FindBin(ntuple->Jets->at(s).Pt())));
+ 
+}
+ 
+
 template<typename ntupleType>void ntupleBranchStatus(ntupleType* ntuple){
   ntuple->fChain->SetBranchStatus("*",0);
   ntuple->fChain->SetBranchStatus("Jets",1);
@@ -129,6 +149,50 @@ template<typename ntupleType> double dRweights(ntupleType* ntuple){
     double intercept=0.9071,slope=0.00009615;
     return 1./(min(ntuple->HT,900.)*slope+intercept);
 }
+
+////******************************************************** Prefiring Weight  **************************************************////|||||||||||||||||||||||||||
+/*
+
+        TFile *f1 = new TFile("/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/L1PrefiringMaps_new.root");
+        TH2F* h = (TH2F*)f1->Get("L1prefiring_photonptvseta_2017BtoF");
+        TAxis* xAxis = h->GetXaxis();
+        TAxis* yAxis = h->GetYaxis();
+
+template<typename ntupleType> double prefiringWeight(ntupleType* ntuple){
+        TFile *f1 = new TFile("/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/L1PrefiringMaps_new.root");
+        TH2F* h = (TH2F*)f1->Get("L1prefiring_photonptvseta_2017BtoF");
+        TAxis* xAxis = h->GetXaxis();
+        TAxis* yAxis = h->GetYaxis();
+
+
+        double prefiringWeight = 4.0,prefiringWeightErr;
+
+        for(int i = 1; i<= h->GetNbinsY()+1; i++ )
+         {
+                for(int j = 1; j<= h->GetNbinsX()+1; j++ ) {
+
+                        if(h->GetBinContent(j,i) != 0){
+
+	                        if(xAxis->GetBinLowEdge(j)<=ntuple->Photons->at(0).Eta() && ntuple->Photons->at(0).Eta()<xAxis->GetBinUpEdge(j) && yAxis->GetBinLowEdge(i)<=ntuple->Photons->at(0).Pt() && ntuple->Photons->at(0).Pt()<yAxis->GetBinUpEdge(i));
+        	                {
+                	               prefiringWeight = h->GetBinContent(j,i);
+                        	       prefiringWeightErr = h->GetBinError(j,i);
+
+	
+        	                }
+                        }
+                }
+         }
+    
+        return prefiringWeight;
+}
+
+*/
+
+
+
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\//
+
 
 template<typename ntupleType> double GJets0p4Weights(ntupleType* ntuple){
     if( ntuple->madHT > 100. && ntuple->madHT < 200. )

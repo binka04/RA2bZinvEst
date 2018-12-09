@@ -32,21 +32,20 @@ if region == "signal" :
     #MChistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/plotObs_photon_baseline.root".format(hash)
     #MChistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/EtaCutRootFiles/plotObs_photon_baseline.root".format(hash)
     #MChistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/RootFiles/plotObs_photon_baseline.root".format(hash)
-    MChistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/plotObs_photon_baseline_prefire.root".format(hash)
+    MChistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/plotObs_photonLDP_baseline_prefire.root".format(hash)
     MChistoTag = "AnalysisBins_BTag0_photon_baseline"
     #RzgHistoFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/RzGamma_PUweightOnly_signal_histo.root".format(hash)
     #RzgHistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/EtaCutRootFiles/RzGamma_PUweightOnly_signal_histo.root".format(hash)
-    #RzgHistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/RootFiles/RzGamma_PUweightOnly_signal_histo.root".format(hash)
-    RzgHistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/RzGamma_PUweightOnly_signal_hist0_No_prefire.root".format(hash)
+    RzgHistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/RootFiles/RzGamma_PUweightOnly_signal_histo.root".format(hash)
+    #RzgHistoFileName = "/uscms/homes/t/tmishra/CMSSW_9_4_0/src/RA2bZinvEst/src/RzGamma_PUweightOnly_signal_hist0_prefire.root".format(hash)
     RzgHistoTag = "AnalysisBins_BTag0_RzGamma_signal"
     trigWeightFileName = "/eos/uscms/store/user/"+options.user+"/RA2bZinvEst/{0}/triggerUnc_signal_histo.root".format(hash)
     trigWeightTag = "AnalysisBins_BTag0_signal"
     fragmentationFileName = "../data/fragmentation.11022017_signal.txt"
     #purityFileName = "../data/photonPurity_signal.txt"
     #purityFileName = "../data/photonPurity_signal_modified_etaCut.txt"
-    #purityFileName = "../data/photonPurity_signal_modified.txt"
-    purityFileName = "Purity/Purity_Output_FINAL_No_weight.txt"
-    outputFileName = "Purity/gJets_signal_No_weight.dat"
+    purityFileName = "../data/photonPurity_signal_modified.txt"
+    outputFileName = "gJets_signal_prefireWeighted.dat"
 
 elif region == "ldp" : 
     nBins = 59
@@ -85,7 +84,6 @@ GJetsHisto = yieldInputFile.Get(MChistoTag+"_GJets")
 dataHisto = yieldInputFile.Get(MChistoTag+"_data")
 dataEBHisto = yieldInputFile.Get(MChistoTag+"_EB_data")
 dataEEHisto = yieldInputFile.Get(MChistoTag+"_EE_data")
-
 
 if GJetsEBHisto.GetNbinsX() != GJetsEEHisto.GetNbinsX() : 
     print "number of bins in barrel and endcap don't match"
@@ -263,11 +261,15 @@ for i in range(nBins) :
         outputDict["nMCerr"].append(sqrt(poisZeroErr*poisZeroErr+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
     else:
         outputDict["nMCerr"].append(sqrt(GJetsHisto.GetBinError(i+1)*GJetsHisto.GetBinError(i+1)/outputDict["nMCGJ"][i]/outputDict["nMCGJ"][i]+scaleFactorErr[i]*scaleFactorErr[i]/scaleFactor[i]/scaleFactor[i]))
-    outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
-    outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
+ #  outputDict["Nobs"].append(dataHisto.GetBinContent(i+1))
+ #  outputDict["nEB"].append(dataEBHisto.GetBinContent(i+1))
+    outputDict["Nobs"].append(GJetsHisto.GetBinContent(i+1))
+    outputDict["nEB"].append(GJetsEBHisto.GetBinContent(i+1))
+    outputDict["nEC"].append(GJetsEEHisto.GetBinContent(i+1))
+
     outputDict["pEB"].append(purityEBAll[i])
     outputDict["pEBerr"].append(purityEBerrAll[i]/outputDict["pEB"][i])
-    outputDict["nEC"].append(dataEEHisto.GetBinContent(i+1))    
+ #  outputDict["nEC"].append(dataEEHisto.GetBinContent(i+1))    
     outputDict["pEC"].append(purityEEAll[i])
     outputDict["pECerr"].append(purityEEerrAll[i]/outputDict["pEC"][i])
     if( RzGamma.GetBinContent(i+1) == 0. or RzGamma.GetBinContent(i+1) == 1. ):
@@ -372,4 +374,3 @@ LUMItext = TText(38,1.01,"13 TeV")
 LUMItext.SetTextFont(51)
 LUMItext.SetTextSize(0.045)
 LUMItext.Draw()
-

@@ -17,6 +17,31 @@
 using namespace std;
 
 int main(int argc, char** argv){
+    TFile *f1 = new TFile("L1PrefiringMaps_new.root");
+        TH2F* h = (TH2F*)f1->Get("L1prefiring_photonptvseta_2016BtoH");
+        TAxis* xAxis = h->GetXaxis();
+        TAxis* yAxis = h->GetYaxis();
+        double weight = 1.0 ,weightErr=1;
+        int c = 0;
+        double binXLow[75] ,binXUp[75] ,binYLow[75] ,binYUp[75] ,binCont[75], binContErr[75];
+        for(int i = 1; i<= h->GetNbinsY()+1; i++ )
+         {
+                for(int j = 1; j<= h->GetNbinsX()+1; j++ ) {
+
+                        if(h->GetBinContent(j,i) != 0){
+
+                         binXLow[c] = xAxis->GetBinLowEdge(j);
+                         binXUp[c] = xAxis->GetBinUpEdge(j);
+                         binYLow[c] = yAxis->GetBinLowEdge(i);
+                         binYUp[c] = yAxis->GetBinUpEdge(i);
+                         binCont[c] = h->GetBinContent(j,i);
+                         binContErr[c] = h->GetBinError(j,i);
+                         c++;
+                        }
+
+                }
+
+         }
 
     gROOT->ProcessLine(".L tdrstyle.C");
     gROOT->ProcessLine("setTDRStyle()");
@@ -154,17 +179,17 @@ int main(int argc, char** argv){
 
         int numEvents = ntuple->fChain->GetEntries();
         ntupleBranchStatus<RA2bTree>(ntuple);
-        double weight = 1.0;
         int count;
         for( int iEvt = 0 ; iEvt < numEvents ; iEvt++ ){
             ntuple->GetEntry(iEvt);
+            double prefiring_weight = 1.0, weight =1 ;
             if( iEvt % 1000000 == 0 ) cout << skims.sampleName[iSample] << ": " << iEvt << "/" << numEvents << endl;
 
             if( skims.regionNames[regInt] == "photonLDPLoose" || skims.regionNames[regInt] == "photonLoose" || skims.regionNames[regInt] == "photonLDP" || skims.regionNames[regInt] == "photon" ){
             if( skims.sampleName[iSample] == "QCD" && isPromptPhoton(ntuple) ) continue;
             if( skims.sampleName[iSample] == "GJets" && !isPromptPhoton(ntuple) ) continue;
-           // if ( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;//For eta Cut
-           // if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;            //For eta Cut 
+     //       if ( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=1.4442 && fabs(ntuple->Photons->at(0).Eta()<=1.566))continue;//For eta Cut
+     //       if( skims.sampleName[iSample] == "GJets" && fabs(ntuple->Photons->at(0).Eta())>=2)continue;            //For eta Cut 
 
             }
       
@@ -173,7 +198,16 @@ int main(int argc, char** argv){
                 ((skims.regionNames[regInt] == "photonLoose"||skims.regionNames[regInt] == "photon")&&!RA2bBaselineWideCut(ntuple)) ) continue;
 
 
-            count++;
+            for(int x = 0; x < 75; x++){
+            if(binXLow[x] <= (ntuple->Photons->at(0).Eta()) && (ntuple->Photons->at(0).Eta()) < binXUp[x] &&  binYLow[x] <= (ntuple->Photons->at(0).Pt()) && (ntuple->Photons->at(0).Pt()) < binYUp[x]){
+                   prefiring_weight = (1 - binCont[x]);
+             }
+            }
+                
+            // weight = /*customPUweights(ntuple)*/prefiring_weight;
+          
+
+//            count++;
             for( int iProj = 0 ; iProj<projections.size() ; iProj++ ){
 
                 int iBin = projections[iProj].fill(ntuple);
@@ -181,16 +215,16 @@ int main(int argc, char** argv){
 
                 if( ntuple->Photons_isEB->at(0) ){
                     if(ntuple->Photons_sigmaIetaIeta->at(0)>.0102){
-                        chargeIsoEBHighSieieVersus[iProj][iBin-1].fill(ntuple);
+                        chargeIsoEBHighSieieVersus[iProj][iBin-1].fill(ntuple,weight);
                     }else{
-                        chargeIsoEBLowSieieVersus[iProj][iBin-1].fill(ntuple);
+                        chargeIsoEBLowSieieVersus[iProj][iBin-1].fill(ntuple,weight);
                     }
                 }
                 else {
                     if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274){
-                        chargeIsoEEHighSieieVersus[iProj][iBin-1].fill(ntuple);
+                        chargeIsoEEHighSieieVersus[iProj][iBin-1].fill(ntuple,weight);
                     }else{
-                        chargeIsoEELowSieieVersus[iProj][iBin-1].fill(ntuple);
+                        chargeIsoEELowSieieVersus[iProj][iBin-1].fill(ntuple,weight);
                     }
                 }
             }
@@ -199,20 +233,20 @@ int main(int argc, char** argv){
      //       cout<<"count is " <<count<<"\n";
             for( int iPlot = 0 ; iPlot < plotsEB.size()-2 ; iPlot++ ){
                 if( ntuple->Photons_isEB->at(0) ) 
-                    plotsEB[iPlot].fill(ntuple);
+                    plotsEB[iPlot].fill(ntuple,weight);
                 else 
-                    plotsEE[iPlot].fill(ntuple);
+                    plotsEE[iPlot].fill(ntuple,weight);
             }
             if( ntuple->Photons_isEB->at(0) ){
                 if(ntuple->Photons_sigmaIetaIeta->at(0)>.0102)
-                    plotsEB[plotsEB.size()-2].fill(ntuple);
+                    plotsEB[plotsEB.size()-2].fill(ntuple,weight);
                 else
-                    plotsEB[plotsEB.size()-1].fill(ntuple);
+                    plotsEB[plotsEB.size()-1].fill(ntuple,weight);
             }else{
                 if(ntuple->Photons_sigmaIetaIeta->at(0)>.0274)
-                    plotsEE[plotsEB.size()-2].fill(ntuple);
+                    plotsEE[plotsEB.size()-2].fill(ntuple,weight);
                 else
-                    plotsEE[plotsEB.size()-1].fill(ntuple);
+                    plotsEE[plotsEB.size()-1].fill(ntuple,weight);
             }
         }
     }
@@ -287,7 +321,7 @@ int main(int argc, char** argv){
     }
    
 //    cout<< "count1 is :"<<count1<<"\n";
-    TFile* outputFile = new TFile("plotPurityProperties_"+skims.regionNames[regInt]+"_with18_data.root","RECREATE");
+    TFile* outputFile = new TFile("plotPurityProperties_"+skims.regionNames[regInt]+"_17data_16MC.root","RECREATE");
 
     for( int iPlot = 0 ; iPlot < plotsEB.size() ; iPlot++){
         TCanvas* can = new TCanvas("can","can",500,500);

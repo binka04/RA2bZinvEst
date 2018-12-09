@@ -1,0 +1,14 @@
+#purity EB:              purity EB error:      purity EE:          purity EE error:
+#purity EB:              purity EB error:      purity EE:          purity EE error:
+#purity EB:              purity EB error:      purity EE:          purity EE error:
+#purity EB:              purity EB error:      purity EE:          purity EE error:
+#purity EB:       purity EE: 
+0.971275526399    0.893605388282
+0.972149898335    0.897197125271
+0.979047147226    0.932232243907
+0.987103486324    0.962985609828
+#purity EB error:       purity EE error: 
+0.00792024205367    0.0214209130433
+0.00669683711033    0.0259610006483
+0.00940488320833    0.0380204290253
+0.00578569073233    0.0213336586003
