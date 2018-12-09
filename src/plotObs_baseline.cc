@@ -188,31 +188,31 @@ int main(int argc, char** argv){
             }
 
     
-         /* for (int unsigned s = 0; s < ntuple->Jets->size();s++){
+          for (int unsigned s = 0; s < ntuple->Jets->size();s++){
             weight*=prefiring_weight_jet(ntuple,iEvt,s);
            }
-         */  
+           
 
-  //         if( skims.sampleName[iSample] == "QCD") {QCD_total ++ ; }
+           if( skims.sampleName[iSample] == "QCD") {QCD_total ++ ; }
            if( skims.sampleName[iSample] == "QCD" && prefiring_weight_photon(ntuple,iEvt) != 1) {count_QCD ++ ; }
            if( skims.sampleName[iSample] == "QCD" && prefiring_weight_jet(ntuple,iEvt,0) != 1) {count_QCD_jet ++ ; }
 
-  //           if( skims.sampleName[iSample] == "TT") { TT_total ++ ; }
+             if( skims.sampleName[iSample] == "TT") { TT_total ++ ; }
            if( skims.sampleName[iSample] == "TT" && prefiring_weight_photon(ntuple,iEvt) != 1) { count_TT ++ ; }
            if( skims.sampleName[iSample] == "TT" && prefiring_weight_jet(ntuple,iEvt,0) != 1) { count_TT_jet ++ ; }
            
-  //         if( skims.sampleName[iSample] == "Others") {Others_total ++ ; }
+           if( skims.sampleName[iSample] == "Others") {Others_total ++ ; }
            if( skims.sampleName[iSample] == "Others" && prefiring_weight_photon(ntuple,iEvt) != 1) {count_Others ++ ; }
            if( skims.sampleName[iSample] == "Others" && prefiring_weight_jet(ntuple,iEvt,0) != 1) {count_Others_jet ++ ; }
            
-  //         if( skims.sampleName[iSample] == "GJets") { GJets_total ++ ; }  
+           if( skims.sampleName[iSample] == "GJets") { GJets_total ++ ; }  
            if( skims.sampleName[iSample] == "GJets" && prefiring_weight_photon(ntuple,iEvt) != 1) { count_GJets ++ ; }  
            if( skims.sampleName[iSample] == "GJets" && prefiring_weight_jet(ntuple,iEvt,0) != 1) { count_GJets_jet ++ ; }  
      
   
 
            for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++ ){
-                weight = lumi*ntuple->Weight*customPUweights(ntuple)/**prefiring_weight_photon(ntuple,iEvt)*/;              // prefiring weight here
+                weight = lumi*ntuple->Weight*customPUweights(ntuple)*prefiring_weight_photon(ntuple,iEvt);              // prefiring weight here
                 if( reg == skimSamples::kPhoton || reg == skimSamples::kPhotonLDP ) 
                    weight *= photonTriggerWeight(ntuple);
                 if( skims.sampleName[iSample] == "GJets" ){
@@ -270,7 +270,7 @@ int main(int argc, char** argv){
         }
     }
 
-    TFile* outputFile = new TFile("plotObs_"+skims.regionNames[regInt]+"_No_prefire.root","UPDATE");
+    TFile* outputFile = new TFile("plotObs_"+skims.regionNames[regInt]+"_prefire.root","UPDATE");
 
     for( int iPlot = 0 ; iPlot < plotsAllEvents.size() ; iPlot++){
         TCanvas* can = new TCanvas("can","can",500,500);
